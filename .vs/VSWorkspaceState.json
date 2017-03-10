@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\build",
+    "\\src\\components",
+    "\\src\\router",
+    "\\src\\store",
+    "\\src\\widgets"
+  ],
+  "SelectedNode": "\\build\\build.js",
+  "PreviewInSolutionExplorer": false
+}

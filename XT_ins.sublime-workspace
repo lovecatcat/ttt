@@ -1,0 +1,1224 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"safe",
+				"safe_year"
+			],
+			[
+				"att",
+				"attr2"
+			],
+			[
+				"sa",
+				"safe_year"
+			],
+			[
+				"lon",
+				"longTerm"
+			],
+			[
+				"pa",
+				"parse"
+			],
+			[
+				"upc",
+				"toUpperCase(): string\tNativeScript - String"
+			],
+			[
+				"mh",
+				"mih\tmin-height"
+			],
+			[
+				"com",
+				"commit"
+			],
+			[
+				"json",
+				"json_decode"
+			],
+			[
+				"cons",
+				"console: Console\tNativeScript - Module NativeScript"
+			],
+			[
+				"rea",
+				"readonly"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"dis",
+				"disabled"
+			],
+			[
+				"bas",
+				"base64Img"
+			],
+			[
+				"che",
+				"checkCard"
+			],
+			[
+				"getda",
+				"getDay(): number\tNativeScript - Date"
+			],
+			[
+				"getM",
+				"getMonth(): number\tNativeScript - Date"
+			],
+			[
+				"getY",
+				"getFullYear(): number\tNativeScript - Date"
+			],
+			[
+				"setTi",
+				"setTimeout( callback: Function, milliseconds?: number ): number\tNativeScript - Module NativeScript"
+			],
+			[
+				"adc",
+				"addCss( cssString: string ): void\tNativeScript - Page"
+			],
+			[
+				"tri",
+				"trim(): string\tNativeScript - String"
+			],
+			[
+				"sub",
+				"submit\t.submit()"
+			],
+			[
+				"base",
+				"base64_decode"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"bor",
+				"border"
+			],
+			[
+				"par",
+				"parseInt"
+			],
+			[
+				"nex",
+				"nextAll\t.nextAll()"
+			],
+			[
+				"fir",
+				"firstMoney"
+			],
+			[
+				"bo",
+				"border"
+			],
+			[
+				"sl",
+				"slideUp\t.slideUp()"
+			],
+			[
+				"sh",
+				"show\t.show()"
+			],
+			[
+				"parent",
+				"parent\t.parent()"
+			],
+			[
+				"bacc",
+				"background-color"
+			],
+			[
+				"show",
+				"showTips"
+			],
+			[
+				"para",
+				"params"
+			],
+			[
+				"fl",
+				"flag"
+			],
+			[
+				"op",
+				"op+\topacity: $1;\nfilter: alpha(opacity=$2);"
+			],
+			[
+				"paren",
+				"parents\t.parents()"
+			],
+			[
+				"pare",
+				"parent_id"
+			],
+			[
+				"ro",
+				"removeAttr"
+			],
+			[
+				"css",
+				"css\t.css() - single"
+			],
+			[
+				"ag",
+				"age2"
+			],
+			[
+				"select",
+				"selected"
+			],
+			[
+				"ht",
+				"html\t.html()"
+			],
+			[
+				"ea",
+				"each\t.each()"
+			],
+			[
+				"re",
+				"result"
+			],
+			[
+				"sho",
+				"showTips"
+			],
+			[
+				"clos",
+				"close"
+			],
+			[
+				"la",
+				"layer"
+			],
+			[
+				"pro",
+				"progress"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"get_defin",
+				"get_defined_vars"
+			],
+			[
+				"tr",
+				"true"
+			],
+			[
+				"shre",
+				"share_data"
+			],
+			[
+				"get",
+				"get\t$.get()"
+			],
+			[
+				"le",
+				"level"
+			],
+			[
+				"a",
+				"auto"
+			],
+			[
+				"mw",
+				"max-width"
+			],
+			[
+				"ad",
+				"admin_id"
+			],
+			[
+				"eac",
+				"each\t$.each()"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"l",
+				"log\tjs_snippet"
+			],
+			[
+				"p",
+				"pure-u- \tPureCSS class"
+			],
+			[
+				"i",
+				"tk_zxsy_icon_1.png\tw:16 h:17"
+			],
+			[
+				"data",
+				"data\t.data()"
+			],
+			[
+				"rg",
+				"rgba()"
+			],
+			[
+				"li",
+				"line-height"
+			],
+			[
+				"for",
+				"for\tfor (…) {…}"
+			],
+			[
+				"th",
+				"this\t$(this)"
+			],
+			[
+				"s",
+				"style\tAttr"
+			],
+			[
+				"crp",
+				"cur-p\tcursor: pointer;"
+			],
+			[
+				"remo",
+				"removeprop\t.removeProp()"
+			],
+			[
+				"co",
+				"colspan\tAttr"
+			],
+			[
+				"pd",
+				"padding"
+			],
+			[
+				"attr",
+				"attr\t.attr() - single"
+			],
+			[
+				"bg",
+				"bg\tbackground: #${1:000};"
+			],
+			[
+				"to",
+				"top"
+			],
+			[
+				"color",
+				"color-red"
+			],
+			[
+				"fons",
+				"font-size"
+			],
+			[
+				"ge",
+				"getfee"
+			],
+			[
+				"c",
+				"c\tcolor: #${1:000};"
+			],
+			[
+				"h",
+				"height\tAttr"
+			],
+			[
+				"check",
+				"checkFee"
+			],
+			[
+				"ci",
+				"click\t.click()"
+			],
+			[
+				"mg",
+				"margin"
+			],
+			[
+				"year",
+				"year_fee"
+			],
+			[
+				"va",
+				"val\t.val()"
+			],
+			[
+				"pars",
+				"parseInt"
+			],
+			[
+				"has",
+				"hasClass\t.hasClass()"
+			],
+			[
+				"bot",
+				"border-top"
+			],
+			[
+				"fla",
+				"false"
+			],
+			[
+				"fj",
+				"fj_id"
+			],
+			[
+				"name",
+				"pageName"
+			],
+			[
+				"fa",
+				"false"
+			],
+			[
+				"bu",
+				"blur\t.blur()"
+			],
+			[
+				"prop",
+				"prop\t.prop() - single"
+			],
+			[
+				"each",
+				"each\t.each()"
+			],
+			[
+				"bra",
+				"break"
+			],
+			[
+				"ret",
+				"return"
+			],
+			[
+				"ja",
+				"jQuery.ajax\tjQuery.ajax"
+			],
+			[
+				"padd",
+				"padding"
+			],
+			[
+				"isn",
+				"is_numeric"
+			],
+			[
+				"func",
+				"function with name"
+			],
+			[
+				"time",
+				"timeStamp\tEvent"
+			],
+			[
+				"new",
+				"new Date()\tDate"
+			],
+			[
+				"pas",
+				"parents\t.parents()"
+			],
+			[
+				"b",
+				"blur\t.blur()"
+			],
+			[
+				"ma",
+				"manage.html"
+			],
+			[
+				"ass",
+				"assign"
+			],
+			[
+				"_",
+				"_SERVER"
+			],
+			[
+				"strip",
+				"strip_tags"
+			],
+			[
+				"html",
+				"html\t.html()"
+			],
+			[
+				"ti",
+				"ti--\ttext-indent: -9999px;"
+			],
+			[
+				"do",
+				"download.png\tw:1083 h:444"
+			],
+			[
+				"arp",
+				"array_push"
+			],
+			[
+				"qr",
+				"qrcode_iphone.jpg\tw:156 h:155"
+			],
+			[
+				"br",
+				"br\tborder-right"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"k",
+				"king_img_02.jpg\tw:1920 h:645"
+			],
+			[
+				"stai",
+				"star_img2.jpg\tw:1920 h:407"
+			],
+			[
+				"sta",
+				"star_img2.jpg\tw:1920 h:407"
+			],
+			[
+				"aler",
+				"alert(message)\tWindow"
+			],
+			[
+				"pus",
+				"array_push"
+			],
+			[
+				"mrd",
+				"mdrt_logo.jpg\tw:117 h:85"
+			],
+			[
+				"ida",
+				"ida-img.jpg\tw:1097 h:689"
+			],
+			[
+				"ia",
+				"ida-banner.jpg\tw:1920 h:489"
+			],
+			[
+				"st",
+				"star3.png\tw:221 h:198"
+			],
+			[
+				"m",
+				"member/"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 342.0,
+		"last_filter": "lp",
+		"selected_items":
+		[
+			[
+				"lp",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: li",
+				"Package Control: List Packages"
+			],
+			[
+				"Snippet: p",
+				"Snippet: Lorem ipsum"
+			],
+			[
+				"insp",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: rm",
+				"Package Control: Remove Package"
+			],
+			[
+				"markdown Pres",
+				"Markdown Preview: Save to HTML"
+			],
+			[
+				"bs3-c4",
+				"Snippet: bs3-col-4"
+			],
+			[
+				"bs3-col",
+				"Snippet: bs3-col-8"
+			],
+			[
+				"git",
+				"git: status"
+			],
+			[
+				"open s",
+				"File: Open In Browser - Testing Server"
+			],
+			[
+				"ip",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: less",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: css",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 446.0
+	},
+	"console":
+	{
+		"height": 466.0,
+		"history":
+		[
+			"exit()",
+			"exit();",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/E/programs/vuejs/XT_ins",
+		"/E/programs/vuejs/XT_ins/config",
+		"/E/programs/vuejs/XT_ins/dist",
+		"/E/programs/vuejs/XT_ins/dist/static",
+		"/E/programs/vuejs/XT_ins/dist/static/css",
+		"/E/programs/vuejs/XT_ins/dist/static/js",
+		"/E/programs/vuejs/XT_ins/node_modules/vue-preview/src",
+		"/E/programs/vuejs/XT_ins/node_modules/vue-preview/src/plugins",
+		"/E/programs/vuejs/XT_ins/node_modules/vue-preview/src/plugins/preview",
+		"/E/programs/vuejs/XT_ins/src",
+		"/E/programs/vuejs/XT_ins/src/api",
+		"/E/programs/vuejs/XT_ins/src/components",
+		"/E/programs/vuejs/XT_ins/src/router",
+		"/E/programs/vuejs/XT_ins/src/store",
+		"/E/programs/vuejs/XT_ins/src/widgets",
+		"/E/programs/vuejs/XT_ins/static"
+	],
+	"file_history":
+	[
+		"/E/programs/vuejs/XT_ins/src/router/index.js",
+		"/E/programs/vuejs/XT_ins/src/store/mutations.js",
+		"/E/programs/vuejs/XT_ins/src/components/Insured.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Prospectus.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Preview.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beinsured.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beneficiaries.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Healthinfo.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Billinfo.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Confirmation.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Tips.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beneficiary.vue",
+		"/E/programs/vuejs/XT_ins/node_modules/vue-preview/src/plugins/preview/index.js",
+		"/E/programs/vuejs/XT_ins/node_modules/vue-preview/src/plugins/preview/preview.vue",
+		"/E/programs/vuejs/XT_ins/dist/index.html",
+		"/E/programs/vuejs/XT_ins/config/index.js",
+		"/E/programs/vuejs/XT_insBak/index.html",
+		"/E/programs/vuejs/ZTMobi/src/store/mutations.js",
+		"/E/programs/vuejs/ZTMobi/src/api/index.js",
+		"/E/programs/vuejs/ZTMobi/src/store/state.js",
+		"/E/programs/vuejs/ZTMobi/src/assets/css/app.scss",
+		"/E/programs/vuejs/ZTMobi/src/components/City.vue",
+		"/E/programs/vuejs/ZTMobi/src/widgets/Toast.js",
+		"/E/programs/vuejs/ZTMobi/src/components/Home.vue",
+		"/E/programs/vuejs/ZTMobi/src/components/CarInfo.vue",
+		"/E/programs/vuejs/ZTMobi/src/components/Quotes.vue",
+		"/E/programs/vuejs/ZTMobi/src/components/Insurance.vue",
+		"/E/programs/vuejs/ZTMobi/src/components/Order.vue",
+		"/E/programs/vuejs/ZTMobi/package.json",
+		"/E/programs/vuejs/ZTMobi/src/components/Region.vue",
+		"/E/programs/vuejs/ZTMobi/src/widgets/Components.js",
+		"/E/programs/vuejs/ZTMobi/src/main.js",
+		"/E/programs/vuejs/ZTMobi/src/widgets/Dialog.js",
+		"/E/programs/vuejs/ZTMobi/dist/ZTmobi.html",
+		"/D/Program Files/sublime text 3/Data/Packages/HTML-CSS-JS Prettify/.jsbeautifyrc",
+		"/E/programs/hmhome/Theme/index/home/XT_ins.html",
+		"/E/programs/hmhome/Theme/index/home/AddUserEdit.html",
+		"/E/programs/hmhome/Theme/index/home/ZT_pay.html",
+		"/E/programs/hmhome/Theme/index/home/test.html",
+		"/E/programs/hmhome/test.html",
+		"/E/programs/hmhome/test.php",
+		"/D/Program Files/sublime text 3/Data/Packages/JavaScript Completions/JavaScript-Completions.sublime-settings",
+		"/D/Program Files/sublime text 3/Data/Packages/User/JavaScript-Completions.sublime-settings",
+		"/E/programs/hmhome/Theme/index/home/weui/prospectus.js",
+		"/E/programs/hmhome/Theme/index/home/js/common.js",
+		"/E/programs/hmhome/Theme/index/home/prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/login-1223.html",
+		"/E/programs/hmhome/Theme/index/home/WxAddUser.html",
+		"/E/programs/hmhome/Theme/index/home/carins_login.html",
+		"/E/programs/hmhome/Theme/index/home/login.html",
+		"/E/programs/hmhome/Bin/Home/Controller/HmddController.class.php",
+		"/E/programs/hmhome/Bin/Common/Common/function.php",
+		"/E/programs/hmhome/Bin/Home/Common/function.php",
+		"/E/programs/hmhome/Theme/index/home/index.html",
+		"/E/programs/hmhome/Public/images/Temp/2017021513473285.png",
+		"/E/programs/hmhome/Public/images/Temp/2017021512071942.jpeg",
+		"/E/programs/hmhome/ThinkPHP/Library/Behavior/UpgradeNoticeBehavior.class.php",
+		"/E/programs/hmhome/Bin/Common/Conf/config.php",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_asset_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_ylf3_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/order_manage.html",
+		"/D/github/Initio/sftp-config.json",
+		"/C/Users/FED/AppData/Local/Temp/fz3temp-2/goods.dwt",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_asset_prospectus-new.html",
+		"/D/FED/Desktop/ZY_axs_prospectus.html",
+		"/D/FED/Desktop/XT_bwrs_asset_prospectus.html",
+		"/C/Users/FED/AppData/Roaming/Composer/vendor/bin/phpcs.bat",
+		"/C/Users/FED/AppData/Roaming/Composer/vendor/bin/pdepend.bat",
+		"/E/programs/hmhome/Theme/index/home/XT_healthy_prospectus-bak.html",
+		"/E/programs/hmhome/Theme/index/home/less/prospectus.less",
+		"/E/programs/hmhome/Theme/index/home/XT_healthy_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/prospectus_manage.html",
+		"/E/programs/hmhome/Theme/index/home/less/carins_login.less",
+		"/E/资料/源代码/weui-1.1.0/src/style/icon/weui-font.less",
+		"/E/资料/源代码/weui-1.1.0/src/style/icon/weui-icon_font.less",
+		"/E/programs/hmhome/Theme/index/home/css/prospectus.min.css",
+		"/D/Program Files/sublime text 3/Data/Packages/YUI Compressor/YUI Compressor.sublime-build",
+		"/D/Program Files/sublime text 3/Data/Packages/YUI Compressor/package-metadata.json",
+		"/E/资料/源文件/后端模板/clip-one/assets/plugins/jquery-cookie/jquery.cookie.js",
+		"/D/FED/Desktop/font_52rylk1bcrmb1emi/iconfont.svg",
+		"/E/资料/源代码/weui-1.1.0/dist/style/weui.css",
+		"/E/programs/hmhome/Theme/index/home/css/corins_login.css",
+		"/E/programs/hmhome/Theme/index/home/weui/weui.min.css",
+		"/D/Program Files (x86)/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
+		"/D/leo/web/web.sublime-project",
+		"/D/leo/web/web.sublime-workspace",
+		"/E/programs/hmhome/Theme/index/home/TK_lak_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/ZY_axs_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/weui/prospectus.css",
+		"/E/programs/hmhome/Theme/index/home/GH_enjoy_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_pasture_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_educate_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/TK_lak_zxsy_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/PICC_bwrs_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xry_pasture_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xry_educate_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xry_asset_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xfn_pasture_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xfn_educate_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/css/common.css",
+		"/E/programs/hmhome/Theme/index/home/GY_xfn_asset_prospectus.html",
+		"/E/programs/hmhome/Theme/index/home/20161129.html",
+		"/D/WWW/demo/statusLine.html",
+		"/D/webpack/package.json",
+		"/E/programs/hmhome/Theme/index/home/接口.md",
+		"/E/programs/huimeng/.gitignore",
+		"/D/FED/Desktop/edit.svg",
+		"/D/FED/Desktop/font_htbfi0hu82r9t3xr/demo_symbol.html",
+		"/D/FED/Desktop/font_htbfi0hu82r9t3xr/iconfont.js",
+		"/D/FED/Desktop/font_htbfi0hu82r9t3xr/iconfont.svg",
+		"/E/programs/hmhome/微信.todo",
+		"/D/WWW/piwik/config/global.php",
+		"/D/WWW/piwik/config/global.ini.php",
+		"/D/WWW/piwik/sftp-config.json",
+		"/D/WWW/piwik/lang/README.md",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_educate_prospectus - 副本.html",
+		"/E/programs/hmhome/Theme/index/home/XT_bwrs_pasture_prospectus - 副本.html",
+		"/E/programs/hmhome/Theme/index/home/GY_xry_pasture_prospectus - 副本.html",
+		"/D/Program Files (x86)/Sublime Text 3/Data/Packages/HTML-CSS-JS Prettify/.jsbeautifyrc",
+		"/D/Program Files (x86)/Sublime Text 3/Data/Packages/HTML-CSS-JS Prettify/HTMLPrettify.sublime-settings",
+		"/D/Program Files (x86)/Sublime Text 3/Data/Packages/User/SFTP.sublime-settings",
+		"/E/programs/hmhome/Bin/Home/Controller/WechatController.class.php",
+		"/E/programs/hmhome/Bin/Home/Controller/WechatController.class-new.php",
+		"/E/programs/hmhome/ThinkPHP/Library/Vendor/HuiMeng/Wechat.php",
+		"/E/programs/hmhome/Bin/Admin/Controller/ProspectusController.class.php",
+		"/E/programs/hmhome/Bin/Home/Controller/ProspectusController.class.php",
+		"/E/programs/hmhome/.gitignore",
+		"/E/programs/hmhome/Theme/index/home/css/share.css"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 108.0,
+		"where_history":
+		[
+			"E:\\programs\\vuejs\\XT_ins,-node_modules",
+			"E:\\programs\\vuejs\\XT_ins\\src",
+			"E:\\programs\\vuejs\\XT_ins\\src\\components",
+			"E:\\programs\\vuejs\\XT_ins\\src",
+			"E:\\programs\\vuejs\\XT_ins\\src\\components",
+			"E:\\programs\\vuejs\\ZTMobi\\src\\components",
+			"E:\\programs\\hmhome\\Theme\\index\\home",
+			"E:\\programs\\hmhome\\Theme\\index\\home,",
+			"E:\\programs\\hmhome\\Theme\\index\\home,-E:\\programs\\hmhome\\Theme\\index\\home\\bak",
+			"E:\\programs\\hmhome\\Theme\\index\\home",
+			"E:\\hmhome\\Theme\\index\\home",
+			"E:\\huimeng\\Theme\\Base",
+			"E:\\huimeng\\Theme\\Index",
+			"E:\\huimeng\\Bin\\Index\\View\\Index",
+			"E:\\huimeng\\Bin\\Runtime\\Cache\\Index",
+			"E:\\huimeng\\Bin\\Index\\View\\Index",
+			"E:\\hmhome\\Bin\\Index\\View\\Index",
+			"E:\\hmhome\\Bin\\Index\\View",
+			"E:\\hmhome\\Bin\\Index\\View\\Index",
+			"E:\\hmhome",
+			"D:\\github\\phpspider",
+			"E:\\FE\\src\\zsj_business",
+			"E:\\WWW\\cms",
+			"D:\\Yeah\\Desktop\\0321\\手机",
+			"D:\\Yeah\\Desktop\\0321"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"data",
+			"beneficiaries",
+			"attr",
+			" aria-hidden=\"true\"",
+			"name=\"x21\"",
+			"同一受益",
+			"attr",
+			"back",
+			"vm.$store.state.",
+			"assured",
+			"longTerm",
+			"applicant",
+			"id",
+			"idcheck",
+			"longTerm",
+			"assured",
+			"applicant",
+			"assurerd",
+			"assured",
+			"assurerd",
+			"prevResult",
+			"i",
+			"continue",
+			"index",
+			"i",
+			"BIN",
+			"from '",
+			"index",
+			"reset",
+			"setCarins",
+			"insuredPremium",
+			"item",
+			"coverageList",
+			"Calculated",
+			"setParam",
+			"Calculated",
+			"selectIC",
+			"applicantName",
+			"Calculated",
+			"saveCalculated",
+			"&&",
+			"calok",
+			"isNew",
+			"is_owner",
+			"Calculated",
+			"saveCalculated",
+			"this.",
+			"showApplicant",
+			"new ",
+			"this.ownerName",
+			"is_owner",
+			"console.log",
+			"false",
+			"picker",
+			"province",
+			"地址",
+			"地区",
+			"post",
+			"ajax",
+			"mobile",
+			"服务器",
+			"$(\"#mobile\").attr",
+			"$(\"#mobile\").attr('disabled',true)",
+			"sendsms",
+			"mobile",
+			"sendsms",
+			"send",
+			"accept=\"image/jpg,image/jpeg,image/png,image/bmp\"",
+			"image/jpeg",
+			"checkCard",
+			"send",
+			"先",
+			"Js-idcard_val2",
+			"Js-paycard_file",
+			"Js-idcard_file2",
+			"Js-idcard_val2",
+			"Js-idcard_img2",
+			"result",
+			"ajaxImg",
+			"toDataURL",
+			"Js-paycard_img",
+			"type=\"file\"",
+			"招商",
+			"r_bankcard",
+			"r_bandcard",
+			"bandcard",
+			"招商",
+			"银行卡",
+			"confUrl",
+			"admin_id",
+			"confUrl",
+			"share",
+			"resizeCanvas",
+			"2",
+			"0px",
+			"0%",
+			"px",
+			"px;",
+			"canvas",
+			"WeixinJSBridge",
+			"idcard",
+			"r_tel",
+			"sendsms",
+			"tel",
+			"r_tel",
+			"r_name",
+			"idcard",
+			"id",
+			"idcard",
+			"h3",
+			"<u> </u>",
+			"p",
+			" style=\"display: none;\"",
+			"agreement",
+			"AddUser",
+			"验证码",
+			"b",
+			"send",
+			"mobile",
+			"sms",
+			"signature_img",
+			"signature",
+			"icheck",
+			"=/static",
+			"=static",
+			"/static",
+			"=static",
+			"=st"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"$",
+			"var baseUrl = \"http://cloud.ehuimeng.com\"",
+			"http://cloud.ehuimeng.com",
+			"",
+			"h2",
+			"\"/Theme/index/home/js",
+			"\"/Theme/index/home/css",
+			"女士",
+			"../../public",
+			"保险,保险代理,汇盟,汇盟保代,深圳汇盟保险代理有限公司",
+			"file=\"./Theme",
+			"file=\"/Theme",
+			"{:U('/",
+			"合作渠道",
+			"代理保险",
+			"{:U('agent')}",
+			"{:U('qualification')}",
+			"{:U('sitemap')}",
+			"{:U('service')}",
+			"{:U('CooperationChannels')}",
+			"{:U('cooperationchannels')}",
+			"{:U('recruitment')}",
+			"{:U('companynews')}",
+			"{:U('industrynews')}",
+			"=\"{:U('industrynews')}\"",
+			"=\"{:U('cooperation')}\"",
+			"=\"{:U('industry')}\"",
+			"=\"{:U('contact')}\"",
+			"=\"{:U('index')}\"",
+			"=\"={:U('index')}\"",
+			"{:U('index')}",
+			"{:U('institutions')}",
+			"{:U('advantage')}",
+			"{:U('employee')}",
+			"{:U('philosophy')}",
+			"{:U('orientation')}",
+			"{:U('company')}",
+			"{:U('mdrt')}",
+			"{:U('ida')}",
+			"{:U('studio')}",
+			"{:U('founder')}",
+			"{:U('member')}",
+			"{:U('kings')}",
+			"{:U('stars')}",
+			"{:U('honor')}",
+			"\"__PUBLIC__/index/images/",
+			"<include file=\"./Bin/Index/View/Index/include/footer.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/header.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/meta.html\" />",
+			"\"__PUBLIC__/index/images/",
+			"\"__PUBLIC__/index/",
+			"<include file=\"./Bin/Index/View/Index/include/side.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/footer.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/header.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/meta.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/footer.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/header.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/meta.html\" />",
+			"__PUBLIC__/index/images/",
+			"<include file=\"./Bin/Index/View/Index/include/footer.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/header.html\" />",
+			"<include file=\"./Bin/Index/View/Index/include/meta.html\" />",
+			"<span class=\"number\"></span>",
+			"<span class=\"yuan\">元</span>",
+			"<span class=\"number\"></span>",
+			"<span class=\"number\"></span>\n<span class=\"yuan\">元</span>",
+			"\"/Theme/index/home/images/plans/",
+			"/template/default",
+			"\"/assets",
+			":",
+			"newoptions",
+			"crtId",
+			"第28届世界模特小姐大赛",
+			"&quot;",
+			"&gt;",
+			"&lt;",
+			"hrmenu",
+			"max-width: 1000px;",
+			"include/",
+			".html",
+			"setTableName('xiao_model_field',true)",
+			"setTableName('xiao_model',true)",
+			"setTableName('xiao_admin',true)",
+			"en_",
+			".register",
+			"慧联通信",
+			"\"/web/images/",
+			"\"/web/css/",
+			"\"/web/images/",
+			"\"/web/js/",
+			"\"/web_pc/js/",
+			"(/web_pc/images/",
+			"\"/web_pc/images/"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.482230392157,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.GitSavvy":
+	{
+		"height": 100.0
+	},
+	"output.clipboard_manager":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 339.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.gulp_output":
+	{
+		"height": 87.0
+	},
+	"output.sftp":
+	{
+		"height": 195.0
+	},
+	"pinned_build_system": "Packages/User/php.sublime-build",
+	"project": "XT_ins.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"vue-previewindex",
+				"node_modules\\vue-preview\\src\\plugins\\preview\\index.js"
+			],
+			[
+				"vue-previewindex.js",
+				"node_modules\\vue-preview\\src\\plugins\\preview\\index.js"
+			],
+			[
+				"hmdd",
+				"Bin\\Home\\Controller\\HmddController.class.php"
+			],
+			[
+				"h",
+				"Bin\\Home\\Controller\\HmddController.class.php"
+			],
+			[
+				"pasture",
+				"Theme\\index\\home\\XT_bwrs_pasture_prospectus.html"
+			],
+			[
+				"xt_bw",
+				"Theme\\index\\home\\XT_bwrs_pasture_prospectus.html"
+			],
+			[
+				"xry",
+				"Theme\\index\\home\\GY_xry_pasture_prospectus.html"
+			],
+			[
+				"prospectus.js",
+				"Theme\\index\\home\\weui\\prospectus.js"
+			],
+			[
+				"home/css",
+				"hmhome\\Theme\\index\\home\\css\\common.css"
+			],
+			[
+				"common.js",
+				"hmhome\\Theme\\index\\home\\js\\common.js"
+			],
+			[
+				"",
+				"hmhome\\Bin\\Index\\View\\Index\\recruitment.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"D:\\leo\\web\\web.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 1,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 288.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
