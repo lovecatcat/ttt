@@ -3,13 +3,23 @@ import Vue from 'vue'
 import Input from './Input'
 import Select from './Select'
 import Dropdown from './Dropdown'
-// import Dialog from './Dialog'
 
-// Vue.component('app-toast', Toast)
+const AppDialog = {
+  template: `
+  <div class="am-dialog show app-dialog">
+    <div class="am-dialog-wrap">
+      <slot name="header"></slot>
+      <slot name="body"></slot>
+      <slot name="footer"></slot>
+    </div>
+  </div>
+  `
+}
+Vue.component('app-dialog', AppDialog)
 Vue.component('app-input', Input)
 Vue.component('app-select', Select)
 Vue.component('app-dropdown', Dropdown)
-  // Vue.component('app-dialog', Dialog)
+  // Vue.component('app-accupation', Occupation)
 
 ///////////
 // 日期格式化 //
@@ -32,3 +42,4 @@ Date.prototype.Format = function (fmt) {
   }
   return fmt;
 };
+

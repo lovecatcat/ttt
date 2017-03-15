@@ -138,7 +138,7 @@
       <app-input label="固定电话" v-if="assured.visit_tel">
         <input slot="input" readonly :value="assured.visit_tel" type="text">
       </app-input>
-      <app-input label="工作单位">
+      <app-input label="工作单位" v-show="assured.work_unit">
         <input slot="input" readonly :value="assured.work_unit" type="text">
       </app-input>
       <app-input label="年收入">
@@ -216,18 +216,18 @@
           <input slot="input" disabled v-model.trim="beneficiary.address_select" type="text" placeholder="请在下方选择和填写">
         </app-input>
         <!-- 通讯地址 -->
-        <app-region v-if="init" :provinces="init.applicant.province" :label="address_selected_label" v-on:regionselect="address_selected"></app-region>
+        <!-- <app-region v-if="init" :provinces="init.applicant.province" v-on:regionselect="address_selected"></app-region> -->
         <!-- 通讯地址 -->
         <app-input label="详细地址">
           <input slot="input" v-model.trim="beneficiary.address" type="text" placeholder="请填写详细通讯地址">
         </app-input>
         <app-input label="邮编">
-          <input slot="input" v-model.number="beneficiary.zipcode" type="number" @change="checkZipcode" placeholder="请填写受益人邮编">
+          <input slot="input" v-model.number="beneficiary.zipcode" type="number" placeholder="请填写受益人邮编">
         </app-input>
-        <app-input label="手机号码">
+        <app-input label="手机号码" v-show="beneficiary.tel">
           <input slot="input" v-model.number="beneficiary.tel" type="number" placeholder="请填写受益人手机号码">
         </app-input>
-        <app-input label="固定电话(选题)">
+        <app-input label="固定电话" v-show="beneficiary.visit_tel">
           <input slot="input" v-model.lazy.trim="beneficiary.visit_tel" type="text" placeholder="请填写受益人固定电话">
         </app-input>
         <app-input label="职业">
@@ -253,7 +253,7 @@
       </app-select>
       <app-select label="交费期间" readonly="true">
         <select disabled v-model="insurance.pay_year" disabled>
-          <option v-for="item in attr" :value="item.sv_id">{{item.pay_year}}</option>
+          <option v-for="item in attr" :value="item.sv_id">{{item.pay_year == 1 ? '趸交' : item.pay_year + '年'}}</option>
         </select>
       </app-select>
       <app-select label="保险期间" readonly="true">
@@ -400,29 +400,29 @@
     <div v-if="warData" class="app-list-header am-flexbox">
       <div class="am-flexbox-item"><span class="app-iconfont">&#xe631;</span>投保信息确认</div>
     </div>
-    <app-dropdown v-if="warData" up='up' :label="'保险计划信息'+(insurances.length>1? (index == 0 ? '(主险)': ('(附加险'+(index>2?index-1:'')+')') ) :'')" v-for="insurance,index in insurances" :key="index">
-      <app-select label="险种" readonly="true">
-        <select readonly v-model="main_insurance" disabled>
-          <option v-if="item.safe_id == 209 || item.safe_id == 210" v-for="item in safegoods" :value="item">{{item.name}}</option>
-        </select>
-      </app-select>
-      <app-select label="交费期间">
-        <select disabled v-model="insurance.pay_year">
-          <option v-for="item in attr" :value="item.sv_id">{{item.pay_year}}</option>
-        </select>
-      </app-select>
-      <app-select label="保险期间">
-        <select disabled v-model="insurance.safe_year">
-          <option v-for="item in attr" :value="item.sv_id">{{item.safe_year==999?'终身':item.safe_year}}</option>
-        </select>
-      </app-select>
-      <app-input label="基本保险金额">
-        <input slot="input" readonly :value="insurance.money" type="text">
-      </app-input>
-      <app-input label="年交保费">
-        <input slot="input" readonly :value="warData.data[main_insurance.safe_id]" type="text">
-      </app-input>
-    </app-dropdown>
+<!--     <app-dropdown v-if="warData" up='up' :label="'保险计划信息'+(insurances.length>1? (index == 0 ? '(主险)': ('(附加险'+(index>2?index-1:'')+')') ) :'')" v-for="insurance,index in insurances" :key="index">
+  <app-select label="险种" readonly="true">
+    <select readonly v-model="main_insurance" disabled>
+      <option v-if="item.safe_id == 209 || item.safe_id == 210" v-for="item in safegoods" :value="item">{{item.name}}</option>
+    </select>
+  </app-select>
+  <app-select label="交费期间">
+    <select disabled v-model="insurance.pay_year">
+      <option v-for="item in attr" :value="item.sv_id">{{item.pay_year}}</option>
+    </select>
+  </app-select>
+  <app-select label="保险期间">
+    <select disabled v-model="insurance.safe_year">
+      <option v-for="item in attr" :value="item.sv_id">{{item.safe_year==999?'终身':item.safe_year}}</option>
+    </select>
+  </app-select>
+  <app-input label="基本保险金额">
+    <input slot="input" readonly :value="insurance.money" type="text">
+  </app-input>
+  <app-input label="年交保费">
+    <input slot="input" readonly :value="warData.data[main_insurance.safe_id]" type="text">
+  </app-input>
+</app-dropdown> -->
     <div v-if="warData" class="am-content am-ft-right am-ft-red">合计保费：{{countFee(warData)}}元</div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
       <router-link to="/billinfo" class="am-tab-item">上一步</router-link>

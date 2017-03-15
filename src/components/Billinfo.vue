@@ -32,7 +32,7 @@
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
         <!-- 开户行所在地 -->
-        <app-region v-if="init" :level="2" :provinces="init.applicant.province" :label="bank_label" v-on:regionselect="address_selected"></app-region>
+        <app-region v-if="init" :level="3" :provinces="init.applicant.province" :label="bank_label" v-on:regionselect="address_selected"></app-region>
       </div>
     </div>
     <div class="app-agreement">
@@ -128,6 +128,11 @@ export default {
       this.warranty.bank_city = ''
       this.warranty.bank_district = ''
       this.warranty.bank_address = ''
+      this.$refs.address.province.selected = 0
+      this.$refs.address.city.selected = 0
+      this.$refs.address.district.selected = 0
+      this.$refs.address.citys = []
+      this.$refs.address.show = true
     },
     address_selected(a, p, c, d) {
       this.warranty.bank_address = a
@@ -143,23 +148,6 @@ export default {
         toast_text = '银行账号不能为空'
       } else if (isNaN(number)) {
         toast_text = '银行卡号必须是数字'
-      } else {
-        /*        BIN.getBankBin(number, function(err, data) {
-                  if (data) {
-                    vm.warranty.bank_name = data.bankName
-                    var cardtype = {
-                      '储蓄卡': 51,
-                      '信用卡': 51,
-                      '准贷记卡': 51,
-                      '预付费卡': 51
-                    }
-                    vm.warranty.bank_card = cardtype[data.cardTypeName]
-                    return
-                  }
-                  if (!err) {
-                    toast_text = '无法识别该银行卡'
-                  }
-                })*/
       }
       if (toast_text) {
         // vm.warranty.bank_name = ''

@@ -1,18 +1,30 @@
 <template>
-  <div class="am-list-item dropdown" v-show="label[0] != '重新选择'">
+  <div class="am-list-item dropdown" v-show="show">
     <div class="am-list-dropdown-main">
-      <div class="am-list-label tar app-color-warn">{{label[0]}}:</div>
+      <div class="am-list-label tar app-color-warn">请选择省</div>
       <div class="am-list-control">
-        <select v-if="provinces" v-model="province.selected" v-show="label[0] == '请选择省'" @change="province_changed">
-          <option disabled>请选择</option>
+        <select v-if="provinces" v-model="province.selected" @change="province_changed">
+          <option disabled value="0">请选择</option>
           <option v-if="item.code.substr(2,4) == '0000'" v-for="item in provinces" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
         </select>
-        <select v-model="city.selected" v-show="label[0] == '请选择市'" @change="city_changed">
-          <option disabled>请选择</option>
+      </div>
+      <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
+    </div>
+    <div class="am-list-dropdown-main" v-if="goon >= 2">
+      <div class="am-list-label tar app-color-warn">请选择市</div>
+      <div class="am-list-control">
+        <select v-model="city.selected" @change="city_changed">
+          <option disabled value="0">请选择</option>
           <option v-if="item.code.substr(4,2) == '00'" v-for="item in citys" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
         </select>
-        <select v-model="district.selected" v-show="label[0] == '请选择县/区'" @change="district_changed">
-          <option disabled>请选择</option>
+      </div>
+      <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
+    </div>
+    <div class="am-list-dropdown-main" v-if="goon >= 3">
+      <div class="am-list-label tar app-color-warn">请选择县/区</div>
+      <div class="am-list-control">
+        <select v-model="district.selected" @change="district_changed">
+          <option disabled value="0">请选择</option>
           <option v-for="item in districts" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
         </select>
       </div>
@@ -29,23 +41,24 @@ export default {
   data() {
     return {
       province: {
-        selected: '',
+        selected: 0,
         field: '',
         code: '',
         if_id: ''
       },
       city: {
-        selected: '',
+        selected: 0,
         field: '',
         code: '',
         if_id: ''
       },
       district: {
-        selected: '',
+        selected: 0,
         field: '',
         code: '',
         if_id: ''
       },
+      show: true,
       citys: [],
       districts: [],
       selects: []
@@ -105,18 +118,15 @@ export default {
       this.district.field = ''
 
       this.selects = selected[0]
-      if (this.goon < 3 && ['110000', '120000', '310000', '500000', '810000', '820000'].indexOf(selected[1]) >= 0) {
-        this.label[0] = '重新选择'
+      // , '810000', '820000'
+      if (this.goon < 3 && ['110000', '120000', '310000', '500000'].indexOf(selected[1]) >= 0) {
+        this.show = false
         return
       }
-      /*      if (this.goon == 2 && ['110000', '120000', '310000', '500000'].indexOf(selected[1]) >= 0) {
-              this.label[0] = '重新选择'
-              return
-            }*/
       if (this.goon > 1 && selected[1].substr(2, 4) == '0000') {
         this.getRegion('city', this.province.code);
       } else {
-        this.label[0] = '重新选择'
+        this.show = false
       }
     },
     city_changed() {
@@ -131,7 +141,7 @@ export default {
       if (this.goon > 2) {
         this.getRegion('district', this.city.code);
       } else {
-        this.label[0] = '重新选择'
+        this.show = false
       }
     },
     district_changed() {
@@ -141,7 +151,7 @@ export default {
       this.district.code = selected[1]
       this.district.if_id = selected[2]
 
-      this.label[0] = '重新选择'
+      this.show = false
       if (this.city.field == selected[0]) {
         this.selects = this.province.field + " " + this.city.field
         return
@@ -152,16 +162,14 @@ export default {
       const vm = this
       Api.queryRegion(mode, code, res => {
         if (res.length < 1) {
-          vm.label[0] = '重新选择'
+          vm.show = false
           vm.$forceUpdate() // 不知为何需要强制更新
           return
         }
         if (mode == 'city') {
           vm.citys = res
-          vm.label[0] = '请选择市'
         } else if (mode == 'district') {
           vm.districts = res
-          vm.label[0] = '请选择县/区'
         }
       })
     }

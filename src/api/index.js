@@ -109,6 +109,14 @@ const queryRegion = function (mode, code, cb) {
   })
 }
 
+const searchOccupation = function (key, cb) {
+  axios.get('UploadWarranty/getOccupation?search=' + key).then(response => {
+    cb(response.data)
+  }).catch(error => {
+    console.log(error)
+  })
+}
+
 const queryOccupation = function (if_id, cb) {
   axios.get('Warranty/getSubFieldList?if_id=' + if_id).then(response => {
     cb(response.data)
@@ -141,12 +149,23 @@ const pushWarranty = function (data, cb) {
   })
 }
 
+const queryZipcode = function (code, cb) {
+  axios.get('Warranty/getZipCode?code=' + code).then(response => {
+    cb(response.data)
+  }).catch(error => {
+    console.log(error)
+  })
+}
+
 export default {
   initField,
   queryID,
   queryRegion,
+  searchOccupation,
   queryOccupation,
   queryMatters,
   querySafegoods,
-  pushWarranty
+  pushWarranty,
+  queryZipcode
 }
+

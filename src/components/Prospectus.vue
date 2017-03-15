@@ -13,7 +13,7 @@
           <input v-if="!attr" disabled v-model="insurance.pay_year" type="text" placeholder="请填写缴费期间">
           <select v-model="insurance.pay_year" v-else @change="insurance.period_money = ''">
             <option disabled>请选择</option>
-            <option v-for="item in attr" :value="item.sv_id">{{item.pay_year}}</option>
+            <option v-for="item in attr" :value="item.sv_id">{{item.pay_year == 1 ? '趸交' : item.pay_year + '年'}}</option>
           </select>
         </app-select>
         <app-select label="保险期间">
@@ -156,14 +156,12 @@ export default {
   methods: {
     cal() {
       var vm = this
-      if (!vm.checkForm()) {
-        return
-      }
-      if (vm.uploading) {
+      if (!vm.checkForm() || vm.uploading) {
         return
       }
       vm.uploading = true
       vm.$toast.open('正在计算', 'loading')
+
       let pushData = {}
       let filter = ['register_select', 'address_select', 'occupation_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
       let applicant = Object.assign({}, vm.applicant, vm.$store.state.applicant)
@@ -204,13 +202,14 @@ export default {
 
       let insurances = [vm.insurance]
       insurances.forEach(function(insurance) {
-          pushData['insurance_war_id'].push('')
-          pushData['insurance_money'].push(insurance.money)
-          pushData['insurance_pay_year'].push(insurance.pay_year)
-          pushData['insurance_safe_id'].push(insurance.safe_id)
-          pushData['insurance_safe_year'].push(insurance.safe_year)
-        })
-        // console.log(pushData)
+        pushData['insurance_war_id'].push('')
+        pushData['insurance_money'].push(insurance.money)
+        pushData['insurance_pay_year'].push(insurance.pay_year)
+        pushData['insurance_safe_id'].push(insurance.safe_id)
+        pushData['insurance_safe_year'].push(insurance.safe_year)
+      })
+
+      // console.log(pushData)
       Api.pushWarranty(qs.stringify(pushData), res => {
         vm.uploading = false
         if (res.status == 0) {
@@ -228,11 +227,12 @@ export default {
           })
           let pay_year
           vm.attr.forEach(item => {
-              if (item.sv_id == vm.insurance.pay_year) {
-                pay_year = item.pay_year
-              }
-            })
-            // 是否达到反洗钱标准
+            if (item.sv_id == vm.insurance.pay_year) {
+              pay_year = item.pay_year
+            }
+          })
+
+          // 是否达到反洗钱标准
           vm.$store.dispatch('setAntiMoney', (res.data[vm.insurance.safe_id] * pay_year >= 200000))
         }
       })

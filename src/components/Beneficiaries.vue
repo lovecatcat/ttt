@@ -92,12 +92,11 @@ export default {
       return false
     }
     let vm = this
-    let id = vm.$store.state.assured.document_number
     let type = vm.warranty.benefited_type
     if (type == 1) {
       let children = vm.$refs.child
       for (let index in children) {
-        if (children[index].beneficiary.document_number == id) {
+        if (children[index].beneficiary.document_number == vm.$store.state.assured.document_number && children[index].beneficiary.name == vm.$store.state.assured.name) {
           vm.$toast.open('受益人和被保险人不能是同一人', '')
           return false
         }

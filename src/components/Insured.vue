@@ -70,13 +70,15 @@
           <input slot="input" readonly v-model="applicant.address_select" type="text" placeholder="请在下方选择和填写" @click="clearAddress">
           <div slot="icon" v-show="applicant.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
-        <!-- 通讯地址 -->
         <app-region ref="address" v-if="init" :provinces="init.applicant.province" :label="address_selected_label" v-on:regionselect="address_selected"></app-region>
         <div class="am-list-item">
+          <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
-            <textarea v-model="applicant.address" placeholder="请填写详细通讯地址"></textarea>
+            <input v-model.trim="applicant.address" type="text" placeholder="请填写详细通讯地址">
           </div>
+          <div slot="icon" v-show="applicant.address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.address = ''"></i></div>
         </div>
+        <!-- 通讯地址 -->
       </div>
     </div>
     <div class="am-list am-list-6lb form">
@@ -136,22 +138,9 @@
           <div slot="icon" @click="warranty.is_assured_val = ''" v-show="warranty.is_assured_val != ''" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="职业">
-          <input slot="input" v-model="applicant.occupation" placeholder="请在下方选择职业" type="text" readonly @click="clearOccupation">
-          <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
+          <input slot="input" v-model="applicant.occupation" placeholder="请选择职业" type="text" readonly @click="showOccupation = true">
+          <div slot="icon" v-show="applicant.occupation" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
-        <!-- 职业 -->
-        <div class="am-list-item dropdown" v-if="init" v-show="occupation_selected_label != '重新选择'">
-          <div class="am-list-dropdown-main">
-            <div class="am-list-label tar app-color-warn">{{occupation_selected_label}}:</div>
-            <div class="am-list-control">
-              <select id="occupation" v-model="applicant.occupation_select" @change="occupation_changed">
-                <option disabled>请选择</option>
-                <option v-for="item in occupations" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-              </select>
-            </div>
-            <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
-          </div>
-        </div>
         <!-- 职业 -->
         <app-select label="合同争议处理方式">
           <select v-model="warranty.contract_handle" v-if="init">
@@ -169,12 +158,69 @@
       <router-link to="/" class="am-tab-item">上一步</router-link>
       <a @click="next" class="am-tab-item selected">下一步</a>
     </div>
+    <div class="am-dialog show app-dialog" v-show="showOccupation">
+      <div class="am-dialog-wrap">
+        <div class="am-dialog-header" slot="header">
+          <h3 slot="header">职业</h3>
+        </div>
+        <div class="am-dialog-body" slot="body">
+          <div class="am-list form">
+            <div class="am-list-header am-ft-left">选择职业</div>
+            <div class="am-list-body">
+              <div class="am-list-item">
+                <div class="am-list-label">{{occupation_selected_label}}</div>
+                <div class="am-list-control">
+                  <select id="occupation" v-model="applicant.occupation_select" @change="occupation_changed">
+                    <option disabled>请选择</option>
+                    <option v-for="item in occupations" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
+                  </select>
+                </div>
+                <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="am-search-inpage">
+            <div class="am-search-input">
+              <input class="am-search-value" v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
+              <div class="am-search-clear" @click="keyword = ''" v-show="keyword !=''">
+                <i class="am-icon-clear am-icon clear-tiny"></i>
+              </div>
+              <div class="am-search-icon" @click="queryOccupation">
+                <i class="am-icon search-inpage"></i>
+              </div>
+            </div>
+          </div>
+          <div class="am-list" v-if="OccupationResult.length">
+            <div class="am-list-header am-ft-left">搜索结果</div>
+            <div class="am-list-body">
+              <label class="am-list-item" v-for="item,index in OccupationResult" @click="selectOccupation(item)">
+                <div class="am-list-content">{{index+1}}.{{item.explain}}</div>
+              </label>
+            </div>
+          </div>
+          <div class="am-list" v-else v-show="commonOccupation.length > 0">
+            <div class="am-list-header am-ft-left">常见职业</div>
+            <div class="am-list-body">
+              <label class="am-list-item" v-for="item,index in commonOccupation" @click="selectOccupation(item)">
+                <div class="am-list-content">{{index+1}}.{{item.explain}}</div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="am-dialog-footer" slot="footer">
+          <button type="button" class="am-dialog-button" @click="showOccupation = false">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 <script>
 import Api from '../api'
 // 区域选择器
 import Region from '../components/Region'
+// import Occupation from '../components/Occupation'
 
 export default {
   name: 'Insured',
@@ -183,11 +229,15 @@ export default {
   },
   data() {
     return {
+      longTerm: false, //是否长期有效
       register_selected_label: ['请选择省'],
       address_selected_label: ['请选择省'],
-      occupation_selected_label: '请选择',
+      level: 0,
       occupations: null, //职业数据
-      longTerm: false, //是否长期有效
+      keyword: '', // 职业搜索关键词
+      showOccupation: false, //显示职业数据
+      OccupationResult: [], //搜索结果
+      commonOccupation: [], //常见职业
       // 投保人信息
       applicant: {
         register_select: '', //户籍展示
@@ -239,6 +289,10 @@ export default {
     init() {
       this.$store.state.init && (this.occupations = JSON.parse(JSON.stringify(this.$store.state.init.applicant.occupation_code)))
       return this.$store.state.init
+    },
+    occupation_selected_label() {
+      const OccupationLevel = ['一级', '二级', '三级', '四级', '五级', '六级', '七级', '八级']
+      return OccupationLevel[this.level]
     }
   },
   watch: {
@@ -327,6 +381,9 @@ export default {
           vm.applicant.appl_id && (delete vm.applicant.appl_id)
           return
         }
+        if (vm.applicant.name != res.name) {
+          return false
+        }
         var applicant = {}
         if (res.ChPro && res.ChCity && res.ChDistrict) {
           vm.address_selected_label = ['重新选择']
@@ -346,7 +403,7 @@ export default {
         applicant.weight = res.weight
         applicant.name = res.name
         if (res.occupation_code) {
-          vm.occupation_selected_label = '重新选择'
+          vm.level = 0
           applicant.occupation = res.occupation
           applicant.occupation_code = res.occupation_code
           vm.warranty.applicant_occupation_code = res.occupation_code
@@ -356,6 +413,7 @@ export default {
         applicant.visit_tel = res.visit_tel
         applicant.work_unit = res.work_unit
         applicant.zipcode = res.zipcode
+        this.$refs.address.show = false
         vm.applicant = Object.assign(vm.applicant, applicant)
       })
     },
@@ -385,9 +443,13 @@ export default {
     // 通讯地址选择
     address_selected(a, p, c, d) {
       this.applicant.address_select = a
-      this.applicant.province = p.if_id
-      this.applicant.city = c.if_id
-      this.applicant.district = d.if_id
+      p && (this.applicant.province = p.if_id)
+      c && (this.applicant.city = c.if_id)
+      d && (this.applicant.district = d.if_id)
+      var code = d.code ? d.code : c.code
+      code && Api.queryZipcode(code, response => {
+        this.applicant.zipcode = response
+      })
     },
     // 清除通讯地址
     clearAddress() {
@@ -396,7 +458,12 @@ export default {
       this.applicant.city = ''
       this.applicant.district = ''
       this.applicant.address_select = ''
-      this.address_selected_label = ['请选择省']
+      this.$refs.address.province.selected = 0
+      this.$refs.address.city.selected = 0
+      this.$refs.address.district.selected = 0
+      this.$refs.address.citys = []
+      this.$refs.address.districts = []
+      this.$refs.address.show = true
     },
     // 邮编校验
     checkZipcode() {
@@ -429,12 +496,36 @@ export default {
         this.$toast.open('电话以0开头,格式为区号+号码,如:01012345678', '')
       }
     },
+    // 搜索职业
+    queryOccupation() {
+      var vm = this
+      if (!vm.keyword) {
+        vm.$toast.open('关键词不能为空', 'warn')
+        return
+      }
+      Api.searchOccupation(vm.keyword, response => {
+        if (response.data.length > 0 && response.status === true) {
+          vm.OccupationResult = response.data
+        } else {
+          vm.$toast.open('未找到', 'warn')
+        }
+      })
+    },
+    // 选择职业
+    selectOccupation(item) {
+      this.level = 0
+      this.showOccupation = false
+      this.warranty.applicant_occupation_code = item.if_id
+      this.applicant.occupation = item.explain
+      this.applicant.occupation_code = item.if_id
+    },
     // 清除职业
     clearOccupation() {
       this.warranty.applicant_occupation_code = ''
-      this.occupation_selected_label = '请选择'
       this.applicant.occupation_select = ''
       this.occupations = JSON.parse(JSON.stringify(this.init.applicant.occupation_code))
+      this.showOccupation = true
+      this.OccupationResult = []
     },
     // 职业选择
     occupation_changed() {
@@ -451,13 +542,14 @@ export default {
       Api.queryOccupation(if_id, data => {
         this.$toast.open(null, null)
         if (data.length < 1) {
-          vm.occupation_selected_label = '重新选择'
+          vm.level = 0
+          vm.showOccupation = false
           vm.occupations = JSON.parse(JSON.stringify(vm.init.applicant.occupation_code))
           vm.warranty.applicant_occupation_code = if_id
           vm.applicant.occupation = explain
           vm.applicant.occupation_code = if_id
         } else {
-          vm.occupation_selected_label = '请继续选择'
+          vm.level += 1
           vm.occupations = data
         }
       })

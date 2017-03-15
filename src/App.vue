@@ -1,7 +1,12 @@
 <template>
   <div id="app" class="app-container">
     <keep-alive>
-      <router-view></router-view>
+      <router-view>
+        <div class="am-loading page">
+          <i class="am-icon loading" aria-hidden="true"></i>
+          <div class="am-loading-text">加载中</div>
+        </div>
+      </router-view>
     </keep-alive>
   </div>
 </template>
