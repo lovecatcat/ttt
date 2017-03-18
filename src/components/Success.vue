@@ -6,7 +6,8 @@
       <div class="am-message-sub">
         <p v-if="state == 1">自核通过，则在线进行收费；</p>
         <p v-else>自核不通过进入人工核保，则进行自动转为线下扣款</p>
-        <a class="am-page-result-button" href="./">返回首页</a>
+        <br>
+        <a class="am-page-result-button" href="//m.ehuimeng.com">返回首页</a>
       </div>
     </div>
   </div>

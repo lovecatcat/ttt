@@ -32,7 +32,7 @@
         </app-input>
         <app-select label="保单选项">
           <select v-model="warranty.delivery_way" v-if="init">
-            <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
+            <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="邮箱" v-show="warranty.delivery_way == 117">
@@ -52,7 +52,7 @@
         <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-list-control">
           <div class="am-switch">
-            <input type="checkbox" v-model="assured.social_security" class="am-switch-checkbox">
+            <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
             <label class="am-switch-label">
               <div class="am-switch-inner"></div>
               <div class="am-switch-switch"></div>
@@ -126,12 +126,17 @@ export default {
     }
   },
   created() {
+    var vm = this
     Api.querySafegoods(res => {
-      this.safegoods = res
-      this.$store.dispatch('saveSafegoods', res)
+      if (res.name && res.name.indexOf('Error') > -1) {
+        vm.$toast.open('服务器出错了', 'error')
+        return
+      }
+      vm.safegoods = res
+      vm.$store.dispatch('saveSafegoods', res)
     })
-    if (this.$store.state.warranty && this.$store.state.warranty.is_assured == 21) {
-      this.back = '/insured'
+    if (vm.$store.state.warranty && vm.$store.state.warranty.is_assured == 21) {
+      vm.back = '/insured'
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -211,6 +216,10 @@ export default {
 
       // console.log(pushData)
       Api.pushWarranty(qs.stringify(pushData), res => {
+        if (res.name && res.name.indexOf('Error') > -1) {
+          vm.$toast.open('服务器出错了', 'error')
+          return
+        }
         vm.uploading = false
         if (res.status == 0) {
           console.info(res.message)

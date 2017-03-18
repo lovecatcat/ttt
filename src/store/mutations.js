@@ -31,6 +31,7 @@ export default {
     delBeneficiary(state, val) {
       let index = state.tmp.people.indexOf(val)
       state.tmp.people.splice(index, 1)
+      state.beneficiaries.splice(index, 1)
     },
     saveBeneficiary(state, payload) {
       state.beneficiaries = decode(payload)
@@ -55,6 +56,11 @@ export default {
     },
     setResult(state, payload) {
       state.result = decode(payload)
+    },
+    setParam(state, payload) {
+      for (var index in payload) {
+        state[index] = payload[index]
+      }
     }
 }
 

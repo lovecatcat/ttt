@@ -12,27 +12,27 @@
           <input slot="input" disabled v-model.trim="warranty.applicant" type="text" placeholder="请填写户名">
         </app-input>
         <app-input label="银行账号">
-          <input slot="input" v-model="warranty.bank_account" type="text" placeholder="请填写银行账号" @change="getAccount">
+          <input slot="input" v-model="warranty.bank_account" type="text" placeholder="请填写银行账号" @change="checkAccount">
           <div slot="icon" v-show="warranty.bank_account != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="warranty.bank_account = ''"></i></div>
         </app-input>
         <app-select label="开户行">
           <select v-model="warranty.bank_name" v-if="init">
-            <option disabled>请选择开户行</option>
-            <option v-for="item in init.transferstate.bank_name" :value="item.if_id">{{item.explain}}</option>
+            <option disabled value="0">请选择开户行</option>
+            <option v-for="item in init.transferstate.bank_name" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-select label="账户类别">
           <select v-model="warranty.bank_card" v-if="init">
-            <option disabled>请选择账户类别</option>
-            <option v-for="item in init.transferstate.bank_card" :value="item.if_id">{{item.explain}}</option>
+            <option disabled value="0">请选择账户类别</option>
+            <option v-for="item in init.transferstate.bank_card" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="开户行所在地">
-          <input slot="input" disabled v-model.trim="warranty.bank_address" type="text" placeholder="请在下方选择">
+          <input slot="input" v-model.trim="warranty.bank_address" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
         <!-- 开户行所在地 -->
-        <app-region v-if="init" :level="3" :provinces="init.applicant.province" :label="bank_label" v-on:regionselect="address_selected"></app-region>
+        <app-region ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
       </div>
     </div>
     <div class="app-agreement">
@@ -67,12 +67,10 @@ export default {
   data() {
     return {
       agreement: false, //协议
-      charges: false, //是否先行收费
-      bank_label: ['请选择省'],
       warranty: {
-        applicant: '', //户名
-        bank_card: '52', //卡折标志
-        bank_name: '', //银行名称
+        applicant: this.$store.state.applicant.name, //户名
+        bank_card: '46', //卡折标志
+        bank_name: 0, //银行名称
         bank_account: '', //银行帐号
         bank_province: '', //银行省编码
         bank_city: '', //银行市编码
@@ -87,19 +85,12 @@ export default {
       return this.$store.state.init
     }
   },
-  created() {
-    this.warranty.applicant = this.$store.state.applicant.name
-  },
   beforeRouteLeave(to, from, next) {
     if (to.path == '/healthinfo') {
       next()
       return false
     }
     this.$store.commit('setWarranty', this.warranty)
-    if (this.agreement == false) {
-      this.$toast.open('请先确认阅读《转账授权声明》', 'warn')
-      return false
-    }
     this.checkForm() && next()
   },
   methods: {
@@ -109,12 +100,14 @@ export default {
         toast_text = '户名不能为空'
       } else if (!this.warranty.bank_name) {
         toast_text = '银行名称不能为空'
-      } else if (!this.warranty.bank_account) {
-        toast_text = '银行帐号不能为空'
+      } else if (!this.checkAccount()) {
+        return false
       } else if (!this.warranty.bank_province) {
         toast_text = '银行所在省份不能为空'
-      } else if (!this.warranty.bank_city && [28, 133, 141, 158].indexOf(parseInt(this.warranty.bank_province)) < 0) {
+      } else if (!this.warranty.bank_city && this.warranty.bank_province != 138) {
         toast_text = '银行所在城市不能为空'
+      } else if (this.agreement == false) {
+        toast_text = '请先确认阅读《转账授权声明》'
       }
       if (toast_text) {
         this.$toast.open(toast_text, 'warn')
@@ -123,24 +116,28 @@ export default {
       return true
     },
     clearAddress() {
-      this.bank_label = ['请选择省']
       this.warranty.bank_province = ''
       this.warranty.bank_city = ''
       this.warranty.bank_district = ''
       this.warranty.bank_address = ''
-      this.$refs.address.province.selected = 0
-      this.$refs.address.city.selected = 0
-      this.$refs.address.district.selected = 0
-      this.$refs.address.citys = []
       this.$refs.address.show = true
     },
-    address_selected(a, p, c, d) {
-      this.warranty.bank_address = a
-      this.warranty.bank_province = p.if_id
-      this.warranty.bank_city = c.if_id
-      this.warranty.bank_district = d.if_id
+    // 通讯地址选择
+    address_selected(selected) {
+      var vm = this
+      var select_show = selected[0].explain
+      vm.$set(vm.warranty, 'bank_province', selected[0].if_id)
+      if (selected[1]) {
+        select_show += selected[1].explain
+        vm.$set(vm.warranty, 'bank_city', selected[1].if_id)
+      }
+      if (selected[2]) {
+        select_show += selected[2].explain
+        vm.$set(vm.warranty, 'bank_district', selected[2].if_id)
+      }
+      vm.$set(vm.warranty, 'bank_address', select_show)
     },
-    getAccount() {
+    checkAccount() {
       var vm = this
       var number = vm.warranty.bank_account
       var toast_text = null
@@ -150,10 +147,10 @@ export default {
         toast_text = '银行卡号必须是数字'
       }
       if (toast_text) {
-        // vm.warranty.bank_name = ''
-        // vm.warranty.bank_card = ''
         vm.$toast.open(toast_text, 'warn')
+        return false
       }
+      return true
     }
   }
 }

@@ -54,7 +54,7 @@ const router = new Router({
     name: 'Beinsured',
     component: Beinsured,
     meta: {
-      docTitle: '被投保人信息'
+      docTitle: '被保险人信息'
     }
   }, {
     path: '/beneficiaries',
@@ -89,7 +89,8 @@ const router = new Router({
     name: 'Preview',
     component: Preview,
     meta: {
-      docTitle: '投保信息确认'
+      docTitle: '投保信息确认',
+      keepnew: true
     }
   }, {
     path: '/success',

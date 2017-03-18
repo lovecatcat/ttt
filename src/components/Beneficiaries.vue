@@ -24,7 +24,7 @@
     </div>
     <app-beneficiary v-show="warranty.benefited_type == 1" ref=child :key="index" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
     <div class="am-button-group" role="group" v-show="warranty.benefited_type == 1">
-      <a @click="add" class="am-button" role="button">继续添加 <span class="app-iconfont">&#xe667;</span></a>
+      <a @click="add" class="am-button" role="button"><span class="app-iconfont">&#xe667;</span> 继续添加 </a>
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
       <router-link to="/prospectus" class="am-tab-item">上一步</router-link>
@@ -34,6 +34,7 @@
 </template>
 <script>
 import Beneficiary from './Beneficiary'
+import Api from '../api'
 
 export default {
   name: 'Beneficiaries',
@@ -105,7 +106,7 @@ export default {
         }
         children[index].$emit('save')
         if (index == children.length - 1) {
-          vm.$store.commit('saveBeneficiary', JSON.parse(JSON.stringify(vm.beneficiaries)))
+          vm.$store.commit('saveBeneficiary', Api.obj2json(vm.beneficiaries))
           if (!this.checkRatio()) return
           vm.$store.commit('setWarranty', vm.warranty)
           next()

@@ -1,13 +1,21 @@
+
 'use strict'
+/*const FastClick = require('fastclick')
+FastClick.attach(document.body)*/
+
 import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
 
+// components
 import './widgets'
+
+// Toast
 import Toast from './widgets/Toast'
 Vue.use(Toast)
 
+// Dialog
 import Dialog from './widgets/Dialog'
 Vue.use(Dialog)
 
@@ -24,7 +32,7 @@ Vue.mixin({
 Vue.config.productionTip = false
 
 /* eslint-disable */
-new Vue({
+var app = new Vue({
   el: '#app',
   router,
   store,

@@ -46,7 +46,7 @@
         </app-input>
         <div class="am-list-item" v-show="!longTerm">
           <div class="am-list-control">
-            <input v-model="beneficiary.document_term" type="date" placeholder="请填写证件有效期">
+            <input :class="{'has':beneficiary.document_term != ''}" v-model="beneficiary.document_term" type="date" placeholder="请填写证件有效期">
           </div>
           <div v-show="beneficiary.document_term" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.document_term = ''"></i></div>
         </div>
@@ -62,7 +62,7 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" v-model="beneficiary.birthday" :disabled="beneficiary.document_type in [1,5]" type="date" placeholder="请填写受益人出生日期">
+          <input slot="input" :class="{'has': beneficiary.birthday != ''}" v-model="beneficiary.birthday" :disabled="beneficiary.document_type in [1,5]" type="date" placeholder="请填写受益人出生日期">
           <div slot="icon" v-show="beneficiary.birthday  && !same  && !beneficiary.document_type in [1,5]" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.birthday = ''"></i></div>
         </app-input>
         </app-input>
@@ -92,11 +92,11 @@
         <app-select label="国籍" :readonly="beneficiary.document_type != 3">
           <select v-model="beneficiary.nationality" v-if="init" :disabled="beneficiary.document_type != 3">
             <option disabled>请选择</option>
-            <option v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
+            <option v-for="type in init.applicant.nationality" :value="type.bs_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="通讯地址">
-          <input slot="input" disabled v-model.trim="beneficiary.address_select" type="text" placeholder="必填">
+          <input slot="input" v-model.trim="beneficiary.address_select" type="text" placeholder="请点击选择" @click="$refs.address.show=true">
           <template slot="icon">
             <div v-show="beneficiary.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
             <div class="am-list-button" @click="sameAddress">
@@ -105,17 +105,17 @@
           </template>
         </app-input>
         <!-- 通讯地址 -->
-        <app-region ref="address" v-if="init" :provinces="init.applicant.province" :label="address_selected_label" v-on:regionselect="address_selected"></app-region>
+        <app-region ref="address" v-on:regionselect="address_selected"></app-region>
         <!-- 通讯地址 -->
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
-            <input v-model.trim="beneficiary.address" type="text" placeholder="请填写详细通讯地址">
+            <input v-model.lazy.trim="beneficiary.address" type="text" placeholder="请填写详细通讯地址">
           </div>
           <div slot="icon" v-show="beneficiary.address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.address = ''"></i></div>
         </div>
         <app-input label="邮编">
-          <input slot="input" v-model.number="beneficiary.zipcode" type="number" @change="checkZipcode" placeholder="请填写受益人邮编">
+          <input slot="input" v-model.lazy="beneficiary.zipcode" type="text" @change="checkZipcode" placeholder="请填写受益人邮编">
           <template slot="icon">
             <div v-show="beneficiary.zipcode != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.zipcode = ''"></i></div>
             <div class="am-list-button" @click="sameZipcode">
@@ -124,7 +124,7 @@
           </template>
         </app-input>
         <app-input label="手机号码">
-          <input slot="input" @change="checkPhone" v-model.number="beneficiary.tel" type="number" placeholder="请填写受益人手机号码">
+          <input slot="input" @change="checkPhone" v-model.number.lazy="beneficiary.tel" type="number" placeholder="请填写受益人手机号码">
           <div slot="icon" v-show="beneficiary.tel != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.tel = ''"></i></div>
         </app-input>
         <app-input label="固定电话">
@@ -132,65 +132,12 @@
           <div slot="icon" v-show="beneficiary.visit_tel != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.visit_tel = ''"></i></div>
         </app-input>
         <app-input label="职业">
-          <input slot="input" v-model="beneficiary.occupation" placeholder="请选择职业" type="text" @click="showOccupation = true">
+          <input slot="input" v-model="beneficiary.occupation" placeholder="请选择职业" type="text" @click="$refs.occupation.show = true">
           <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
-      </div>
-    </div>
-    <div class="am-dialog show app-dialog" v-show="showOccupation">
-      <div class="am-dialog-wrap">
-        <div class="am-dialog-header" slot="header">
-          <h3 slot="header">职业</h3>
-        </div>
-        <div class="am-dialog-body" slot="body">
-          <div class="am-list form">
-            <div class="am-list-header am-ft-left">选择职业</div>
-            <div class="am-list-body">
-              <div class="am-list-item">
-                <div class="am-list-label">{{occupation_selected_label}}</div>
-                <div class="am-list-control">
-                  <select id="occupation" v-model="beneficiary.occupation_select" @change="occupation_changed">
-                    <option disabled>请选择</option>
-                    <option v-for="item in occupations" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-                  </select>
-                </div>
-                <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
-              </div>
-            </div>
-          </div>
-          <div class="am-search-inpage">
-            <div class="am-search-input">
-              <input class="am-search-value" v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
-              <div class="am-search-clear" @click="keyword = ''" v-show="keyword !=''">
-                <i class="am-icon-clear am-icon clear-tiny"></i>
-              </div>
-              <div class="am-search-icon" @click="queryOccupation">
-                <i class="am-icon search-inpage"></i>
-              </div>
-            </div>
-          </div>
-          <div class="am-list" v-if="OccupationResult.length">
-            <div class="am-list-header am-ft-left">搜索结果</div>
-            <div class="am-list-body">
-              <label class="am-list-item" v-for="item,index in OccupationResult" @click="selectOccupation(item)">
-                <div class="am-ft-md">{{index+1}}.{{item.explain}}</div>
-              </label>
-            </div>
-          </div>
-          <div class="am-list" v-else v-show="commonOccupation.length > 0">
-            <div class="am-list-header am-ft-left">常见职业</div>
-            <div class="am-list-body">
-              <label class="am-list-item" v-for="item,index in commonOccupation" @click="selectOccupation(item)">
-                <div class="am-list-content">{{index+1}}.{{item.explain}}</div>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="am-dialog-footer" slot="footer">
-          <button type="button" class="am-dialog-button" @click="showOccupation = false">
-            关闭
-          </button>
-        </div>
+        <!-- 职业 -->
+        <app-occupation ref="occupation"></app-occupation>
+        <!-- 职业 -->
       </div>
     </div>
   </section>
@@ -198,36 +145,26 @@
 <script>
 import Api from '../api'
 // 区域选择器
-import Region from '../components/Region'
+import Region from './Region'
+import Occupation from './Occupation'
 const IDValidator = require('id-validator')
 export default {
   name: 'Beneficiary',
   props: ['people', 'index'],
   components: {
-    'app-region': Region
+    'app-region': Region,
+    'app-occupation': Occupation
   },
   data() {
     return {
       same: false, //同受益人
-
-      register_selected_label: ['请选择省'],
-      address_selected_label: ['请选择省'],
       longTerm: false, //长期有效
-      // init: null,
-      level: 0,
-      occupations: null, //职业数据
-      keyword: '', // 职业搜索关键词
-      showOccupation: false, //显示职业数据
-      OccupationResult: [], //搜索结果
-      commonOccupation: [], //常见职业
-      // applicant: null, //投保人信息
       // 受益人信息
       beneficiary: {
         register_select: '', //户籍展示
         address_select: '', //通信展示
-        occupation_select: '', //职业展示
         name: '', //姓名
-        sex: '', //性别
+        sex: 15, //性别
         nationality: 63, //国籍
         register: '', //户籍
         birthday: '', //出生日期
@@ -271,10 +208,6 @@ export default {
     anti_money() {
       //单次投保达到反洗钱标准（年交保费*交费年期≥20万元）
       return this.$store.state.anti_money
-    },
-    occupation_selected_label() {
-      const OccupationLevel = ['一级', '二级', '三级', '四级', '五级', '六级', '七级', '八级']
-      return OccupationLevel[this.level]
     }
   },
   created() {
@@ -282,7 +215,6 @@ export default {
     vm.$on('save', function() {
       vm.$parent.beneficiaries[vm.people] = vm.beneficiary
     })
-    vm.occupations = JSON.parse(JSON.stringify(this.init.applicant.occupation_code))
   },
   watch: {
     longTerm(val) {
@@ -291,7 +223,7 @@ export default {
     same(val) {
       const vm = this
       if (val) {
-        var applicant = JSON.parse(JSON.stringify(this.$store.state.applicant))
+        var applicant = Api.obj2json(this.$store.state.applicant)
         vm.beneficiary.document_number = applicant.document_number
         vm.beneficiary.document_type = applicant.document_type
         vm.beneficiary.document_term = applicant.document_term
@@ -350,6 +282,7 @@ export default {
     },
     del() {
       this.$store.commit('delBeneficiary', this.people)
+      this.$delete(this.$parent.beneficiaries, this.people)
       this.$toast.open('删除成功', 'success')
     },
     // 检查ID是否有效
@@ -376,7 +309,7 @@ export default {
             vm.beneficiary.birthday = idInfo.birth
             vm.beneficiary.sex = sex[idInfo.sex]
             vm.beneficiary.register_select = addr[code].name
-            vm.beneficiary.register = addr[code].if_id
+            vm.beneficiary.register = addr[code].bs_id
           } else {
             toast_text = '请输入18位正确格式的身份证'
             vm.beneficiary.register_select = ''
@@ -438,13 +371,13 @@ export default {
           toast_text = '请选择' + sb + '受益人【国籍】'
         } else if (!vm.beneficiary.province) {
           toast_text = '请选择' + sb + '受益人【通讯地址省份】'
-        } else if (!vm.beneficiary.city) {
+        } else if (!vm.beneficiary.city && vm.beneficiary.province != '138') {
           toast_text = '请选择' + sb + '受益人【通讯地址市区】'
-        } else if (!vm.beneficiary.district) {
+        } else if (!vm.beneficiary.district && vm.beneficiary.province != '138' && vm.beneficiary.city != '13643') {
           toast_text = '请选择' + sb + '受益人【通讯地址县/区】'
         } else if (!vm.beneficiary.address) {
           toast_text = '请填写' + sb + '受益人【详细地址】'
-        } else if (!vm.beneficiary.zipcode) {
+        } else if (!vm.beneficiary.zipcode && !vm.checkZipcode()) {
           toast_text = '请填写' + sb + '受益人【通信邮编】'
         } else if (!vm.beneficiary.tel && !vm.beneficiary.visit_tel) {
           toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'
@@ -460,9 +393,6 @@ export default {
         console.info(toast_text)
         vm.$toast.open(toast_text, '')
         return false
-      }
-      if (vm.anti_money) {
-        return vm.IDValidate() && this.checkZipcode()
       }
       return vm.IDValidate()
     },
@@ -491,99 +421,57 @@ export default {
     },
     // 邮编校验
     checkZipcode() {
-      if (!/^[1-9]\d{5}(?!\d)$/.test(this.beneficiary.zipcode)) {
+      if (!/^[0-9]\d{5}(?!\d)$/.test(this.beneficiary.zipcode)) {
         this.$toast.open('请输入6位数字邮编', 'warn')
         return false
       }
       return true
     },
-    // 清除户籍
-    clearRegister() {
-      this.beneficiary.register = ''
-      this.beneficiary.register_select = ''
-      this.register_selected_label = ['请选择省']
-    },
     // 通讯地址选择
-    address_selected(a, p, c, d) {
-      this.beneficiary.address_select = a
-      p && (this.beneficiary.province = p.if_id)
-      c && (this.beneficiary.city = c.if_id)
-      d && (this.beneficiary.district = d.if_id)
-      var code = d.code ? d.code : c.code
-      code && Api.queryZipcode(code, response => {
-        this.beneficiary.zipcode = response
-      })
+    address_selected(selected) {
+      var vm = this
+      var select_show = ''
+      select_show += selected[0].explain
+      vm.$set(vm.beneficiary, 'province', selected[0].if_id)
+      if (selected[1]) {
+        select_show += selected[1].explain
+        vm.$set(vm.beneficiary, 'city', selected[1].if_id)
+      }
+      if (selected[2]) {
+        select_show += selected[2].explain
+        vm.$set(vm.beneficiary, 'district', selected[2].if_id)
+        Api.queryZipcode(selected[2].code, response => {
+          if (!response) {
+            Api.queryZipcode(selected[1].code, response => {
+              if (!response) return
+              vm.$set(vm.beneficiary, 'zipcode', response)
+            })
+            return
+          }
+          vm.beneficiary.zipcode = response
+        })
+      }
+      vm.$set(vm.beneficiary, 'address_select', select_show)
     },
     // 清除通讯地址
     clearAddress() {
-      this.beneficiary.address = ''
       this.beneficiary.province = ''
       this.beneficiary.city = ''
       this.beneficiary.district = ''
       this.beneficiary.address_select = ''
-      this.$refs.address.province.selected = 0
-      this.$refs.address.city.selected = 0
-      this.$refs.address.district.selected = 0
-      this.$refs.address.citys = []
-      this.$refs.address.districts = []
       this.$refs.address.show = true
     },
-    // 搜索职业
-    queryOccupation() {
-      var vm = this
-      if (!vm.keyword) {
-        vm.$toast.open('关键词不能为空', 'warn')
-        return
-      }
-      Api.searchOccupation(vm.keyword, response => {
-        if (response.data.length > 0 && response.status === true) {
-          vm.OccupationResult = response.data
-        } else {
-          vm.$toast.open('未找到', 'warn')
-        }
-      })
-    },
-    // 选择职业
-    selectOccupation(item) {
-      this.level = 0
-      this.showOccupation = false
-      this.warranty.applicant_occupation_code = item.if_id
-      this.beneficiary.occupation = item.explain
-      this.beneficiary.occupation_code = item.if_id
+    // 设置职业
+    setOccupation(selected) {
+      console.log(selected)
+      this.$set(this.beneficiary, 'occupation_code', selected.bs_id)
+      this.$set(this.beneficiary, 'occupation', selected.explain)
     },
     // 清除职业
     clearOccupation() {
-      this.beneficiary.occupation_code = ''
-      this.beneficiary.occupation_select = ''
-      this.occupations = JSON.parse(JSON.stringify(this.init.applicant.occupation_code))
-      this.showOccupation = true
-      this.OccupationResult = []
-    },
-    // 职业选择
-    occupation_changed() {
-      this.beneficiary.occupation_code = ''
-      this.beneficiary.occupation = ''
-      if (!this.beneficiary.occupation_select) return
-      const selected = this.beneficiary.occupation_select.split('|')
-      this.getOccupation(selected[2], selected[0])
-      this.$toast.open(null, 'loading')
-    },
-    // 获取地址数据
-    getOccupation(if_id, explain) {
-      const vm = this
-      Api.queryOccupation(if_id, data => {
-        vm.$toast.open(null, null)
-        if (data.length < 1) {
-          vm.level = 0
-          vm.showOccupation = false
-          vm.occupations = JSON.parse(JSON.stringify(this.init.applicant.occupation_code))
-          vm.beneficiary.occupation_code = if_id
-          vm.beneficiary.occupation = explain
-        } else {
-          vm.level += 1
-          vm.occupations = data
-        }
-      })
+      this.$set(this.beneficiary, 'occupation_code', '')
+      this.$set(this.beneficiary, 'occupation', '')
+      this.$refs.occupation.show = true
     }
   }
 }

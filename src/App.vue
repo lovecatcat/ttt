@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="app-container">
+    <router-view v-if="$route.meta.keepnew">
+    </router-view>
     <keep-alive>
-      <router-view>
+      <router-view v-if="!$route.meta.keepnew">
         <div class="am-loading page">
           <i class="am-icon loading" aria-hidden="true"></i>
           <div class="am-loading-text">加载中</div>

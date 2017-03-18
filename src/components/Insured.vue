@@ -3,8 +3,8 @@
     <div class="am-list am-list-6lb form">
       <div class="app-list-header"><span class="app-iconfont">&#xe631;</span>投保人信息</div>
       <div class="am-list-body">
-        <app-input label="姓名" require="true">
-          <input slot="input" v-model.lazy.trim="applicant.name" type="text" placeholder="请填写投保人姓名">
+        <app-input label="姓名">
+          <input slot="input" v-model.lazy.trim="applicant.name" type="text" placeholder="请填写投保人姓名" @change="setInfo">
           <div slot="icon" v-show="applicant.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
@@ -30,15 +30,16 @@
           </div>
         </app-input>
         <div class="am-list-item" v-show="!longTerm">
+          <div class="am-list-label tar app-color-warn">有效日期</div>
           <div class="am-list-control">
-            <input :readonly="longTerm" v-model="applicant.document_term" type="date" placeholder="请填写证件有效期">
+            <input :class="{'has': applicant.document_term != ''}" :readonly="longTerm" v-model="applicant.document_term" type="date" placeholder="请填写证件有效期">
           </div>
           <div v-show="applicant.document_term" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.document_term = ''"></i></div>
         </div>
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" class="am-switch-checkbox" for="sex" :disabled="applicant.document_type == 1 || applicant.document_type == 5" v-model="applicant.sex" :true-value="15" :false-value="16">
+              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" for="sex" :disabled="applicant.document_type == 1 || applicant.document_type == 5" v-model="applicant.sex" :true-value="15" :false-value="16">
               <label class="am-switch-label" for="sex">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -47,7 +48,7 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" :readonly="applicant.document_type == 1 || applicant.document_type == 5" v-model="applicant.birthday" type="date" placeholder="请填写投保人出生日期">
+          <input slot="input" @change="setInfo" :class="{'has': applicant.birthday != ''}" :readonly="applicant.document_type == 1 || applicant.document_type == 5" v-model="applicant.birthday" type="date" placeholder="请填写投保人出生日期">
           <div slot="icon" v-if="applicant.document_type != 1 && applicant.document_type != 5" v-show="applicant.birthday" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.birthday = ''"></i></div>
         </app-input>
       </div>
@@ -57,20 +58,20 @@
         <app-select label="国籍" :readonly="applicant.document_type != 3">
           <select v-model="applicant.nationality" v-if="init" :disabled="applicant.document_type != 3">
             <option disabled>请选择国籍</option>
-            <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
+            <option v-for="item in init.applicant.nationality" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="户籍">
-          <input slot="input" readonly v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍" @click="clearRegister">
+          <input slot="input" readonly v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍" @click="$refs.register.show = true">
           <div slot="icon" v-show="applicant.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
+        <app-region v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
         <!-- 户籍 -->
-        <app-region v-if="init" v-show="!applicant.register" :level="1" :label="register_selected_label" :provinces="init.applicant.province" v-on:regionselect="register_selected"></app-region>
         <app-input label="通讯地址">
-          <input slot="input" readonly v-model="applicant.address_select" type="text" placeholder="请在下方选择和填写" @click="clearAddress">
+          <input slot="input" readonly v-model="applicant.address_select" type="text" placeholder="请点击进行选择" @click="$refs.address.show = true">
           <div slot="icon" v-show="applicant.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
-        <app-region ref="address" v-if="init" :provinces="init.applicant.province" :label="address_selected_label" v-on:regionselect="address_selected"></app-region>
+        <app-region v-on:regionselect="address_selected" ref="address"></app-region>
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -84,7 +85,7 @@
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
         <app-input label="邮编">
-          <input slot="input" @change="checkZipcode" maxlength="6" v-model.lazy.number="applicant.zipcode" type="number" placeholder="请填写投保人邮编">
+          <input slot="input" @change="checkZipcode" maxlength="6" v-model.lazy="applicant.zipcode" type="text" placeholder="请填写投保人邮编">
           <div slot="icon" v-show="applicant.zipcode != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.zipcode = ''"></i></div>
         </app-input>
         <app-input label="手机号码">
@@ -105,7 +106,7 @@
         </app-input>
         <app-select label="收入来源">
           <select v-model.number="applicant.annual_source">
-            <option disabled>请选择收入来源</option>
+            <option disabled value="0">请选择收入来源</option>
             <option value="1">工薪</option>
             <option value="2">个体</option>
             <option value="3">私营</option>
@@ -138,14 +139,16 @@
           <div slot="icon" @click="warranty.is_assured_val = ''" v-show="warranty.is_assured_val != ''" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="职业">
-          <input slot="input" v-model="applicant.occupation" placeholder="请选择职业" type="text" readonly @click="showOccupation = true">
-          <div slot="icon" v-show="applicant.occupation" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
+          <input slot="input" v-model="applicant.occupation" placeholder="请选择职业" type="text" readonly @click="$refs.occupation.show = true">
+          <div slot="icon" v-show="applicant.occupation" @click="clearOccupation" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
+        <!-- 职业 -->
+        <app-occupation ref="occupation"></app-occupation>
         <!-- 职业 -->
         <app-select label="合同争议处理方式">
           <select v-model="warranty.contract_handle" v-if="init">
             <option disabled>请选择</option>
-            <option v-for="item in init.warranty.contract_handle" :value="item.if_id">{{item.explain}}</option>
+            <option v-for="item in init.warranty.contract_handle" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="仲裁委员会" v-show="warranty.contract_handle == 109">
@@ -158,91 +161,28 @@
       <router-link to="/" class="am-tab-item">上一步</router-link>
       <a @click="next" class="am-tab-item selected">下一步</a>
     </div>
-    <div class="am-dialog show app-dialog" v-show="showOccupation">
-      <div class="am-dialog-wrap">
-        <div class="am-dialog-header" slot="header">
-          <h3 slot="header">职业</h3>
-        </div>
-        <div class="am-dialog-body" slot="body">
-          <div class="am-list form">
-            <div class="am-list-header am-ft-left">选择职业</div>
-            <div class="am-list-body">
-              <div class="am-list-item">
-                <div class="am-list-label">{{occupation_selected_label}}</div>
-                <div class="am-list-control">
-                  <select id="occupation" v-model="applicant.occupation_select" @change="occupation_changed">
-                    <option disabled>请选择</option>
-                    <option v-for="item in occupations" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-                  </select>
-                </div>
-                <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
-              </div>
-            </div>
-          </div>
-          <div class="am-search-inpage">
-            <div class="am-search-input">
-              <input class="am-search-value" v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
-              <div class="am-search-clear" @click="keyword = ''" v-show="keyword !=''">
-                <i class="am-icon-clear am-icon clear-tiny"></i>
-              </div>
-              <div class="am-search-icon" @click="queryOccupation">
-                <i class="am-icon search-inpage"></i>
-              </div>
-            </div>
-          </div>
-          <div class="am-list" v-if="OccupationResult.length">
-            <div class="am-list-header am-ft-left">搜索结果</div>
-            <div class="am-list-body">
-              <label class="am-list-item" v-for="item,index in OccupationResult" @click="selectOccupation(item)">
-                <div class="am-list-content">{{index+1}}.{{item.explain}}</div>
-              </label>
-            </div>
-          </div>
-          <div class="am-list" v-else v-show="commonOccupation.length > 0">
-            <div class="am-list-header am-ft-left">常见职业</div>
-            <div class="am-list-body">
-              <label class="am-list-item" v-for="item,index in commonOccupation" @click="selectOccupation(item)">
-                <div class="am-list-content">{{index+1}}.{{item.explain}}</div>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="am-dialog-footer" slot="footer">
-          <button type="button" class="am-dialog-button" @click="showOccupation = false">
-            关闭
-          </button>
-        </div>
-      </div>
-    </div>
   </section>
 </template>
 <script>
 import Api from '../api'
 // 区域选择器
-import Region from '../components/Region'
-// import Occupation from '../components/Occupation'
+import Region from './Region'
+import Occupation from './Occupation'
 
 export default {
   name: 'Insured',
   components: {
-    'app-region': Region
+    'app-region': Region,
+    'app-occupation': Occupation
   },
   data() {
     return {
       longTerm: false, //是否长期有效
-      register_selected_label: ['请选择省'],
-      address_selected_label: ['请选择省'],
-      level: 0,
-      occupations: null, //职业数据
-      keyword: '', // 职业搜索关键词
-      showOccupation: false, //显示职业数据
-      OccupationResult: [], //搜索结果
-      commonOccupation: [], //常见职业
+      cardinfo: {}, //身份证信息
       // 投保人信息
       applicant: {
         register_select: '', //户籍展示
         address_select: '', //通信展示
-        occupation_select: '', //职业展示
         name: '', //姓名
         sex: 15, //性别
         height: '', //身高(厘米)
@@ -250,7 +190,7 @@ export default {
         nationality: 63, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
-        annual_source: '', //收入来源
+        annual_source: 0, //收入来源
         annual_source_other: '', //其他收入来源
         birthday: '', //出生日期
         // 证件
@@ -287,12 +227,7 @@ export default {
   },
   computed: {
     init() {
-      this.$store.state.init && (this.occupations = JSON.parse(JSON.stringify(this.$store.state.init.applicant.occupation_code)))
       return this.$store.state.init
-    },
-    occupation_selected_label() {
-      const OccupationLevel = ['一级', '二级', '三级', '四级', '五级', '六级', '七级', '八级']
-      return OccupationLevel[this.level]
     }
   },
   watch: {
@@ -336,7 +271,7 @@ export default {
             vm.applicant.birthday = idInfo.birth
             vm.applicant.sex = sex[idInfo.sex]
             vm.applicant.register_select = addr[code].name
-            vm.applicant.register = addr[code].if_id
+            vm.applicant.register = addr[code].bs_id
 
             return this.checkAge()
           } else {
@@ -377,45 +312,55 @@ export default {
       const vm = this
       const id = vm.applicant.document_number
       Api.queryID(id, 'applicant', res => {
-        if (!res) {
-          vm.applicant.appl_id && (delete vm.applicant.appl_id)
+        if (res.name && res.name.indexOf('Error') > -1) {
+          vm.$toast.open('服务器出错了', 'error')
           return
         }
-        if (vm.applicant.name != res.name) {
+
+        // 不存在 appl_id
+        if (!res.appl_id) {
+          vm.applicant.appl_id && vm.$delete(vm.applicant, 'appl_id')
           return false
         }
-        var applicant = {}
-        if (res.ChPro && res.ChCity && res.ChDistrict) {
-          vm.address_selected_label = ['重新选择']
-          applicant.province = res.province
-          applicant.city = res.city
-          applicant.district = res.district
-          applicant.address = res.address
-          applicant.address_select = res.ChPro + res.ChCity + res.ChDistrict
-        }
-        applicant.annual_earnings = res.annual_earnings
-        applicant.annual_source = res.annual_source
-        applicant.annual_source_other = res.annual_source_other
-        applicant.appl_id = res.appl_id
-        applicant.document_term = res.document_term
-        if (res.document_term == '9999-12-30') this.longTerm = true
-        applicant.height = res.height
-        applicant.weight = res.weight
-        applicant.name = res.name
-        if (res.occupation_code) {
-          vm.level = 0
-          applicant.occupation = res.occupation
-          applicant.occupation_code = res.occupation_code
-          vm.warranty.applicant_occupation_code = res.occupation_code
-        }
-        applicant.register = res.register
-        applicant.tel = res.tel
-        applicant.visit_tel = res.visit_tel
-        applicant.work_unit = res.work_unit
-        applicant.zipcode = res.zipcode
-        this.$refs.address.show = false
-        vm.applicant = Object.assign(vm.applicant, applicant)
+        vm.cardinfo = res
+        vm.$set(vm.applicant, 'appl_id', res.appl_id)
+        vm.setInfo()
       })
+    },
+    setInfo() {
+      var vm = this
+      var res = vm.cardinfo
+        // 是否同人
+      if (vm.applicant.name != res.name || vm.applicant.document_type != res.document_type || vm.applicant.document_number != res.document_number || vm.applicant.birthday != res.birthday || vm.applicant.sex != res.sex) {
+        return
+      }
+      var applicant = {}
+      if (res.ChPro && res.ChCity && res.ChDistrict) {
+        applicant.province = res.province
+        applicant.city = res.city
+        applicant.district = res.district
+        applicant.address = res.address
+        applicant.address_select = res.ChPro + res.ChCity + res.ChDistrict
+      }
+      applicant.annual_earnings = res.annual_earnings
+      applicant.annual_source = res.annual_source
+      applicant.annual_source_other = res.annual_source_other
+      applicant.document_term = res.document_term
+      if (res.document_term == '9999-12-30') vm.longTerm = true
+      applicant.height = res.height
+      applicant.weight = res.weight
+      applicant.name = res.name
+      if (res.occupation_code) {
+        applicant.occupation = res.occupation
+        applicant.occupation_code = res.occupation_code
+        vm.warranty.applicant_occupation_code = res.occupation_code
+      }
+      applicant.register = res.register
+      applicant.tel = res.tel
+      applicant.visit_tel = res.visit_tel
+      applicant.work_unit = res.work_unit
+      applicant.zipcode = res.zipcode
+      vm.applicant = Object.assign(vm.applicant, applicant)
     },
     // 年龄验证
     checkAge() {
@@ -430,44 +375,53 @@ export default {
       return true
     },
     // 户籍选择
-    register_selected(a, p, c, d) {
-      this.applicant.register = p.if_id
-      this.applicant.register_select = a
+    register_selected(selected) {
+      this.$set(this.applicant, 'register', selected[0].if_id)
+      this.$set(this.applicant, 'register_select', selected[0].explain)
     },
     // 清除户籍
     clearRegister() {
       this.applicant.register = ''
       this.applicant.register_select = ''
-      this.register_selected_label = ['请选择省']
+      this.$refs.register.show = true
     },
     // 通讯地址选择
-    address_selected(a, p, c, d) {
-      this.applicant.address_select = a
-      p && (this.applicant.province = p.if_id)
-      c && (this.applicant.city = c.if_id)
-      d && (this.applicant.district = d.if_id)
-      var code = d.code ? d.code : c.code
-      code && Api.queryZipcode(code, response => {
-        this.applicant.zipcode = response
-      })
+    address_selected(selected) {
+      var vm = this
+      var select_show = ''
+      select_show += selected[0].explain
+      vm.$set(vm.applicant, 'province', selected[0].if_id)
+      if (selected[1]) {
+        select_show += selected[1].explain
+        vm.$set(vm.applicant, 'city', selected[1].if_id)
+      }
+      if (selected[2]) {
+        select_show += selected[2].explain
+        vm.$set(vm.applicant, 'district', selected[2].if_id)
+        Api.queryZipcode(selected[2].code, response => {
+          if (!response) {
+            Api.queryZipcode(selected[1].code, response => {
+              if (!response) return
+              vm.$set(vm.applicant, 'zipcode', response)
+            })
+            return
+          }
+          vm.applicant.zipcode = response
+        })
+      }
+      vm.$set(vm.applicant, 'address_select', select_show)
     },
     // 清除通讯地址
     clearAddress() {
-      this.applicant.address = ''
       this.applicant.province = ''
       this.applicant.city = ''
       this.applicant.district = ''
       this.applicant.address_select = ''
-      this.$refs.address.province.selected = 0
-      this.$refs.address.city.selected = 0
-      this.$refs.address.district.selected = 0
-      this.$refs.address.citys = []
-      this.$refs.address.districts = []
       this.$refs.address.show = true
     },
     // 邮编校验
     checkZipcode() {
-      if (!/^[1-9]\d{5}(?!\d)$/.test(this.applicant.zipcode)) {
+      if (!/^[0-9]\d{5}(?!\d)$/.test(this.applicant.zipcode)) {
         this.$toast.open('请输入6位数字邮编', 'warn')
         return false
       }
@@ -496,63 +450,18 @@ export default {
         this.$toast.open('电话以0开头,格式为区号+号码,如:01012345678', '')
       }
     },
-    // 搜索职业
-    queryOccupation() {
-      var vm = this
-      if (!vm.keyword) {
-        vm.$toast.open('关键词不能为空', 'warn')
-        return
-      }
-      Api.searchOccupation(vm.keyword, response => {
-        if (response.data.length > 0 && response.status === true) {
-          vm.OccupationResult = response.data
-        } else {
-          vm.$toast.open('未找到', 'warn')
-        }
-      })
-    },
-    // 选择职业
-    selectOccupation(item) {
-      this.level = 0
-      this.showOccupation = false
-      this.warranty.applicant_occupation_code = item.if_id
-      this.applicant.occupation = item.explain
-      this.applicant.occupation_code = item.if_id
+    // 设置职业
+    setOccupation(selected) {
+      this.$set(this.warranty, 'applicant_occupation_code', selected.bs_id)
+      this.$set(this.applicant, 'occupation_code', selected.bs_id)
+      this.$set(this.applicant, 'occupation', selected.explain)
     },
     // 清除职业
     clearOccupation() {
-      this.warranty.applicant_occupation_code = ''
-      this.applicant.occupation_select = ''
-      this.occupations = JSON.parse(JSON.stringify(this.init.applicant.occupation_code))
-      this.showOccupation = true
-      this.OccupationResult = []
-    },
-    // 职业选择
-    occupation_changed() {
-      this.warranty.applicant_occupation_code = ''
-      this.applicant.occupation = ''
-      if (!this.applicant.occupation_select) return
-      const selected = this.applicant.occupation_select.split('|')
-      this.getOccupation(selected[2], selected[0])
-      this.$toast.open(null, 'loading')
-    },
-    // 获取地址数据
-    getOccupation(if_id, explain) {
-      const vm = this
-      Api.queryOccupation(if_id, data => {
-        this.$toast.open(null, null)
-        if (data.length < 1) {
-          vm.level = 0
-          vm.showOccupation = false
-          vm.occupations = JSON.parse(JSON.stringify(vm.init.applicant.occupation_code))
-          vm.warranty.applicant_occupation_code = if_id
-          vm.applicant.occupation = explain
-          vm.applicant.occupation_code = if_id
-        } else {
-          vm.level += 1
-          vm.occupations = data
-        }
-      })
+      this.$set(this.warranty, 'applicant_occupation_code', '')
+      this.$set(this.applicant, 'occupation_code', '')
+      this.$set(this.applicant, 'occupation', '')
+      this.$refs.occupation.show = true
     },
     // 校验表单
     checkForm() {
@@ -568,24 +477,28 @@ export default {
         toast_text = '请选择投保人【性别】'
       } else if (!vm.applicant.birthday) {
         toast_text = '请选择投保人【出生日期】'
+      } else if (!this.checkAge()) {
+        return false
       } else if (!vm.applicant.nationality) {
         toast_text = '请选择投保人【国籍】'
       } else if (!vm.applicant.register) {
         toast_text = '请选择投保人【户籍】'
       } else if (!vm.applicant.province) {
         toast_text = '请选择投保人【通讯地址省份】'
-      } else if (!vm.applicant.city) {
+      } else if (!vm.applicant.city && vm.applicant.province != '138') {
         toast_text = '请选择投保人【通讯地址市区】'
-      } else if (!vm.applicant.district) {
+      } else if (!vm.applicant.district && vm.applicant.province != '138' && vm.applicant.city != '13643') {
         toast_text = '请选择投保人【通讯地址县/区】'
       } else if (!vm.applicant.address) {
         toast_text = '请填写投保人【详细地址】'
       } else if (!vm.applicant.zipcode) {
         toast_text = '请填写投保人【通信邮编】'
+      } else if (!this.checkZipcode()) {
+        return false
       } else if (!vm.applicant.tel) {
         toast_text = '请填写投保人【手机号码】'
-          /*      } else if (!vm.applicant.work_unit) {
-                  toast_text = '请填写投保人【工作单位】'*/
+      } else if (!this.checkPhone()) {
+        return false
       } else if (!vm.applicant.annual_earnings) {
         toast_text = '请填写投保人【年收入】'
       } else if (!vm.applicant.annual_earnings) {
@@ -610,7 +523,7 @@ export default {
         this.$toast.open(toast_text, '')
         return false
       }
-      return this.checkPhone() && this.IDValidate() && this.checkAge() && this.checkZipcode()
+      return true
     },
     next() {
       if (!this.checkForm()) {
@@ -642,3 +555,15 @@ export default {
   }
 }
 </script>
+<style>
+input[type="date"]:before,
+input[type="month"]:before {
+  color: #999;
+  content: attr(placeholder);
+}
+
+input[type="date"].has:before,
+input[type="month"].has:before {
+  content: "" !important;
+}
+</style>

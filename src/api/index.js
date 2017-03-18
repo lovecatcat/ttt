@@ -1,16 +1,18 @@
+import axios from 'axios'
 /**
  * env 环境变量
  * 开发环境: development
  * 生产环境: production
  * @type {String}
  */
-const env = location.port == '80801' ? 'development' : 'production'
-  // 保险公司ID
+// const env = location.port == '80801' ? 'development' : 'production'
+// 保险公司ID
 const SCID = 19
 
 // http数据交互插件
-import axios from 'axios'
-axios.defaults.baseURL = env == 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
+axios.defaults.baseURL = 'http://cloud.ehuimeng.com/'
+
+// axios.defaults.baseURL = env == 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
 
 const initField = function (cb) {
   axios.get('Warranty/initWarField?sc_id=' + SCID).then(response => {
@@ -59,8 +61,8 @@ const initField = function (cb) {
             res.assured.sex = citem.children
           } else if (citem.a_id == 10) { //职业代码
             res.assured.occupation_code = citem.children
-              // } else if (citem.a_id == 46) { //社保（含新农合）
-              //   res.assured.social_security = citem.children
+          } else if (citem.a_id == 46) { //社保（含新农合）
+            res.assured.social_security = citem.children
           }
         })
       } else if (item.name == 'beneficiary') {
@@ -85,6 +87,7 @@ const initField = function (cb) {
     })
     cb(res)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -97,6 +100,7 @@ const queryID = function (id, tb, cb) {
     }
     cb(res)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -105,6 +109,7 @@ const queryRegion = function (mode, code, cb) {
   axios.get('Warranty/getAreaList?mode=' + mode + '&code=' + code).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -113,6 +118,7 @@ const searchOccupation = function (key, cb) {
   axios.get('UploadWarranty/getOccupation?search=' + key).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -121,6 +127,7 @@ const queryOccupation = function (if_id, cb) {
   axios.get('Warranty/getSubFieldList?if_id=' + if_id).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -129,6 +136,7 @@ const queryMatters = function (cb) {
   axios.get('Warranty/getClientmatterList?sc_id=' + SCID).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -137,6 +145,7 @@ const querySafegoods = function (cb) {
   axios.get('Warranty/getSafegoodsList?sc_id=' + SCID).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -145,6 +154,7 @@ const pushWarranty = function (data, cb) {
   axios.post('Warranty/pushWarranty', data).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
 }
@@ -153,8 +163,13 @@ const queryZipcode = function (code, cb) {
   axios.get('Warranty/getZipCode?code=' + code).then(response => {
     cb(response.data)
   }).catch(error => {
+    cb(error)
     console.log(error)
   })
+}
+
+const obj2json = function (obj) {
+  return JSON.parse(JSON.stringify(obj))
 }
 
 export default {
@@ -166,6 +181,7 @@ export default {
   queryMatters,
   querySafegoods,
   pushWarranty,
-  queryZipcode
+  queryZipcode,
+  obj2json
 }
 

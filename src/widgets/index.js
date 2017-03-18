@@ -19,7 +19,11 @@ Vue.component('app-dialog', AppDialog)
 Vue.component('app-input', Input)
 Vue.component('app-select', Select)
 Vue.component('app-dropdown', Dropdown)
-  // Vue.component('app-accupation', Occupation)
+
+// Picker
+require('mint-picker/lib/index.css');
+import Picker from 'mint-picker';
+Vue.component('mt-picker', Picker);
 
 ///////////
 // 日期格式化 //

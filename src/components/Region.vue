@@ -1,34 +1,17 @@
 <template>
-  <div class="am-list-item dropdown" v-show="show">
-    <div class="am-list-dropdown-main">
-      <div class="am-list-label tar app-color-warn">请选择省</div>
-      <div class="am-list-control">
-        <select v-if="provinces" v-model="province.selected" @change="province_changed">
-          <option disabled value="0">请选择</option>
-          <option v-if="item.code.substr(2,4) == '0000'" v-for="item in provinces" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-        </select>
+  <div class="mobileSelect" :class="{'mobileSelect-show':show}">
+    <div class="grayLayer"></div>
+    <div class="content">
+      <div class="btnBar">
+        <div class="fixWidth">
+          <div class="cancel" @click="close">取消</div>
+          <div class="title"></div>
+          <div class="ensure" @click="ok">选择</div>
+        </div>
       </div>
-      <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
-    </div>
-    <div class="am-list-dropdown-main" v-if="goon >= 2">
-      <div class="am-list-label tar app-color-warn">请选择市</div>
-      <div class="am-list-control">
-        <select v-model="city.selected" @change="city_changed">
-          <option disabled value="0">请选择</option>
-          <option v-if="item.code.substr(4,2) == '00'" v-for="item in citys" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-        </select>
+      <div class="panel">
+        <mt-picker :slots="addressSlots" @change="addrChange" :visible-item-count="5"></mt-picker>
       </div>
-      <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
-    </div>
-    <div class="am-list-dropdown-main" v-if="goon >= 3">
-      <div class="am-list-label tar app-color-warn">请选择县/区</div>
-      <div class="am-list-control">
-        <select v-model="district.selected" @change="district_changed">
-          <option disabled value="0">请选择</option>
-          <option v-for="item in districts" :value="item.explain+'|'+item.code+'|'+item.if_id">{{item.explain}}</option>
-        </select>
-      </div>
-      <div class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
     </div>
   </div>
 </template>
@@ -37,141 +20,173 @@ import Api from '../api'
 
 export default {
   name: 'region',
-  props: ['provinces', 'label', 'level'],
+  props: {
+    level: {
+      type: Number,
+      default: 3
+    }
+  },
   data() {
+    var provinces = Api.obj2json(this.$store.state.init.applicant.province)
+    provinces.unshift({
+      code: "",
+      explain: "请选择省份"
+    })
+    var level3 = [{
+      flex: 1,
+      values: provinces,
+      className: 'slot1',
+      textAlign: 'center'
+    }, {
+      divider: true,
+      content: '-',
+      className: 'slot2'
+    }, {
+      flex: 1,
+      className: 'slot3',
+      textAlign: 'center'
+    }, {
+      divider: true,
+      content: '-',
+      className: 'slot4'
+    }, {
+      flex: 1,
+      className: 'slot5',
+      textAlign: 'center'
+    }]
+    var level2 = [{
+      flex: 1,
+      values: provinces,
+      className: 'slot1',
+      textAlign: 'center'
+    }, {
+      divider: true,
+      content: '-',
+      className: 'slot2'
+    }, {
+      flex: 1,
+      className: 'slot3',
+      textAlign: 'center'
+    }]
+    var level1 = [{
+      flex: 1,
+      values: provinces,
+      className: 'slot1',
+      textAlign: 'center'
+    }]
+    let Slots
+    switch (this.level) {
+      case 1:
+        Slots = level1
+        break;
+      case 2:
+        Slots = level2
+        break;
+      case 3:
+        Slots = level3
+        break;
+    }
     return {
-      province: {
-        selected: 0,
-        field: '',
-        code: '',
-        if_id: ''
-      },
-      city: {
-        selected: 0,
-        field: '',
-        code: '',
-        if_id: ''
-      },
-      district: {
-        selected: 0,
-        field: '',
-        code: '',
-        if_id: ''
-      },
-      show: true,
-      citys: [],
-      districts: [],
-      selects: []
+      show: false,
+      provinces: provinces,
+      addressSlots: Slots,
+      seleted: []
     }
   },
   computed: {
-    goon() {
-      return this.level || '3'
-    }
-  },
-  watch: {
-    selects: {
-      handler(val) {
-        console.info('the selected is', val)
-        this.$emit('regionselect', this.selects, this.province, this.city, this.district)
-      },
-      deep: true
+    cities() {
+      return Api.obj2json(this.$store.state.cities)
     },
-    label: {
-      handler(val) {
-        console.info(val[0], 'label updated at', new Date())
-        this.resetSelect()
-      }
+    districts() {
+      return Api.obj2json(this.$store.state.districts)
     }
   },
   methods: {
-    resetSelect() {
-      console.info('selected reseted at', new Date())
-        // 重置省份
-      this.province = {
-        selected: '',
-        field: '',
-        code: '',
-        if_id: ''
+    addrChange(picker, values) {
+      var vm = this
+      vm.seleted = []
+      if (vm.level > 1) {
+        if (typeof vm.cities[values[0].code] == 'object') {
+          picker.setSlotValues(1, vm.cities[values[0].code])
+        } else if (values[0].code) {
+          Api.queryRegion('city', values[0].code, res => {
+            if (res.name && res.name.indexOf('Error') > -1) {
+              vm.$toast.open('服务器出错了', 'error')
+              return
+            }
+            if (res.length > 0) {
+              vm.cities[values[0].code] = res
+              picker.setSlotValues(1, res)
+            } else {
+              vm.cities[values[0].code] = []
+              picker.setSlotValues(1, [])
+              picker.setSlotValues(2, [])
+            }
+          })
+        } else {
+          picker.setSlotValues(1, [])
+          picker.setSlotValues(2, [])
+        }
       }
-      this.city = {
-        selected: '',
-        field: '',
-        code: '',
-        if_id: ''
-      }
-      this.district = {
-        selected: '',
-        field: '',
-        code: '',
-        if_id: ''
-      }
-      this.selected = ''
-    },
-    province_changed() {
-      if (!this.province.selected) return
-      const selected = this.province.selected.split('|')
-      this.province.field = selected[0]
-      this.province.code = selected[1]
-      this.province.if_id = selected[2]
-      this.city.field = ''
-      this.district.field = ''
 
-      this.selects = selected[0]
-      // , '810000', '820000'
-      if (this.goon < 3 && ['110000', '120000', '310000', '500000'].indexOf(selected[1]) >= 0) {
-        this.show = false
-        return
+      if (vm.level > 2) {
+        if (values[1] && values[1].code) {
+          if (typeof vm.districts[values[1].code] == 'object') {
+            picker.setSlotValues(2, vm.districts[values[1].code])
+          } else {
+            values[1].code && Api.queryRegion('district', values[1].code, res => {
+              if (res.name && res.name.indexOf('Error') > -1) {
+                vm.$toast.open('服务器出错了', 'error')
+                return
+              }
+              if (res.length > 0) {
+                vm.districts[values[1].code] = res
+                picker.setSlotValues(2, res)
+              } else {
+                vm.districts[values[1].code] = []
+                picker.setSlotValues(2, [])
+              }
+            })
+          }
+        } else {
+          picker.setSlotValues(2, [])
+        }
       }
-      if (this.goon > 1 && selected[1].substr(2, 4) == '0000') {
-        this.getRegion('city', this.province.code);
-      } else {
-        this.show = false
+      switch (vm.level) {
+        case 1:
+          vm.seleted.push(values[0])
+          break;
+        case 2:
+          vm.seleted.push(values[0])
+          vm.seleted.push(values[1])
+          break;
+        case 3:
+        default:
+          vm.seleted.push(values[0])
+          vm.seleted.push(values[1])
+          vm.seleted.push(values[2])
+          break;
       }
     },
-    city_changed() {
-      if (!this.city.selected) return
-      const selected = this.city.selected.split('|');
-      this.city.field = selected[0]
-      this.city.code = selected[1]
-      this.city.if_id = selected[2]
-      this.district.field = ''
-
-      this.selects = this.province.field + " " + selected[0]
-      if (this.goon > 2) {
-        this.getRegion('district', this.city.code);
-      } else {
-        this.show = false
+    close() {
+      if (!this.seleted) {
+        this.$toast.open('请先选择区域', 'warn')
+        return false
       }
-    },
-    district_changed() {
-      if (!this.district.selected) return
-      const selected = this.district.selected.split('|');
-      this.district.field = selected[0]
-      this.district.code = selected[1]
-      this.district.if_id = selected[2]
-
       this.show = false
-      if (this.city.field == selected[0]) {
-        this.selects = this.province.field + " " + this.city.field
+    },
+    ok() {
+      if (this.seleted.length < 0) {
+        this.$toast.open('请稍等', '')
         return
       }
-      this.selects = this.province.field + " " + this.city.field + " " + selected[0]
-    },
-    getRegion(mode, code) {
-      const vm = this
-      Api.queryRegion(mode, code, res => {
-        if (res.length < 1) {
-          vm.show = false
-          vm.$forceUpdate() // 不知为何需要强制更新
-          return
-        }
-        if (mode == 'city') {
-          vm.citys = res
-        } else if (mode == 'district') {
-          vm.districts = res
-        }
+      this.$emit('regionselect', this.seleted)
+      this.selected = []
+      this.level > 1 && this.$store.commit('setParam', {
+        districts: this.districts,
+        cities: this.cities
       })
+      this.close()
     }
   }
 }

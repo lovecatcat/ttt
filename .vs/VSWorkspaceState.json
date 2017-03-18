@@ -2,11 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\build",
+    "\\src",
     "\\src\\components",
     "\\src\\router",
     "\\src\\store",
     "\\src\\widgets"
   ],
-  "SelectedNode": "\\build\\build.js",
+  "SelectedNode": "\\src\\components\\Healthinfo.vue",
   "PreviewInSolutionExplorer": false
 }

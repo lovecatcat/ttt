@@ -77,13 +77,13 @@ export default {
                 </label>
               </div>
             </div>
-            <app-input :label="item.title" v-if="item.type=='date'">
-              <input slot="input" v-model="item.input" type="month" placeholder="请选择时间">
-              <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
+            <app-input :label="item.title" v-else-if="item.type=='date'">
+              <input slot="input" :class="{'has':item.input != ''}" v-model="item.input" type="month" placeholder="请选择时间">
+              <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
             </app-input>
-            <app-input :label="item.title" v-if="item.type=='text'">
+            <app-input :label="item.title" v-else-if="item.type=='text'">
               <input slot="input" v-model="item.input" type="text" placeholder="必填">
-              <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
+              <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
             </app-input>
           </template>
           <div class="am-button-group">
@@ -104,6 +104,7 @@ export default {
           this.show = false
           this.$parent.showPup0ver = false
           this.$parent.clientvalue.ass_amswer[this.index] = false
+          this.$parent.clientvalue.fields[this.index] = ''
         },
         comfirm() {
           if (!this.checkForm()) {
@@ -117,12 +118,18 @@ export default {
           var field = ''
           for (var i in this.forms) {
             var j = this.forms[i]
-            if (!j.input) {
+            if (!j.input && j.type != 'radio') {
               this.$toast.open('请填写' + j.title, '')
               bool = false
               return false
             }
-            field += j.title + '：' + j.input + '<br>'
+            let text
+            if (j.type == 'radio') {
+              text = j.input == true ? '是' : '否'
+            } else {
+              text = j.input
+            }
+            field += j.title + '：' + text + '\t'
           }
           // 合并输入内容
           this.$parent.clientvalue.fields[this.index] = field
@@ -329,6 +336,10 @@ export default {
   created() {
     const vm = this
     Api.queryMatters(res => {
+      if (res.name && res.name.indexOf('Error') > -1) {
+        vm.$toast.open('服务器出错了', 'error')
+        return
+      }
       vm.matters = res.filter(matter => {
         return matter.version == 2
       })
@@ -359,21 +370,18 @@ export default {
         for (var i in forms) {
           forms[i].input = ''
         }
-        return false
-      }
-
-      // 为是且有必填项
-      if (['3', '4', '5', '6', '7', '8', '9', '15', '16'].indexOf(id) > -1) {
+        this.$set(this.clientvalue.fields, id, '')
+      } else if (['3', '4', '5', '6', '7', '8', '9', '10', '16'].indexOf(id) > -1) {
+        // 为是且有必填项
         this.showPup0ver = true
         this.$refs['form' + id][0].show = true
       }
+      this.$forceUpdate()
     },
     checkForm() {
       var bools = this.clientvalue.ass_amswer
       var allFalse = true
-      console.log(bools)
       for (var i in bools) {
-        console.log(bools[i])
         if (bools[i] === true) {
           allFalse = false
         }
