@@ -34,7 +34,6 @@
       </div>
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
-      <!-- <a href="./" class="am-tab-item">上一步</a> -->
       <a href="javascript:;" @click="$toast.open('请先确认投保须知','warn')" v-if="!agreement" class="am-tab-item selected">下一步</a>
       <router-link v-else to="/insured" class="am-tab-item selected">下一步</router-link>
     </div>

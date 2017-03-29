@@ -315,8 +315,10 @@ body {
     }
 }
 
+@import 'picker';
+
 /* 选择器*/
-.mobileSelect {
+/* .mobileSelect {
     position: relative;
     z-index: -1;
     opacity: 0;
@@ -471,9 +473,10 @@ body {
 
 .mobileSelect-show {
     opacity: 1;
-    z-index: 10000;
+    z-index: 800;
 }
 
 .mobileSelect-show .content {
     bottom: 0;
 }
+ */

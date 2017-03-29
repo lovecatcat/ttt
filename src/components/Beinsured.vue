@@ -66,13 +66,11 @@
           <div slot="icon" v-show="assured.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
         <!-- 户籍 -->
-        <app-region :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
         <app-input label="通讯地址">
           <input slot="input" readonly v-model="assured.address_select" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
           <div slot="icon" v-show="assured.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
         <!-- 通讯地址 -->
-        <app-region ref="address" v-on:regionselect="address_selected"></app-region>
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -141,6 +139,8 @@
       <router-link to="/insured" class="am-tab-item">上一步</router-link>
       <router-link to="/prospectus" class="am-tab-item selected">下一步</router-link>
     </div>
+    <app-region :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
+    <app-region ref="address" v-on:regionselect="address_selected"></app-region>
   </section>
 </template>
 <script>

@@ -104,9 +104,6 @@
             </div>
           </template>
         </app-input>
-        <!-- 通讯地址 -->
-        <app-region ref="address" v-on:regionselect="address_selected"></app-region>
-        <!-- 通讯地址 -->
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -140,6 +137,9 @@
         <!-- 职业 -->
       </div>
     </div>
+    <!-- 通讯地址 -->
+    <app-region ref="address" v-on:regionselect="address_selected"></app-region>
+    <!-- 通讯地址 -->
   </section>
 </template>
 <script>

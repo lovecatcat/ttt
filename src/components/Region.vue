@@ -176,8 +176,8 @@ export default {
       this.show = false
     },
     ok() {
-      if (this.seleted.length < 0) {
-        this.$toast.open('请稍等', '')
+      if (!this.seleted) {
+        this.$toast.open('请先选择区域', 'warn')
         return
       }
       this.$emit('regionselect', this.seleted)

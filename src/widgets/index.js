@@ -21,9 +21,9 @@ Vue.component('app-select', Select)
 Vue.component('app-dropdown', Dropdown)
 
 // Picker
-require('mint-picker/lib/index.css');
-import Picker from 'mint-picker';
-Vue.component('mt-picker', Picker);
+require('mint-picker/lib/index.css')
+import Picker from 'mint-picker'
+Vue.component('mt-picker', Picker)
 
 ///////////
 // 日期格式化 //

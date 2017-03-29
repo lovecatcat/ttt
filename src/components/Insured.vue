@@ -65,13 +65,11 @@
           <input slot="input" readonly v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍" @click="$refs.register.show = true">
           <div slot="icon" v-show="applicant.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
-        <app-region v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
         <!-- 户籍 -->
         <app-input label="通讯地址">
           <input slot="input" readonly v-model="applicant.address_select" type="text" placeholder="请点击进行选择" @click="$refs.address.show = true">
           <div slot="icon" v-show="applicant.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
-        <app-region v-on:regionselect="address_selected" ref="address"></app-region>
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -161,6 +159,8 @@
       <router-link to="/" class="am-tab-item">上一步</router-link>
       <a @click="next" class="am-tab-item selected">下一步</a>
     </div>
+    <app-region v-on:regionselect="address_selected" ref="address"></app-region>
+    <app-region v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
   </section>
 </template>
 <script>
@@ -387,6 +387,7 @@ export default {
     },
     // 通讯地址选择
     address_selected(selected) {
+      if (selected.length == 0) return false
       var vm = this
       var select_show = ''
       select_show += selected[0].explain

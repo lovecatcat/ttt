@@ -31,8 +31,6 @@
           <input slot="input" v-model.trim="warranty.bank_address" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
-        <!-- 开户行所在地 -->
-        <app-region ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
       </div>
     </div>
     <div class="app-agreement">
@@ -51,6 +49,8 @@
       <router-link to="/healthinfo" class="am-tab-item">上一步</router-link>
       <router-link to="/preview" class="am-tab-item selected">下一步</router-link>
     </div>
+    <!-- 开户行所在地 -->
+    <app-region ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
   </div>
 </template>
 <script>

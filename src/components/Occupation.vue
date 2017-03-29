@@ -69,7 +69,7 @@ export default {
       showSelect: 0,
       level: 0, //职业级数
       keyword: '', // 职业搜索关键词
-      occupations: Api.obj2json(this.$store.state.init.applicant.occupation_code), //职业数据
+      // occupations: Api.obj2json(this.$store.state.init.applicant.occupation_code), //职业数据
       showOccupation: false, //显示职业数据
       OccupationResult: [], //搜索结果
       commonOccupation: [{
@@ -136,6 +136,9 @@ export default {
     selected_label() {
       const OccupationLevel = ['一级', '二级', '三级', '四级', '五级', '六级', '七级', '八级']
       return OccupationLevel[this.level]
+    },
+    occupations() {
+      return Api.obj2json(this.$store.state.init.applicant.occupation_code)
     }
   },
   methods: {
