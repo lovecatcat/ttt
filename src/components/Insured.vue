@@ -486,9 +486,9 @@ export default {
         toast_text = '请选择投保人【户籍】'
       } else if (!vm.applicant.province) {
         toast_text = '请选择投保人【通讯地址省份】'
-      } else if (!vm.applicant.city && vm.applicant.province != '138') {
+      } else if (!vm.applicant.city && vm.applicant.province != '3877') {
         toast_text = '请选择投保人【通讯地址市区】'
-      } else if (!vm.applicant.district && vm.applicant.province != '138' && vm.applicant.city != '13643') {
+      } else if (!vm.applicant.district && vm.applicant.province != '3877') {
         toast_text = '请选择投保人【通讯地址县/区】'
       } else if (!vm.applicant.address) {
         toast_text = '请填写投保人【详细地址】'

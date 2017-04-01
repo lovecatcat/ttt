@@ -104,7 +104,7 @@ export default {
         return false
       } else if (!this.warranty.bank_province) {
         toast_text = '银行所在省份不能为空'
-      } else if (!this.warranty.bank_city && this.warranty.bank_province != 138) {
+      } else if (!this.warranty.bank_city && this.warranty.bank_province != 3877) {
         toast_text = '银行所在城市不能为空'
       } else if (this.agreement == false) {
         toast_text = '请先确认阅读《转账授权声明》'

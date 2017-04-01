@@ -371,9 +371,9 @@ export default {
           toast_text = '请选择' + sb + '受益人【国籍】'
         } else if (!vm.beneficiary.province) {
           toast_text = '请选择' + sb + '受益人【通讯地址省份】'
-        } else if (!vm.beneficiary.city && vm.beneficiary.province != '138') {
+        } else if (!vm.beneficiary.city && vm.beneficiary.province != '3877') {
           toast_text = '请选择' + sb + '受益人【通讯地址市区】'
-        } else if (!vm.beneficiary.district && vm.beneficiary.province != '138' && vm.beneficiary.city != '13643') {
+        } else if (!vm.beneficiary.district && vm.beneficiary.province != '3877') {
           toast_text = '请选择' + sb + '受益人【通讯地址县/区】'
         } else if (!vm.beneficiary.address) {
           toast_text = '请填写' + sb + '受益人【详细地址】'
