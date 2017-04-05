@@ -8,7 +8,7 @@
           <div slot="icon" v-show="assured.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model="assured.document_type" v-if="init" @change="assured.document_number = ''">
+          <select v-model="assured.document_type" v-if="init.assured" @change="assured.document_number = ''">
             <option disabled>请选择证件类型</option>
             <option v-for="item in init.assured.document_type" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -56,7 +56,7 @@
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
         <app-select label="国籍" :readonly="assured.document_type != 3">
-          <select v-model="assured.nationality" v-if="init" :disabled="assured.document_type != 3">
+          <select v-model="assured.nationality" v-if="init.assured" :disabled="assured.document_type != 3">
             <option disabled>请选择国籍</option>
             <option v-for="item in init.assured.nationality" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -139,8 +139,8 @@
       <router-link to="/insured" class="am-tab-item">上一步</router-link>
       <router-link to="/prospectus" class="am-tab-item selected">下一步</router-link>
     </div>
-    <app-region :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
-    <app-region ref="address" v-on:regionselect="address_selected"></app-region>
+    <app-region v-if="init.applicant" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
+    <app-region v-if="init.applicant" ref="address" v-on:regionselect="address_selected"></app-region>
   </section>
 </template>
 <script>
@@ -200,7 +200,7 @@ export default {
   },
   computed: {
     init() {
-      return this.$store.state.init
+      return this.$store.state.init || {}
     }
   },
   watch: {

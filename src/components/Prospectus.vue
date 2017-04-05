@@ -5,21 +5,21 @@
       <div class="am-list-body">
         <app-select label="险种">
           <select v-model="main_insurance" @change="insurance_changed">
-            <option disabled>请选择</option>
+            <option disabled value="0">请选择</option>
             <option v-if="item.safe_id == 209 || item.safe_id == 210" v-for="item in safegoods" :value="item">{{item.name}}</option>
           </select>
         </app-select>
         <app-select label="交费期间">
           <input v-if="!attr" disabled v-model="insurance.pay_year" type="text" placeholder="请填写缴费期间">
           <select v-model="insurance.pay_year" v-else @change="insurance.period_money = ''">
-            <option disabled>请选择</option>
+            <option disabled value="0">请选择</option>
             <option v-for="item in attr" :value="item.sv_id">{{item.pay_year == 1 ? '趸交' : item.pay_year + '年'}}</option>
           </select>
         </app-select>
         <app-select label="保险期间">
           <input v-if="!attr2" disabled v-model="insurance.safe_year" type="text" placeholder="请填写保险期间">
-          <select v-model="insurance.safe_year" v-else @change="insurance.period_money = ''">
-            <option disabled>请选择</option>
+          <select v-else v-model="insurance.safe_year" @change="insurance.period_money = ''" :disabled="attr2.length === 1">
+            <option v-if="attr2.length > 1" disabled>请选择</option>
             <option v-for="item in attr2" :value="item.sv_id">{{item.safe_year==999?'终身':item.safe_year}}</option>
           </select>
         </app-select>
@@ -31,7 +31,7 @@
           <input slot="input" readonly v-model.number="insurance.period_money" type="number" placeholder="点击计算期交保费" @click="cal">
         </app-input>
         <app-select label="保单选项">
-          <select v-model="warranty.delivery_way" v-if="init">
+          <select v-model="warranty.delivery_way" v-if="init.warranty">
             <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
@@ -51,7 +51,7 @@
       <div class="am-list-item">
         <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-list-control">
-          <div class="am-switch">
+          <div class="am-switch" v-if="init.assured">
             <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
             <label class="am-switch-label">
               <div class="am-switch-inner"></div>
@@ -110,19 +110,19 @@ export default {
       assured: {
         social_security: true
       },
-      pay_year: null, //交费年期
-      safe_year: null, //保险期间
+      // pay_year: null, //交费年期
+      // safe_year: null, //保险期间
       attr: null, //保险属性
       attr2: null, //保险属性
 
       safegoods: [], //保险产品
 
-      main_insurance: null //主险
+      main_insurance: 0 //主险
     }
   },
   computed: {
     init() {
-      return this.$store.state.init
+      return this.$store.state.init || {}
     }
   },
   created() {
@@ -252,10 +252,14 @@ export default {
       vm.attr = vm.main_insurance.attr
       vm.attr2 = unique(vm.attr, 'safe_year')
 
-      // 重置
+      // 初始化值
       vm.add_insurances = null
-      vm.insurance.pay_year = null
-      vm.insurance.safe_year = null
+      vm.insurance.pay_year = 0
+      if (vm.attr2.length === 1) {
+        vm.insurance.safe_year = vm.attr2[0].sv_id
+      } else {
+        vm.insurance.safe_year = null
+      }
     },
     checkEmail() {
       const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/

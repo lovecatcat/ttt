@@ -16,6 +16,9 @@ export default {
   },
   setAntiMoney: ({ commit }, payload) => {
     commit('setAntiMoney', payload)
+  },
+  setParam: ({ commit }, payload) => {
+    commit('setParam', payload)
   }
 }
 

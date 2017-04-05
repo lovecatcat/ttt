@@ -9,10 +9,6 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
-// 图片预览插件
-import VuePreview from 'vue-preview'
-Vue.use(VuePreview)
 export default {
   name: 'Confirmation',
   data() {

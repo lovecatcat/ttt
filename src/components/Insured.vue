@@ -8,7 +8,7 @@
           <div slot="icon" v-show="applicant.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model="applicant.document_type" v-if="init" @change="applicant.document_number = ''">
+          <select v-model="applicant.document_type" v-if="init.applicant" @change="applicant.document_number = ''">
             <option disabled>请选择证件类型</option>
             <option v-if="item.bs_id != 4" v-for="item in init.applicant.document_type" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -56,7 +56,7 @@
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
         <app-select label="国籍" :readonly="applicant.document_type != 3">
-          <select v-model="applicant.nationality" v-if="init" :disabled="applicant.document_type != 3">
+          <select v-model="applicant.nationality" v-if="init.applicant" :disabled="applicant.document_type != 3">
             <option disabled>请选择国籍</option>
             <option v-for="item in init.applicant.nationality" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -127,7 +127,7 @@
           <div slot="icon" v-show="applicant.weight != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.weight = ''"></i></div>
         </app-input>
         <app-select label="是被保险人的">
-          <select v-model="warranty.is_assured" v-if="init">
+          <select v-model="warranty.is_assured" v-if="init.warranty">
             <option disabled>请选择</option>
             <option v-for="item in init.warranty.is_assured" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -144,7 +144,7 @@
         <app-occupation ref="occupation"></app-occupation>
         <!-- 职业 -->
         <app-select label="合同争议处理方式">
-          <select v-model="warranty.contract_handle" v-if="init">
+          <select v-model="warranty.contract_handle" v-if="init.warranty">
             <option disabled>请选择</option>
             <option v-for="item in init.warranty.contract_handle" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -159,8 +159,8 @@
       <router-link to="/" class="am-tab-item">上一步</router-link>
       <a @click="next" class="am-tab-item selected">下一步</a>
     </div>
-    <app-region v-on:regionselect="address_selected" ref="address"></app-region>
-    <app-region v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
+    <app-region v-if="init.applicant" v-on:regionselect="address_selected" ref="address"></app-region>
+    <app-region v-if="init.applicant" v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
   </section>
 </template>
 <script>
@@ -227,7 +227,7 @@ export default {
   },
   computed: {
     init() {
-      return this.$store.state.init
+      return this.$store.state.init || {}
     }
   },
   watch: {
@@ -236,7 +236,7 @@ export default {
     },
     applicant: {
       handler(val) {
-        val.annual_source == 7 && this.$set(this.applicant, this.annual_source_other, '')
+        val.annual_source == 7 && this.$set(this.applicant, 'annual_source_other', '')
       },
       deep: true
     }

@@ -19,6 +19,10 @@ Vue.use(Toast)
 import Dialog from './widgets/Dialog'
 Vue.use(Dialog)
 
+// Preview
+import Preview from './widgets/preview'
+Vue.use(Preview)
+
 import './assets/iconfont/app-iconfont.css'
 import './assets/css/app.scss'
 

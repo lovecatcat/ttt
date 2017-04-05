@@ -66,7 +66,7 @@
           <option value="7">其他</option>
         </select>
       </app-select>
-      <app-input  label="收入来源" v-show="applicant.annual_source ==7">
+      <app-input label="收入来源" v-show="applicant.annual_source ==7">
         <input slot="input" readonly :value="applicant.annual_source_other" type="text">
       </app-input>
       <app-input label="身高">
@@ -579,7 +579,10 @@ export default {
           return false
         } else {
           vm.$toast.open(res.status == 1 ? '投保成功' : res.message, 'success')
-          vm.$store.commit('setResult', res.status)
+          vm.$store.dispatch('setParam', {
+            state: res.status,
+            bid: res.data
+          })
           setTimeout(function() {
             vm.$router.push('/success')
           }, 2000)

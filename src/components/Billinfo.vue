@@ -16,13 +16,13 @@
           <div slot="icon" v-show="warranty.bank_account != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="warranty.bank_account = ''"></i></div>
         </app-input>
         <app-select label="开户行">
-          <select v-model="warranty.bank_name" v-if="init">
+          <select v-model="warranty.bank_name" v-if="init.transferstate">
             <option disabled value="0">请选择开户行</option>
             <option v-for="item in init.transferstate.bank_name" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-select label="账户类别">
-          <select v-model="warranty.bank_card" v-if="init">
+          <select v-model="warranty.bank_card" v-if="init.transferstate">
             <option disabled value="0">请选择账户类别</option>
             <option v-for="item in init.transferstate.bank_card" :value="item.bs_id">{{item.explain}}</option>
           </select>
@@ -50,7 +50,7 @@
       <router-link to="/preview" class="am-tab-item selected">下一步</router-link>
     </div>
     <!-- 开户行所在地 -->
-    <app-region ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
+    <app-region v-if="init.applicant" ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
   </div>
 </template>
 <script>
@@ -69,7 +69,7 @@ export default {
       agreement: false, //协议
       warranty: {
         applicant: this.$store.state.applicant.name, //户名
-        bank_card: '46', //卡折标志
+        bank_card: '45', //卡折标志
         bank_name: 0, //银行名称
         bank_account: '', //银行帐号
         bank_province: '', //银行省编码
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     init() {
-      return this.$store.state.init
+      return this.$store.state.init || {}
     }
   },
   beforeRouteLeave(to, from, next) {

@@ -4,6 +4,7 @@ export default {
   assured: {},
   ready: false,
   state: false,
+  tid: '',
   anti_money: false,
   init: null,
   tmp: {
