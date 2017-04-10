@@ -337,7 +337,7 @@ export default {
     const vm = this
     Api.queryMatters(res => {
       if (res.name && res.name.indexOf('Error') > -1) {
-        vm.$toast.open('服务器出错了', 'error')
+        vm.$toast.open('服务器开小差了', 'error')
         return
       }
       vm.matters = res.filter(matter => {

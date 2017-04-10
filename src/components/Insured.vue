@@ -115,7 +115,7 @@
           </select>
         </app-select>
         <app-input label="" v-show="applicant.annual_source ==7">
-          <input slot="input" v-model="applicant.annual_source_other" type="text" placeholder="请填写收入来源">
+          <input slot="input" v-model.lazy="applicant.annual_source_other" type="text" placeholder="请填写收入来源">
           <div slot="icon" v-show="applicant.annual_source_other != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.annual_source_other = ''"></i></div>
         </app-input>
         <app-input label="身高">
@@ -137,7 +137,7 @@
           <div slot="icon" @click="warranty.is_assured_val = ''" v-show="warranty.is_assured_val != ''" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="职业">
-          <input slot="input" v-model="applicant.occupation" placeholder="请选择职业" type="text" readonly @click="$refs.occupation.show = true">
+          <input slot="input" v-model="applicant.occupation" placeholder="请点击选择职业" type="text" readonly @click="$refs.occupation.show = true">
           <div slot="icon" v-show="applicant.occupation" @click="clearOccupation" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <!-- 职业 -->
@@ -164,6 +164,7 @@
   </section>
 </template>
 <script>
+import Validator from '../widgets/IDValidator'
 import Api from '../api'
 // 区域选择器
 import Region from './Region'
@@ -233,13 +234,13 @@ export default {
   watch: {
     longTerm(val) {
       this.applicant.document_term = val ? '9999-12-30' : ''
-    },
+    }/*,
     applicant: {
       handler(val) {
         val.annual_source == 7 && this.$set(this.applicant, 'annual_source_other', '')
       },
       deep: true
-    }
+    }*/
   },
   methods: {
     // 证件号码校验
@@ -256,8 +257,7 @@ export default {
       switch (type) {
         case '5': // 户口簿
         case '1': // 身份证
-          const IDValidator = require('id-validator')
-          const Validator = new IDValidator();
+
           const addr = this.$store.state.addr
 
           if (Validator.isValid(id, 18)) {
@@ -313,7 +313,7 @@ export default {
       const id = vm.applicant.document_number
       Api.queryID(id, 'applicant', res => {
         if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器出错了', 'error')
+          vm.$toast.open('服务器开小差了', 'error')
           return
         }
 
@@ -350,11 +350,6 @@ export default {
       applicant.height = res.height
       applicant.weight = res.weight
       applicant.name = res.name
-      if (res.occupation_code) {
-        applicant.occupation = res.occupation
-        applicant.occupation_code = res.occupation_code
-        vm.warranty.applicant_occupation_code = res.occupation_code
-      }
       applicant.register = res.register
       applicant.tel = res.tel
       applicant.visit_tel = res.visit_tel
@@ -532,9 +527,9 @@ export default {
       }
       this.$toast.open('', '')
       var nextPage
-      if (this.applicant.annual_source != 7) {
+/*      if (this.applicant.annual_source != 7) {
         this.$delete(this.applicant, 'annual_source_other')
-      }
+      }*/
       // 如果被保险人是本人
       if (this.warranty.is_assured == '21') {
         this.warranty.assured_occupation_code = this.warranty.applicant_occupation_code

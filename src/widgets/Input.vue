@@ -5,6 +5,7 @@
       <slot name="input"></slot>
     </div>
     <slot name="icon"></slot>
+    <slot name="button"></slot>
   </div>
 </template>
 <script>

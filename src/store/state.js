@@ -1,17 +1,18 @@
 export default {
-  warranty: {},
-  applicant: {},
-  assured: {},
-  ready: false,
-  state: false,
-  tid: '',
-  anti_money: false,
-  init: null,
-  tmp: {
+  warranty: {}, //保单信息
+  applicant: {}, //投保人信息
+  assured: {}, //被保人信息
+  ready: false, //加载完毕
+  status: 0, //保单状态
+  tid: '', //投保单号
+  anti_money: false, //反洗钱标准
+  init: null, //初始化数据,
+  main_insurance: 0, //主险数据
+  tmp: { //受益人
     people: [0],
     current: 0
   },
-  addr: {
+  addr: { // 地址
     11: {
       name: '北京',
       bs_id: 28

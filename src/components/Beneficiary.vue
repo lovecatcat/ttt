@@ -67,8 +67,8 @@
         </app-input>
         </app-input>
         <app-select label="是被保人的">
-          <select v-model="beneficiary.relationship" v-if="init">
-            <option disabled>请选择</option>
+          <select v-model.number="beneficiary.relationship" v-if="init.beneficiary">
+            <option disabled value="0">请选择</option>
             <option v-for="item in init.beneficiary.relationship" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
@@ -143,11 +143,12 @@
   </section>
 </template>
 <script>
+import Validator from '../widgets/IDValidator'
 import Api from '../api'
 // 区域选择器
 import Region from './Region'
 import Occupation from './Occupation'
-const IDValidator = require('id-validator')
+
 export default {
   name: 'Beneficiary',
   props: ['people', 'index'],
@@ -227,10 +228,11 @@ export default {
         vm.beneficiary.document_number = applicant.document_number
         vm.beneficiary.document_type = applicant.document_type
         vm.beneficiary.document_term = applicant.document_term
+        if (vm.beneficiary.document_term === '9999-12-30') vm.longTerm = true
         vm.beneficiary.name = applicant.name
         vm.beneficiary.sex = applicant.sex
         vm.beneficiary.birthday = applicant.birthday
-        if ([18, 19, 20, 23].indexOf(vm.warranty.is_assured) > 0) {
+        if (['18', '19', '20', '23'].indexOf(vm.warranty.is_assured) > -1) {
           vm.beneficiary.relationship = vm.warranty.is_assured
         }
         if (this.$store.state.anti_money) {
@@ -239,6 +241,7 @@ export default {
           vm.beneficiary.city = applicant.city
           vm.beneficiary.district = applicant.district
           vm.beneficiary.address = applicant.address
+          vm.beneficiary.address_select = applicant.address_select
           vm.beneficiary.zipcode = applicant.zipcode
           vm.beneficiary.occupation = applicant.occupation
           vm.beneficiary.occupation_code = applicant.occupation_code
@@ -249,15 +252,17 @@ export default {
         vm.beneficiary.document_number = ''
         vm.beneficiary.document_type = ''
         vm.beneficiary.document_term = ''
-        vm.longTerm = 'false'
+        vm.longTerm = false
         vm.beneficiary.name = ''
         vm.beneficiary.birthday = ''
+        vm.beneficiary.relationship = 0
         if (this.$store.state.anti_money) {
           vm.beneficiary.nationality = ''
           vm.beneficiary.province = ''
           vm.beneficiary.city = ''
           vm.beneficiary.district = ''
           vm.beneficiary.address = ''
+          vm.beneficiary.address_select = ''
           vm.beneficiary.zipcode = ''
           vm.beneficiary.occupation = ''
           vm.beneficiary.occupation_code = ''
@@ -269,10 +274,10 @@ export default {
   },
   methods: {
     sameZipcode() {
-      this.beneficiary.zipcode = JSON.parse(JSON.stringify(this.$store.state.applicant.zipcode))
+      this.beneficiary.zipcode = Api.obj2json(this.$store.state.applicant.zipcode)
     },
     sameAddress() {
-      var applicant = JSON.parse(JSON.stringify(this.$store.state.applicant))
+      var applicant = Api.obj2json(this.$store.state.applicant)
       this.beneficiary.address = applicant.address
       this.beneficiary.province = applicant.province
       this.beneficiary.city = applicant.city
@@ -295,7 +300,7 @@ export default {
       switch (type) {
         case '5': // 户口簿
         case '1': // 身份证
-          const Validator = new IDValidator();
+
           const addr = this.$store.state.addr
 
           if (Validator.isValid(id, 18)) {

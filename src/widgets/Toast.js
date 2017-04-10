@@ -1,6 +1,7 @@
 export default {
   install(Vue) {
     let Toast = Vue.extend({
+      name: 'toast',
       data() {
         return {
           text: null,

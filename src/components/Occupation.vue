@@ -6,7 +6,7 @@
       </div>
       <div class="am-dialog-body" slot="body">
         <div class="am-list" v-show="commonOccupation.length > 0">
-          <div class="am-list-header am-ft-left">常见职业</div>
+          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe695;</span> 常见职业</span></div>
           <div class="am-content">
             <div class="app-btns am-ft-left">
               <button type="button" class="am-button tiny" v-for="item in commonOccupation" @click="selectOccupation(item)">{{item.explain}}</button>
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="am-list form">
-          <div class="am-list-header am-ft-left">选择职业</div>
+          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe609;</span> 选择职业</span></div>
           <div class="am-list-body">
             <div class="am-list-item">
               <div class="am-list-label">{{selected_label}}</div>
@@ -28,12 +28,10 @@
             </div>
           </div>
         </div>
-        <div class="am-list">
-          <div class="am-list-header am-ft-left">搜索职业</div>
-        </div>
         <div class="am-search-inpage">
+          <div class="am-ft-left"><span class="app-iconfont app-color-warn">&#xe611;</span> 搜索职业</span></div>
           <div class="am-search-input">
-            <input class="am-search-value" v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
+            <input class="am-search-value" v-focus v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
             <div class="am-search-clear" @click="keyword = ''" v-show="keyword !=''">
               <i class="am-icon-clear am-icon clear-tiny"></i>
             </div>
@@ -142,8 +140,12 @@ export default {
     }
   },
   watch: {
-    initOccupations(val) {
-      this.occupations = val
+    initOccupations: {
+      handler(val) {
+        this.occupations = val
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -163,7 +165,7 @@ export default {
       if (!bs_id) return
       Api.queryOccupation(bs_id, data => {
         if (data.name && data.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器出错了', 'error')
+          vm.$toast.open('服务器开小差了', 'error')
           return
         }
         this.$toast.close()

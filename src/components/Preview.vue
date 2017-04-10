@@ -273,8 +273,8 @@
       </app-input>
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
-        <div class="am-switch">
-          <input type="checkbox" readonly v-model="assured.social_security" class="am-switch-checkbox">
+        <div class="am-switch" v-if="init.assured">
+          <input type="checkbox" disabled v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
           <label class="am-switch-label">
             <div class="am-switch-inner"></div>
             <div class="am-switch-switch"></div>
@@ -394,8 +394,8 @@ export default {
   data() {
     return {
       warData: null, //保单信息
-      main_insurance: null, //主险
-      attr: null, //保险属性
+      // main_insurance: null, //主险
+      // attr: null, //保险属性
       isExempted: false, // 是否豁免投保人
       confirm: false, //确认信息
       uploading: false //正在提交
@@ -405,7 +405,8 @@ export default {
     ...mapState([
       'init',
       'matters',
-      'safegoods'
+      'safegoods',
+      'main_insurance'
     ]),
     applicant() {
       return Api.obj2json(this.$store.state.applicant)
@@ -427,6 +428,9 @@ export default {
     },
     anti_money() {
       return this.$store.state.anti_money
+    },
+    attr() {
+      return this.$store.state.main_insurance.attr
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -435,15 +439,6 @@ export default {
   },
   activated() {
     this.$forceUpdate()
-  },
-  created() {
-    const vm = this
-    vm.safegoods.forEach((item, index) => {
-      if (item.safe_id == vm.insurances[0].safe_id) {
-        vm.main_insurance = item
-        vm.attr = item.attr
-      }
-    })
   },
   methods: {
     countFee(obj) {
@@ -463,6 +458,9 @@ export default {
         return false
       }
       vm.uploading = true
+      setTimeout(() => {
+        vm.uploading = false
+      }, 1500)
       vm.$toast.open('正在提交', 'loading')
       let pushData = {}
       let filter = ['register_select', 'address_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
@@ -570,18 +568,17 @@ export default {
       vm.$toast.open('正在投保中', 'loading')
       Api.pushWarranty(qs.stringify(pushData), res => {
         if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器出错了', 'error')
+          vm.$toast.open('服务器开小差了', 'error')
           return
         }
-        vm.uploading = false
         if (res.status == '0') {
           vm.$toast.open('提交失败：' + res.message, '', 5000)
           return false
         } else {
           vm.$toast.open(res.status == 1 ? '投保成功' : res.message, 'success')
           vm.$store.dispatch('setParam', {
-            state: res.status,
-            bid: res.data
+            status: res.status,
+            tid: res.data
           })
           setTimeout(function() {
             vm.$router.push('/success')

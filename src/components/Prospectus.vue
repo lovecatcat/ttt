@@ -28,7 +28,10 @@
           <div slot="icon" v-show="insurance.money != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="insurance.money = ''"></i></div>
         </app-input>
         <app-input label="期交保费">
-          <input slot="input" readonly v-model.number="insurance.period_money" type="number" placeholder="点击计算期交保费" @click="cal">
+          <input slot="input" readonly v-model.number="insurance.period_money" type="number" placeholder="期交保费(元)">
+          <div slot="button" class="am-list-button" @click="cal">
+            <button type="button">点击计算</button>
+          </div>
         </app-input>
         <app-select label="保单选项">
           <select v-model="warranty.delivery_way" v-if="init.warranty">
@@ -73,18 +76,33 @@ const qs = require('qs')
 import Api from '../api'
 
 const unique = function(a, key) {
-  var res = [];
-  for (var i = 0, len = a.length; i < len; i++) {
-    for (var j = i + 1; j < len; j++) {
-      if (key && a[i][key] === a[j][key]) {
-        j = ++i
-      } else {
-        j = ++i
+    var res = [];
+    for (var i = 0, len = a.length; i < len; i++) {
+      for (var j = i + 1; j < len; j++) {
+        if (key && a[i][key] === a[j][key]) {
+          j = ++i
+        } else {
+          j = ++i
+        }
       }
+      res.push(a[i]);
     }
-    res.push(a[i]);
+    return res;
   }
-  return res;
+  // 计算周岁
+const getAge = function(str) {
+  if (!str) return
+  var age = 0
+  var now = new Date()
+  var year = now.getFullYear()
+  var month = now.getMonth() + 1
+  var day = now.getDate()
+  var r = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
+  if (r[2] < month || (r[2] == month && r[3] < day)) { // 当月
+    age += 1
+  }
+  age += year - r[1]
+  return age
 }
 
 export default {
@@ -108,19 +126,29 @@ export default {
         email: '' //邮箱
       },
       assured: {
-        social_security: true
+        social_security: '15045'
       },
       // pay_year: null, //交费年期
       // safe_year: null, //保险期间
       attr: null, //保险属性
       attr2: null, //保险属性
 
-      safegoods: [], //保险产品
+      safegoods: [] //保险产品
 
-      main_insurance: 0 //主险
+      // main_insurance: 0 //主险
     }
   },
   computed: {
+    main_insurance: {
+      get() {
+        return this.$store.state.main_insurance
+      },
+      set(val) {
+        this.$store.commit('setParam', {
+          main_insurance: val
+        })
+      }
+    },
     init() {
       return this.$store.state.init || {}
     }
@@ -129,7 +157,7 @@ export default {
     var vm = this
     Api.querySafegoods(res => {
       if (res.name && res.name.indexOf('Error') > -1) {
-        vm.$toast.open('服务器出错了', 'error')
+        vm.$toast.open('服务器开小差了', 'error')
         return
       }
       vm.safegoods = res
@@ -140,9 +168,10 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == '/insured' || to.path == 'beinsured') {
+    if (to.path === '/insured' || to.path === '/beinsured') {
+      this.insurance.period_money = ''
       next()
-      return false
+      return
     }
     if (!this.checkForm()) return
     if (!this.insurance.period_money) {
@@ -155,7 +184,7 @@ export default {
     this.$store.commit('saveAssured', this.assured)
     this.$store.commit('setWarranty', this.warranty)
     this.$store.commit('setApplicant', this.applicant)
-    this.$store.commit('saveInsurance', [this.insurance])
+    this.$store.commit('saveInsurance', Api.obj2json([this.insurance]))
     next()
   },
   methods: {
@@ -165,6 +194,9 @@ export default {
         return
       }
       vm.uploading = true
+      setTimeout(() => {
+        vm.uploading = false
+      }, 1500)
       vm.$toast.open('正在计算', 'loading')
 
       let pushData = {}
@@ -217,10 +249,9 @@ export default {
       // console.log(pushData)
       Api.pushWarranty(qs.stringify(pushData), res => {
         if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器出错了', 'error')
+          vm.$toast.open('服务器开小差了', 'error')
           return
         }
-        vm.uploading = false
         if (res.status == 0) {
           console.info(res.message)
           vm.$toast.open('计算失败：' + res.message)
@@ -260,6 +291,7 @@ export default {
       } else {
         vm.insurance.safe_year = null
       }
+      vm.checkAge()
     },
     checkEmail() {
       const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
@@ -275,24 +307,6 @@ export default {
         return false
       }
       return true
-    },
-    checkForm() {
-      const vm = this
-      var toast_text = null
-      if (!vm.insurance.safe_id) {
-        toast_text = '请选择险种'
-      } else if (!vm.insurance.safe_year) {
-        toast_text = '请选择保险期间'
-      } else if (!vm.insurance.pay_year) {
-        toast_text = '请选择交费年期'
-      } else if (!vm.insurance.money) {
-        toast_text = '请填写基本保险金额'
-      }
-      if (toast_text) {
-        this.$toast.open(toast_text, 'warn')
-        return false
-      }
-      return this.checkMoney()
     },
     checkMoney() {
       var id = this.main_insurance.safe_id
@@ -315,6 +329,37 @@ export default {
         return false
       }
       return true
+    },
+    checkAge() {
+      var vm = this
+      var age = getAge(vm.$store.state.assured.birthday)
+      var id = this.main_insurance.safe_id
+      if (age > 60 && id === '209') {
+        vm.$toast.open('被保险人年龄不大于60周岁', '')
+        return false
+      } else if (age > 50 && id === '210') {
+        vm.$toast.open('被保险人年龄不大于50周岁', '')
+        return false
+      }
+      return true
+    },
+    checkForm() {
+      const vm = this
+      var toast_text = null
+      if (!vm.insurance.safe_id) {
+        toast_text = '请选择险种'
+      } else if (!vm.insurance.safe_year) {
+        toast_text = '请选择保险期间'
+      } else if (!vm.insurance.pay_year) {
+        toast_text = '请选择交费年期'
+      } else if (!vm.insurance.money) {
+        toast_text = '请填写基本保险金额'
+      }
+      if (toast_text) {
+        this.$toast.open(toast_text, 'warn')
+        return false
+      }
+      return this.checkMoney() && this.checkAge()
     }
   }
 }

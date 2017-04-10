@@ -111,7 +111,7 @@ export default {
         } else if (values[0].code) {
           Api.queryRegion('city', values[0].code, res => {
             if (res.name && res.name.indexOf('Error') > -1) {
-              vm.$toast.open('服务器出错了', 'error')
+              vm.$toast.open('服务器开小差了', 'error')
               return
             }
             if (res.length > 0) {
@@ -136,7 +136,7 @@ export default {
           } else {
             values[1].code && Api.queryRegion('district', values[1].code, res => {
               if (res.name && res.name.indexOf('Error') > -1) {
-                vm.$toast.open('服务器出错了', 'error')
+                vm.$toast.open('服务器开小差了', 'error')
                 return
               }
               if (res.length > 0) {

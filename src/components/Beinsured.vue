@@ -101,7 +101,7 @@
         </app-input>
         <app-select label="收入来源">
           <select v-model.number="assured.annual_source">
-            <option disabled>请选择收入来源</option>
+            <option disabled value="0">请选择收入来源</option>
             <option value="1">工薪</option>
             <option value="2">个体</option>
             <option value="3">私营</option>
@@ -127,7 +127,7 @@
           <div slot="icon" v-show="assured.weight != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.weight = ''"></i></div>
         </app-input>
         <app-input label="职业">
-          <input slot="input" v-model="assured.occupation" placeholder="请选择职业" type="text" readonly @click="$refs.occupation.show = true">
+          <input slot="input" v-model="assured.occupation" placeholder="请点击选择职业" type="text" readonly @click="$refs.occupation.show = true">
           <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
         <!-- 职业 -->
@@ -144,6 +144,7 @@
   </section>
 </template>
 <script>
+import Validator from '../widgets/IDValidator'
 import Api from '../api'
 // 区域选择器
 import Region from './Region'
@@ -170,7 +171,7 @@ export default {
         nationality: 63, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
-        annual_source: '', //收入来源
+        annual_source: 0, //收入来源
         annual_source_other: '', //其他收入来源
         birthday: '', //出生日期
         // 证件
@@ -223,8 +224,6 @@ export default {
       switch (type) {
         case '5': // 户口簿
         case '1': // 身份证
-          const IDValidator = require('id-validator')
-          const Validator = new IDValidator();
           const addr = this.$store.state.addr
 
           if (Validator.isValid(id, 18)) {
@@ -285,7 +284,7 @@ export default {
       const id = vm.assured.document_number
       Api.queryID(id, 'assured', res => {
         if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器出错了', 'error')
+          vm.$toast.open('服务器开小差了', 'error')
           return
         }
 
@@ -315,6 +314,7 @@ export default {
         assured.address = res.address
         assured.address_select = res.ChPro + res.ChCity + res.ChDistrict
       }
+      assured.name = res.name
       assured.annual_earnings = res.annual_earnings
       assured.annual_source = res.annual_source
       assured.annual_source_other = res.annual_source_other
@@ -322,12 +322,6 @@ export default {
       if (res.document_term == '9999-12-30') vm.longTerm = true
       assured.height = res.height
       assured.weight = res.weight
-      assured.name = res.name
-      if (res.occupation_code) {
-        assured.occupation = res.occupation
-        assured.occupation_code = res.occupation_code
-        vm.warranty.assured_occupation_code = res.occupation_code
-      }
       assured.register = res.register
       assured.tel = res.tel
       assured.visit_tel = res.visit_tel
@@ -471,9 +465,6 @@ export default {
     }
     if (!this.checkForm()) {
       return false
-    }
-    if (this.assured.annual_source != 7) {
-      this.$delete(this.assured, 'annual_source_other')
     }
     this.$store.commit('saveAssured', this.assured)
     this.$store.commit('setWarranty', this.warranty)

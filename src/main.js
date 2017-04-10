@@ -11,6 +11,10 @@ import store from './store'
 // components
 import './widgets'
 
+// // Alert
+// import Alert from './widgets/Alert'
+// Vue.use(Alert)
+
 // Toast
 import Toast from './widgets/Toast'
 Vue.use(Toast)
@@ -23,7 +27,14 @@ Vue.use(Dialog)
 import Preview from './widgets/preview'
 Vue.use(Preview)
 
-import './assets/iconfont/app-iconfont.css'
+Vue.directive('focus', {
+  // 当绑定元素插入到 DOM 中。
+  inserted: function (el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
+
 import './assets/css/app.scss'
 
 // 滚动顶部
@@ -41,5 +52,5 @@ var app = new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App}
 })

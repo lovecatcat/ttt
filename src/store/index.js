@@ -6,14 +6,17 @@ import state from './state'
 import mutations from './mutations'
 import actions from './actions'
 
-// const actions = {}
-// const getters = {}
+const getters = {
+  // initOccupations(state) {
+  //   state.init.applicant ? Object.assign({}, state.init.applicant.occupation_code) : {}
+  // }
+}
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   strict: debug,
   state,
-  // getters,
+  getters,
   mutations,
   actions
 })
