@@ -8,7 +8,7 @@
         <input slot="input" v-model="applicant.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="applicant.document_type" v-if="init" disabled>
+        <select v-model="applicant.document_type" v-if="init.applicant" disabled>
           <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -16,10 +16,12 @@
         <input slot="input" v-model="applicant.document_number" type="text" readonly>
       </app-input>
       <app-input label="证件有效期">
-        <input slot="input" v-model="applicant.document_term" type="text" readonly>
+        <div v-if="applicant.document_term === '9999-12-30'" slot="input">长期有效</div>
+        <!-- <input v-if="applicant.document_term === '9999-12-30'" slot="input" :value="'长期有效'" type="text" readonly> -->
+        <input v-else slot="input" v-model="applicant.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
-        <select v-model="applicant.sex" v-if="init" disabled>
+        <select v-model="applicant.sex" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.sex" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -27,7 +29,7 @@
         <input slot="input" v-model="applicant.birthday" type="text" readonly>
       </app-input>
       <app-select label="国籍" readonly="true">
-        <select v-model="applicant.nationality" v-if="init" disabled>
+        <select v-model="applicant.nationality" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.nationality" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -43,7 +45,7 @@
       <app-input label="邮编">
         <input slot="input" readonly :value="applicant.zipcode" type="text">
       </app-input>
-      <app-input label="手机号码">
+      <app-input label="手机号码" v-show="applicant.tel">
         <input slot="input" readonly :value="applicant.tel" type="text">
       </app-input>
       <app-input label="固定电话" v-show="applicant.visit_tel">
@@ -76,7 +78,7 @@
         <input slot="input" readonly :value="applicant.weight+'Kg'" type="text">
       </app-input>
       <app-select label="是被保险人的" readonly="true">
-        <select v-model="warranty.is_assured" v-if="init" disabled>
+        <select v-model="warranty.is_assured" v-if="init.warranty" disabled>
           <option v-for="item in init.warranty.is_assured" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -84,7 +86,7 @@
         <input slot="input" readonly :value="applicant.occupation" type="text">
       </app-input>
       <app-select label="合同争议处理方式" readonly="true">
-        <select v-model="warranty.contract_handle" v-if="init" disabled>
+        <select v-model="warranty.contract_handle" v-if="init.warranty" disabled>
           <option v-for="item in init.warranty.contract_handle" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -97,7 +99,7 @@
         <input slot="input" v-model="assured.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="assured.document_type" v-if="init" disabled>
+        <select v-model="assured.document_type" v-if="init.assured" disabled>
           <option v-for="type in init.assured.document_type" :value="type.bs_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -105,10 +107,11 @@
         <input slot="input" v-model="assured.document_number" type="text" readonly>
       </app-input>
       <app-input label="证件有效期">
-        <input slot="input" v-model="assured.document_term" type="text" readonly>
+        <div v-if="assured.document_term === '9999-12-30'" slot="input">长期有效</div>
+        <input v-else slot="input" v-model="assured.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
-        <select v-model="assured.sex" v-if="init" disabled>
+        <select v-model="assured.sex" v-if="init.assured" disabled>
           <option v-for="item in init.assured.sex" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -116,7 +119,7 @@
         <input slot="input" v-model="assured.birthday" type="text" readonly>
       </app-input>
       <app-select label="国籍" readonly="true">
-        <select v-model="assured.nationality" v-if="init" disabled>
+        <select v-model="assured.nationality" v-if="init.assured" disabled>
           <option v-for="item in init.assured.nationality" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -173,7 +176,7 @@
         <input slot="input" v-model="beneficiary.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="beneficiary.document_type" v-if="init" disabled>
+        <select v-model="beneficiary.document_type" v-if="init.applicant" disabled>
           <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -181,10 +184,11 @@
         <input slot="input" v-model="beneficiary.document_number" type="text" readonly>
       </app-input>
       <app-input label="证件有效期">
-        <input slot="input" v-model="beneficiary.document_term" type="text" readonly>
+        <div v-if="beneficiary.document_term === '9999-12-30'" slot="input">长期有效</div>
+        <input v-else slot="input" v-model="beneficiary.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
-        <select v-model="beneficiary.sex" v-if="init" disabled>
+        <select v-model="beneficiary.sex" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.sex" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -192,7 +196,7 @@
         <input slot="input" v-model="beneficiary.birthday" type="text" readonly>
       </app-input>
       <app-select label="是被保险人的" readonly="true">
-        <select v-model="beneficiary.relationship" v-if="init" disabled>
+        <select v-model="beneficiary.relationship" v-if="init.beneficiary" disabled>
           <option v-for="item in init.beneficiary.relationship" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -207,7 +211,7 @@
       </app-input>
       <template v-if="anti_money">
         <app-select label="国籍" readonly="true">
-          <select v-model="beneficiary.nationality" v-if="init">
+          <select v-model="beneficiary.nationality" v-if="init.applicant">
             <option :disabled="beneficiary.document_type == '57'" v-for="type in init.applicant.nationality" :value="type.bs_id">{{type.explain}}</option>
           </select>
         </app-select>
@@ -264,7 +268,7 @@
         <input slot="input" readonly :value="insurance.period_money" type="text">
       </app-input>
       <app-select label="保单选项" readonly="true">
-        <select v-model="warranty.delivery_way" v-if="init" disabled>
+        <select v-model="warranty.delivery_way" v-if="init.warranty" disabled>
           <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -345,12 +349,12 @@
             <input slot="input" readonly v-model="warranty.bank_account" type="text" placeholder="请填写银行账号">
           </app-input>
           <app-select label="开户行">
-            <select v-model="warranty.bank_name" v-if="init" disabled>
+            <select v-model="warranty.bank_name" v-if="init.transferstate" disabled>
               <option v-for="item in init.transferstate.bank_name" :value="item.bs_id">{{item.explain}}</option>
             </select>
           </app-select>
           <app-select label="账户类别">
-            <select v-model="warranty.bank_card" v-if="init" disabled>
+            <select v-model="warranty.bank_card" v-if="init.transferstate" disabled>
               <option v-for="item in init.transferstate.bank_card" :value="item.bs_id">{{item.explain}}</option>
             </select>
           </app-select>

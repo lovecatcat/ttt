@@ -23,7 +23,7 @@
           <div slot="icon" v-show="beneficiary.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model="beneficiary.document_type" v-if="init">
+          <select v-model="beneficiary.document_type" v-if="init.applicant">
             <option disabled>请选择</option>
             <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
           </select>
@@ -90,7 +90,7 @@
     <div class="am-list am-list-6lb form" v-if="anti_money">
       <div class="am-list-body">
         <app-select label="国籍" :readonly="beneficiary.document_type != 3">
-          <select v-model="beneficiary.nationality" v-if="init" :disabled="beneficiary.document_type != 3">
+          <select v-model="beneficiary.nationality" v-if="init.applicant" :disabled="beneficiary.document_type != 3">
             <option disabled>请选择</option>
             <option v-for="type in init.applicant.nationality" :value="type.bs_id">{{type.explain}}</option>
           </select>

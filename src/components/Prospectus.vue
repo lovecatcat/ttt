@@ -126,7 +126,7 @@ export default {
         email: '' //邮箱
       },
       assured: {
-        social_security: '15045'
+        social_security: '15047'
       },
       // pay_year: null, //交费年期
       // safe_year: null, //保险期间
