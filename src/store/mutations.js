@@ -48,12 +48,13 @@ export default {
   setAntiMoney(state, bool) {
     state.anti_money = bool
   },
-  ready(state) {
-    state.ready = true
-  },
   setParam(state, payload) {
-    for (var index in payload) {
+    if (typeof payload === 'boolean') {
       state[index] = payload[index]
+    } else {
+      for (var index in payload) {
+        state[index] = payload[index]
+      }
     }
   }
 }

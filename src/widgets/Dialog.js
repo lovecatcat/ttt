@@ -19,21 +19,25 @@ export default {
               <p class="am-dialog-brief">{{brief}}</p>
             </div>
             <div class="am-dialog-footer">
-              <a class="am-dialog-button" role="button" @click="title=''">取消</a>
-              <a class="am-dialog-button" role="button" @click="close">确定</a>
+              <a class="am-dialog-button" role="button" @click="no">取消</a>
+              <a class="am-dialog-button" role="button" @click="yes">确定</a>
             </div>
           </div>
         </div>
       </div>
       `,
       methods: {
-        open(t, b, cb) {
+        open(t, b, ycb, ncb) {
           var vm = this
           vm.title = t
           vm.brief = b
-          vm.close = function () {
+          vm.yes = function () {
             vm.title = ''
-            cb()
+            ycb && ycb()
+          }
+          vm.no = function () {
+            vm.title = ''
+            ncb && ncb()
           }
         }
       }

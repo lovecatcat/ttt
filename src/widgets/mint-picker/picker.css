@@ -21,10 +21,6 @@
     display: block;
 }
 
-.mobileSelect .panel {
-    position: relative
-}
-
 .mobileSelect .content {
     width: 100%;
     display: block;
@@ -82,6 +78,11 @@
 
 .mobileSelect .content .btnBar .title {
     font-size: 15px;
+}
+
+.mobileSelect .panel{
+    position: relative;
+    z-index: 999;
 }
 
 .mobileSelect .content .panel:after {
@@ -159,7 +160,7 @@
 
 .mobileSelect-show {
     opacity: 1;
-    z-index: 10000;
+    z-index: 800;
 }
 
 .mobileSelect-show .content {

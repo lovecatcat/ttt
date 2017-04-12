@@ -13,7 +13,6 @@
 export default {
   name: 'alert',
   data() {
-    // <router-link :to="btnUrl">{{btnTxt}}</router-link>
     return {
       title: '',
       btnTxt: '',
@@ -41,9 +40,6 @@ export default {
       this.btnTxt = ''
       this.isShow = false
     }
-  },
-  deactivated() {
-    this.hide()
   }
 }
 </script>

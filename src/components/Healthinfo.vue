@@ -87,8 +87,8 @@ export default {
             </app-input>
           </template>
           <div class="am-button-group">
-            <button type="button" class="am-button tiny" @click="comfirm">确定</button>
             <button type="button" class="am-button tiny" @click="cancel">取消</button>
+            <button type="button" class="am-button tiny" @click="comfirm">确定</button>
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@ export default {
             field += j.title + '：' + text + '\t'
           }
           // 合并输入内容
-          this.$parent.clientvalue.fields[this.index] = field
+          this.$set(this.$parent.clientvalue.fields, this.index, field)
           return bool
         }
       }
@@ -330,7 +330,16 @@ export default {
       if (val === true) {
         this.clientvalue.ass_amswer = {}
         this.clientvalue.fields = {}
+        this.clientvalue.app_amswer = {}
+        this.clientvalue.app_fields = {}
       }
+    },
+    clientvalue: {
+      handler(val) {
+        this.save2local('clientvalue', val)
+      },
+      deep: true,
+      immediate: true
     }
   },
   created() {
@@ -343,8 +352,11 @@ export default {
       vm.matters = res.filter(matter => {
         return matter.version === '2'
       })
-      vm.$store.dispatch('saveMatters', JSON.parse(JSON.stringify(vm.matters)))
+      vm.$store.dispatch('saveMatters', Api.obj2json(vm.matters))
     })
+    if (this.$store.state.todo) {
+      this.setData('clientvalue', this.$storage.fetch('clientvalue'))
+    }
   },
   beforeRouteLeave(to, from, next) {
     if (to.path === '/beneficiaries') {

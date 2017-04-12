@@ -96,7 +96,9 @@
           </select>
         </app-select>
         <app-input label="通讯地址">
-          <input slot="input" v-model.trim="beneficiary.address_select" type="text" placeholder="请点击选择" @click="$refs.address.show=true">
+          <div slot="input" @click="$refs.address.show = true" placeholder="请点击选择" :class="{pd:!beneficiary.address_select}">
+            {{beneficiary.address_select}}
+          </div>
           <template slot="icon">
             <div v-show="beneficiary.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
             <div class="am-list-button" @click="sameAddress">

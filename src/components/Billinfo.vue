@@ -28,7 +28,9 @@
           </select>
         </app-select>
         <app-input label="开户行所在地">
-          <input slot="input" readonly v-model.trim="warranty.bank_address" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
+          <div slot="input" @click="$refs.address.show = true" placeholder="请点击进行选择" :class="{pd:!warranty.bank_address}">
+            {{warranty.bank_address}}
+          </div>
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
       </div>
@@ -68,7 +70,6 @@ export default {
     return {
       agreement: false, //协议
       warranty: {
-        applicant: this.$store.state.applicant.name, //户名
         bank_card: '45', //卡折标志
         bank_name: 0, //银行名称
         bank_account: '', //银行帐号
@@ -81,6 +82,9 @@ export default {
     }
   },
   computed: {
+    applicant() {
+      return this.$store.state.applicant.name //户名
+    },
     init() {
       return this.$store.state.init || {}
     }

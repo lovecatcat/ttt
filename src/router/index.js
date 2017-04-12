@@ -111,9 +111,7 @@ const router = new Router({
 
 // 更新document.title
 router.beforeEach((to, from, next) => {
-  if (navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-    this.a.app.$root.$children.frame = '/favicon.ico' + Math.random()
-  } else {
+  if (!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
     document.title = to.meta.docTitle
   }
   next()

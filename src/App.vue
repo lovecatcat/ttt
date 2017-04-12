@@ -10,12 +10,10 @@
         </div>
       </router-view>
     </keep-alive>
-    <!-- <app-alert ref="alert"></app-alert> -->
   </div>
 </template>
 <script>
 import Api from './api'
-// import Alert from '@/components/Alert'
 export default {
   name: 'app',
   data() {
@@ -23,9 +21,6 @@ export default {
       frame: ''
     }
   },
-/*  components: {
-    'app-alert': Alert
-  },*/
   created() {
     this.$toast.open('初始化数据', 'loading')
     Api.initField(res => {

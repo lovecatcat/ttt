@@ -1,28 +1,15 @@
 import Vue from 'vue'
 
-import Input from './Input'
-import Select from './Select'
-import Dropdown from './Dropdown'
+import Input from './components/Input'
+import Select from './components/Select'
+import Dropdown from './components/Dropdown'
+import Dialog from './components/Dialog'
+import Picker from './Picker'
 
-const AppDialog = {
-  template: `
-  <div class="am-dialog show app-dialog">
-    <div class="am-dialog-wrap">
-      <slot name="header"></slot>
-      <slot name="body"></slot>
-      <slot name="footer"></slot>
-    </div>
-  </div>
-  `
-}
-Vue.component('app-dialog', AppDialog)
+Vue.component('app-dialog', Dialog)
 Vue.component('app-input', Input)
 Vue.component('app-select', Select)
 Vue.component('app-dropdown', Dropdown)
-
-// Picker
-require('mint-picker/lib/index.css')
-import Picker from 'mint-picker'
 Vue.component('mt-picker', Picker)
 
 ///////////

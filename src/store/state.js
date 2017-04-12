@@ -4,13 +4,14 @@ export default {
   warranty: {}, //保单信息
   applicant: {}, //投保人信息
   assured: {}, //被保人信息
-  ready: false, //加载完毕
   status: 0, //保单状态
   tid: '', //投保单号
   anti_money: false, //反洗钱标准
   init: null, //初始化数据,
-  main_insurance: 0, //主险数据
-  admin_id: admin_id
+  main_insurance: '0', //主险数据
+  admin_id: admin_id,
+  todo: false, //未完成订单
+  ready: false, //首页加载
   tmp: { //受益人
     people: [0],
     current: 0

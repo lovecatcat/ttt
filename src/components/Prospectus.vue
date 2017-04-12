@@ -75,6 +75,7 @@
 const qs = require('qs')
 import Api from '../api'
 
+// 根据key去重
 const unique = function(a, key) {
   var res = []
   for (var i = 0, len = a.length; i < len; i++) {
@@ -93,11 +94,19 @@ const unique = function(a, key) {
 // 计算周岁
 const getAge = function(str) {
   if (!str) return
-  var r = str.split('-')
-  var startTime = new Date(r[0], r[1], r[2])
-  var endTime = new Date()
-  return ((endTime - startTime) / 3600000 / 24 / 365).toString().split('.')[0]
+  var now = new Date()
+  var year = now.getFullYear()
+  var month = now.getMonth() + 1
+  var day = now.getDate()
+
+  var r = str.split('-').map(item => parseInt(item))
+  var age = year - r[0]
+  if (r[1] > month || (r[1] === month && r[2] > day)) { // 当月
+    age -= 1
+  }
+  return age
 }
+
 export default {
   name: 'prospectus',
   data() {
@@ -112,7 +121,6 @@ export default {
         period_money: '' //期交保费
       },
       warranty: {
-        // pay_way: 55, //交费方式
         delivery_way: 117
       },
       applicant: {
@@ -128,7 +136,6 @@ export default {
 
       safegoods: [] //保险产品
 
-      // main_insurance: 0 //主险
     }
   },
   computed: {
@@ -146,6 +153,20 @@ export default {
       return this.$store.state.init || {}
     }
   },
+  watch: {
+    insurances: {
+      handler(val) {
+        this.save2local('insurances', val)
+      },
+      deep: true
+    },
+    main_insurance: {
+      handler(val) {
+        this.save2local('main_insurance', val)
+      },
+      deep: true
+    }
+  },
   created() {
     var vm = this
     Api.querySafegoods(res => {
@@ -154,7 +175,21 @@ export default {
         return
       }
       vm.safegoods = res
-      vm.$store.dispatch('saveSafegoods', res)
+      vm.$store.commit('saveSafegoods', res)
+      if (vm.$store.state.todo && vm.$storage.fetch('main_insurance').safe_id) {
+        vm.setData('main_insurance', vm.$storage.fetch('main_insurance'))
+        vm.$nextTick(function() {
+          vm.attr = vm.main_insurance.attr
+          vm.attr2 = unique(vm.attr, 'safe_year')
+          var insurance = vm.$storage.fetch('insurances')[0]
+          this.insurance.safe_id = insurance.safe_id
+          this.insurance.money = insurance.money
+          this.insurance.pay_year = insurance.pay_year
+          if (vm.attr2.length === 1) {
+            this.insurance.safe_year = vm.attr2[0].sv_id
+          }
+        })
+      }
     })
     if (vm.$store.state.warranty && vm.$store.state.warranty.is_assured === '21') {
       vm.back = '/insured'

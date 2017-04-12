@@ -152,8 +152,6 @@ export default {
     }
   },
   methods: {
-    // 清除职业
-    clearOccupation() {},
     occupationChanged() {
       // var vm = this
       // vm.$set(this.selected, ses, value)

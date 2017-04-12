@@ -135,7 +135,7 @@
       <app-input label="邮编">
         <input slot="input" readonly :value="assured.zipcode" type="text">
       </app-input>
-      <app-input label="手机号码">
+      <app-input label="手机号码" v-if="assured.tel">
         <input slot="input" readonly :value="assured.tel" type="text">
       </app-input>
       <app-input label="固定电话" v-if="assured.visit_tel">
@@ -393,6 +393,7 @@ import Api from '../api'
 import {
   mapState
 } from 'vuex'
+
 export default {
   name: 'preview',
   data() {
@@ -590,6 +591,7 @@ export default {
             status: res.status,
             tid: res.data
           })
+          this.clearStorage()
           setTimeout(function() {
             vm.$router.push('/success')
           }, 2000)

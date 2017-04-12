@@ -48,7 +48,19 @@ export default {
     }
   },
   created() {
-    this.$store.commit('ready')
+    var applicant = this.$storage.fetch('applicant')
+    this.$store.commit('setParam', {
+      ready: true
+    })
+    if (applicant.name) {
+      this.$dialog.open('未完成订单', '是否继续完成该订单?', () => {
+        this.$store.commit('setParam', {
+          todo: true
+        })
+      }, () => {
+        this.clearStorage()
+      })
+    }
   }
 }
 </script>

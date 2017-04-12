@@ -14,7 +14,6 @@ export default {
       </div>
       `,
       data() {
-        // <router-link :to="btnUrl">{{btnTxt}}</router-link>
         return {
           title: '',
           btnTxt: '',
