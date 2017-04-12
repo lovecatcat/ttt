@@ -19,67 +19,67 @@ const initField = function (cb) {
     var res = {}
     const data = response.data
     data.forEach(function (item, index) {
-      if (item.name == 'warranty') {
+      if (item.name === 'warranty') {
         // 保单信息
         res.warranty = {}
         item.list.forEach(function (citem) {
-          if (citem.a_id == 53) { //与投保人关系
+          if (citem.a_id === '53') { //与投保人关系
             res.warranty.is_assured = citem.children
-          } else if (citem.a_id == 30) { //合同争议处理方式
+          } else if (citem.a_id === '30') { //合同争议处理方式
             res.warranty.contract_handle = citem.children
-          } else if (citem.a_id == 33) { //保单递送方式
+          } else if (citem.a_id === '33') { //保单递送方式
             res.warranty.delivery_way = citem.children
           }
         })
-      } else if (item.name == 'applicant') {
+      } else if (item.name === 'applicant') {
         // 投保人信息
         res.applicant = {}
         item.list.forEach(function (citem) {
-          if (citem.a_id == 6) { //省
+          if (citem.a_id === '6') { //省
             res.applicant.province = citem.children
-          } else if (citem.a_id == 16) { //国籍
+          } else if (citem.a_id === '16') { //国籍
             res.applicant.nationality = citem.children
-          } else if (citem.a_id == 14) { //证件类型
+          } else if (citem.a_id === '14') { //证件类型
             res.applicant.document_type = citem.children
-          } else if (citem.a_id == 13) { //性别
+          } else if (citem.a_id === '13') { //性别
             res.applicant.sex = citem.children
-          } else if (citem.a_id == 10) { //职业代码
+          } else if (citem.a_id === '10') { //职业代码
             res.applicant.occupation_code = citem.children
           }
         })
-      } else if (item.name == 'assured') {
+      } else if (item.name === 'assured') {
         // 被保险人信息
         res.assured = {}
         item.list.forEach(function (citem) {
-          if (citem.a_id == 6) { //省
+          if (citem.a_id === '6') { //省
             res.assured.province = citem.children
-          } else if (citem.a_id == 16) { //国籍
+          } else if (citem.a_id === '16') { //国籍
             res.assured.nationality = citem.children
-          } else if (citem.a_id == 14) { //证件类型
+          } else if (citem.a_id === '14') { //证件类型
             res.assured.document_type = citem.children
-          } else if (citem.a_id == 13) { //性别
+          } else if (citem.a_id === '13') { //性别
             res.assured.sex = citem.children
-          } else if (citem.a_id == 10) { //职业代码
+          } else if (citem.a_id === '10') { //职业代码
             res.assured.occupation_code = citem.children
-          } else if (citem.a_id == 46) { //社保（含新农合）
+          } else if (citem.a_id === '46') { //社保（含新农合）
             res.assured.social_security = citem.children
           }
         })
-      } else if (item.name == 'beneficiary') {
+      } else if (item.name === 'beneficiary') {
         // 受益人信息
         res.beneficiary = {}
         item.list.forEach(citem => {
-          if (citem.a_id == 66) {
+          if (citem.a_id === '66') {
             res.beneficiary.relationship = citem.children
           }
         })
-      } else if (item.name == 'transferstate') {
+      } else if (item.name === 'transferstate') {
         // 银行信息
         res.transferstate = {}
         item.list.forEach(citem => {
-          if (citem.a_id == 5) {
+          if (citem.a_id === '5') {
             res.transferstate.bank_name = citem.children
-          } else if (citem.a_id == 9) {
+          } else if (citem.a_id === '9') {
             res.transferstate.bank_card = citem.children
           }
         })

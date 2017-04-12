@@ -76,35 +76,28 @@ const qs = require('qs')
 import Api from '../api'
 
 const unique = function(a, key) {
-    var res = [];
-    for (var i = 0, len = a.length; i < len; i++) {
-      for (var j = i + 1; j < len; j++) {
-        if (key && a[i][key] === a[j][key]) {
-          j = ++i
-        } else {
-          j = ++i
-        }
+  var res = []
+  for (var i = 0, len = a.length; i < len; i++) {
+    for (var j = i + 1; j < len; j++) {
+      if (key && a[i][key] === a[j][key]) {
+        j = ++i
+      } else {
+        j = ++i
       }
-      res.push(a[i]);
     }
-    return res;
+    res.push(a[i])
   }
-  // 计算周岁
-const getAge = function(str) {
-  if (!str) return
-  var age = 0
-  var now = new Date()
-  var year = now.getFullYear()
-  var month = now.getMonth() + 1
-  var day = now.getDate()
-  var r = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
-  if (r[2] < month || (r[2] == month && r[3] < day)) { // 当月
-    age += 1
-  }
-  age += year - r[1]
-  return age
+  return res
 }
 
+// 计算周岁
+const getAge = function(str) {
+  if (!str) return
+  var r = str.split('-')
+  var startTime = new Date(r[0], r[1], r[2])
+  var endTime = new Date()
+  return ((endTime - startTime) / 3600000 / 24 / 365).toString().split('.')[0]
+}
 export default {
   name: 'prospectus',
   data() {
@@ -163,7 +156,7 @@ export default {
       vm.safegoods = res
       vm.$store.dispatch('saveSafegoods', res)
     })
-    if (vm.$store.state.warranty && vm.$store.state.warranty.is_assured == 21) {
+    if (vm.$store.state.warranty && vm.$store.state.warranty.is_assured === '21') {
       vm.back = '/insured'
     }
   },
@@ -178,7 +171,7 @@ export default {
       this.$toast.open('请点击计算期交保费', 'warn')
       return
     }
-    if (this.warranty.delivery_way == 117 && !this.checkEmail()) {
+    if (this.warranty.delivery_way === 117 && !this.checkEmail()) {
       return false
     }
     this.$store.commit('saveAssured', this.assured)
@@ -212,7 +205,7 @@ export default {
       let assured = vm.$store.state.assured
       for (var j in assured) {
         var open = 'assured_' + j
-        if (j == 'appl_id') continue
+        if (j === 'appl_id') continue
         if (filter.indexOf(j) > -1) {
           continue
         }
@@ -225,8 +218,7 @@ export default {
         var p = 'warranty_' + k
         pushData[p] = warranty[k]
       }
-      var admin_id = document.getElementById('id').value
-      pushData['warranty_admin_id'] = admin_id == '{$admin_id}' || admin_id == '' ? '911' : admin_id
+      pushData['warranty_admin_id'] = vm.$store.state.admin_id
       pushData['warranty_sc_id'] = 19
       pushData['warranty_is_save'] = 0
       pushData['warranty_source'] = 2
@@ -252,12 +244,12 @@ export default {
           vm.$toast.open('服务器开小差了', 'error')
           return
         }
-        if (res.status == 0) {
+        if (res.status === 0) {
           console.info(res.message)
           vm.$toast.open('计算失败：' + res.message)
           return
         } else {
-          vm.$toast.open('', '')
+          vm.$toast.close()
           vm.insurance.period_money = res.data[vm.insurance.safe_id]
           vm.$store.dispatch('saveAssured', {
             'assu_id': res.id.assured_assu_id
@@ -267,7 +259,7 @@ export default {
           })
           let pay_year
           vm.attr.forEach(item => {
-            if (item.sv_id == vm.insurance.pay_year) {
+            if (item.sv_id === vm.insurance.pay_year) {
               pay_year = item.pay_year
             }
           })
@@ -314,15 +306,15 @@ export default {
       var toast_text = null
       switch (id) {
         case '209':
-          if (money < 50000 || money % 10000 != 0) {
+          if (money < 50000 || money % 10000 !== 0) {
             toast_text = '最低保额为50000元，且为1万元整数倍'
           }
-          break;
+          break
         case '210':
-          if (money < 300000 || money % 10000 != 0) {
+          if (money < 300000 || money % 10000 !== 0) {
             toast_text = '最低保额为30万元，且为1万元整数倍'
           }
-          break;
+          break
       }
       if (toast_text) {
         this.$toast.open(toast_text, 'warn')
@@ -335,10 +327,10 @@ export default {
       var age = getAge(vm.$store.state.assured.birthday)
       var id = this.main_insurance.safe_id
       if (age > 60 && id === '209') {
-        vm.$toast.open('被保险人年龄不大于60周岁', '')
+        vm.$toast.open('被保险人年龄不能大于60周岁', '')
         return false
       } else if (age > 50 && id === '210') {
-        vm.$toast.open('被保险人年龄不大于50周岁', '')
+        vm.$toast.open('被保险人年龄不能大于50周岁', '')
         return false
       }
       return true

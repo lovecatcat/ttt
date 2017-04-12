@@ -28,7 +28,7 @@
           </select>
         </app-select>
         <app-input label="开户行所在地">
-          <input slot="input" v-model.trim="warranty.bank_address" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
+          <input slot="input" readonly v-model.trim="warranty.bank_address" type="text" placeholder="请点击进行选择" @click="$refs.address.show=true">
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
       </div>
@@ -86,7 +86,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == '/healthinfo') {
+    if (to.path === '/healthinfo') {
       next()
       return false
     }
@@ -104,9 +104,9 @@ export default {
         return false
       } else if (!this.warranty.bank_province) {
         toast_text = '银行所在省份不能为空'
-      } else if (!this.warranty.bank_city && this.warranty.bank_province != 3877) {
+      } else if (!this.warranty.bank_city && this.warranty.bank_province !== '3877') {
         toast_text = '银行所在城市不能为空'
-      } else if (this.agreement == false) {
+      } else if (this.agreement === false) {
         toast_text = '请先确认阅读《转账授权声明》'
       }
       if (toast_text) {

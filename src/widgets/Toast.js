@@ -22,7 +22,7 @@ export default {
             this.text = text
             this.type = type
             this.show = true
-            if (type != "loading") {
+            if (type !== 'loading') {
               setTimeout(() => {
                 this.text = ''
                 this.type = ''

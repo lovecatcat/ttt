@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     toggle() {
-      if (this.isup != 'up') {
+      if (this.isup !== 'up') {
         this.isup = 'up'
       } else {
         this.isup = ''

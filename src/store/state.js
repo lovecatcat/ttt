@@ -1,3 +1,5 @@
+var admin_id = document.getElementById('id').value
+admin_id = admin_id === '{$admin_id}' || admin_id === '' ? '911' : admin_id
 export default {
   warranty: {}, //保单信息
   applicant: {}, //投保人信息
@@ -8,6 +10,7 @@ export default {
   anti_money: false, //反洗钱标准
   init: null, //初始化数据,
   main_insurance: 0, //主险数据
+  admin_id: admin_id
   tmp: { //受益人
     people: [0],
     current: 0

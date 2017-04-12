@@ -388,7 +388,7 @@
   </div>
 </template>
 <script>
-const qs = require('qs');
+const qs = require('qs')
 import Api from '../api'
 import {
   mapState
@@ -473,14 +473,22 @@ export default {
         if (filter.indexOf(j) > -1) {
           continue
         }
+        /*        if (j === 'address') {
+                  pushData[index] = vm.applicant['address_select'] + vm.applicant[j]
+                } else {
+                }*/
         pushData[index] = vm.applicant[j]
       }
       for (var k in vm.assured) {
         var o = 'assured_' + k
-        if (k == 'appl_id') continue
+        if (k === 'appl_id') continue
         if (filter.indexOf(k) > -1) {
           continue
         }
+        /*        if (k === 'address') {
+                  pushData[o] = vm.assured['address_select'] + vm.assured[k]
+                } else {
+                }*/
         pushData[o] = vm.assured[k]
       }
       for (var m in vm.warranty) {
@@ -488,8 +496,7 @@ export default {
         var p = 'warranty_' + m
         pushData[p] = vm.warranty[m]
       }
-      var admin_id = document.getElementById('id').value
-      pushData['warranty_admin_id'] = admin_id == '{$admin_id}' || admin_id == '' ? '911' : admin_id
+      pushData['warranty_admin_id'] = vm.$store.state.admin_id
       pushData['warranty_sc_id'] = 19
         // pushData['warranty_add_time'] = (Date.parse(new Date())).toString().substr(0, 10)
       pushData['warranty_is_save'] = 1
@@ -504,24 +511,23 @@ export default {
       var warId = ''
       vm.matters.forEach(i => {
         var index = i.entry
+        pushData['clientvalue_ci_id'].push(i.ci_id)
+        pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
+        pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
+
+        pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
+        pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
+        pushData['clientvalue_war_id'].push(warId)
         if (i.child) {
           i.child.forEach(child => {
-            index = i.entry + child.entry
+            // index = i.entry + child.entry
             pushData['clientvalue_ci_id'].push(child.ci_id)
-            pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] || false)
-            pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[i.entry] || false)
-            pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[i.entry] || '')
-            pushData['clientvalue_fields'].push(vm.clientvalue.fields[i.entry] || '')
+            pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
+            pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
+            pushData['clientvalue_app_fields'].push('')
+            pushData['clientvalue_fields'].push('')
             pushData['clientvalue_war_id'].push(warId)
           })
-        } else {
-          pushData['clientvalue_ci_id'].push(i.ci_id)
-          pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] || false)
-          pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] || false)
-
-          pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
-          pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
-          pushData['clientvalue_war_id'].push(warId)
         }
       })
       pushData['beneficiary_war_id'] = []
@@ -537,7 +543,7 @@ export default {
       pushData['beneficiary_relationship'] = []
       pushData['beneficiary_nationality'] = []
       pushData['beneficiary_register'] = []
-      if (vm.warranty.benefited_type == 1) {
+      if (vm.warranty.benefited_type === 1) {
         vm.beneficiaries.forEach(function(beneficiary) {
           pushData['beneficiary_war_id'].push(warId)
           pushData['beneficiary_name'].push(beneficiary.name)
@@ -575,11 +581,11 @@ export default {
           vm.$toast.open('服务器开小差了', 'error')
           return
         }
-        if (res.status == '0') {
+        if (res.status === '0') {
           vm.$toast.open('提交失败：' + res.message, '', 5000)
           return false
         } else {
-          vm.$toast.open(res.status == 1 ? '投保成功' : res.message, 'success')
+          vm.$toast.open(res.status === 1 ? '投保成功' : res.message, 'success')
           vm.$store.dispatch('setParam', {
             status: res.status,
             tid: res.data

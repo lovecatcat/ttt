@@ -29,8 +29,8 @@ export default {
   data() {
     var provinces = Api.obj2json(this.$store.state.init.applicant.province)
     provinces.unshift({
-      code: "",
-      explain: "请选择省份"
+      code: '',
+      explain: '请选择省份'
     })
     var level3 = [{
       flex: 1,
@@ -78,13 +78,13 @@ export default {
     switch (this.level) {
       case 1:
         Slots = level1
-        break;
+        break
       case 2:
         Slots = level2
-        break;
+        break
       case 3:
         Slots = level3
-        break;
+        break
     }
     return {
       show: false,
@@ -106,7 +106,7 @@ export default {
       var vm = this
       vm.seleted = []
       if (vm.level > 1) {
-        if (typeof vm.cities[values[0].code] == 'object') {
+        if (typeof vm.cities[values[0].code] === 'object') {
           picker.setSlotValues(1, vm.cities[values[0].code])
         } else if (values[0].code) {
           Api.queryRegion('city', values[0].code, res => {
@@ -131,7 +131,7 @@ export default {
 
       if (vm.level > 2) {
         if (values[1] && values[1].code) {
-          if (typeof vm.districts[values[1].code] == 'object') {
+          if (typeof vm.districts[values[1].code] === 'object') {
             picker.setSlotValues(2, vm.districts[values[1].code])
           } else {
             values[1].code && Api.queryRegion('district', values[1].code, res => {
@@ -155,17 +155,17 @@ export default {
       switch (vm.level) {
         case 1:
           vm.seleted.push(values[0])
-          break;
+          break
         case 2:
           vm.seleted.push(values[0])
           vm.seleted.push(values[1])
-          break;
+          break
         case 3:
         default:
           vm.seleted.push(values[0])
           vm.seleted.push(values[1])
           vm.seleted.push(values[2])
-          break;
+          break
       }
     },
     close() {

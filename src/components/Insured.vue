@@ -114,7 +114,7 @@
             <option value="7">其他</option>
           </select>
         </app-select>
-        <app-input label="" v-show="applicant.annual_source ==7">
+        <app-input label="" v-show="applicant.annual_source === 7">
           <input slot="input" v-model.lazy="applicant.annual_source_other" type="text" placeholder="请填写收入来源">
           <div slot="icon" v-show="applicant.annual_source_other != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.annual_source_other = ''"></i></div>
         </app-input>
@@ -185,10 +185,10 @@ export default {
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
-        sex: 15, //性别
+        sex: '15', //性别
         height: '', //身高(厘米)
         weight: '', //体重(kg)
-        nationality: 63, //国籍
+        nationality: 99, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
         annual_source: 0, //收入来源
@@ -207,7 +207,7 @@ export default {
         zipcode: '', //通信邮编
         // 职业
         occupation: '', //职业
-        occupation_code: '', //职业代码
+        // occupation_code: '', //职业代码
 
         work_unit: '', //工作单位
         visit_tel: '', //回访电话
@@ -234,13 +234,7 @@ export default {
   watch: {
     longTerm(val) {
       this.applicant.document_term = val ? '9999-12-30' : ''
-    }/*,
-    applicant: {
-      handler(val) {
-        val.annual_source == 7 && this.$set(this.applicant, 'annual_source_other', '')
-      },
-      deep: true
-    }*/
+    }
   },
   methods: {
     // 证件号码校验
@@ -249,7 +243,7 @@ export default {
     },
     // 检查ID是否有效
     IDValidate() {
-      const vm = this;
+      const vm = this
       const type = vm.applicant.document_type
       const id = vm.applicant.document_number
       var toast_text = null
@@ -264,10 +258,10 @@ export default {
             const idInfo = Validator.getInfo(id)
             const code = idInfo.addrCode.substr(0, 2)
             const sex = { // 0为女，1为男
-              1: 15,
-              0: 16
+              1: '15',
+              0: '16'
             }
-            vm.applicant.nationality = 63
+            vm.applicant.nationality = 99
             vm.applicant.birthday = idInfo.birth
             vm.applicant.sex = sex[idInfo.sex]
             vm.applicant.register_select = addr[code].name
@@ -279,27 +273,27 @@ export default {
             vm.applicant.register_select = ''
             vm.applicant.birthday = ''
           }
-          break;
+          break
         case '3': // 护照
           if (id.length <= 3) {
             toast_text = '护照必须是大于3位'
           }
-          break;
+          break
         case '2': // 军官证
           if (id.length > 18 || id.length < 10) {
             toast_text = '军官证必须是10-18位'
           }
-          break;
+          break
         case '7': //港澳
           if (id.length <= 8) {
             toast_text = '港澳居民来往内地通行证号码必须大于8位'
           }
-          break;
+          break
         case '6': //台湾
           if (id.length < 8) {
             toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'
           }
-          break;
+          break
       }
       if (toast_text) {
         vm.$toast.open(toast_text, '')
@@ -331,7 +325,7 @@ export default {
       var vm = this
       var res = vm.cardinfo
         // 是否同人
-      if (vm.applicant.name != res.name || vm.applicant.document_type != res.document_type || vm.applicant.document_number != res.document_number || vm.applicant.birthday != res.birthday || vm.applicant.sex != res.sex) {
+      if (vm.applicant.name !== res.name || vm.applicant.document_type !== res.document_type || vm.applicant.document_number !== res.document_number || vm.applicant.birthday !== res.birthday || vm.applicant.sex !== res.sex) {
         return
       }
       var applicant = {}
@@ -346,7 +340,7 @@ export default {
       applicant.annual_source = res.annual_source
       applicant.annual_source_other = res.annual_source_other
       applicant.document_term = res.document_term
-      if (res.document_term == '9999-12-30') vm.longTerm = true
+      if (res.document_term === '9999-12-30') vm.longTerm = true
       applicant.height = res.height
       applicant.weight = res.weight
       applicant.name = res.name
@@ -359,12 +353,12 @@ export default {
     },
     // 年龄验证
     checkAge() {
-      const vm = this;
+      const vm = this
       const age = new Date().getFullYear() - vm.applicant.birthday.substr(0, 4)
       if (age <= 16) {
         vm.$toast.open('投保人年龄不符合规定，请更换投保人', 'error')
-        vm.applicant.document_number = ''
-        vm.applicant.birthday = ''
+          // vm.applicant.document_number = ''
+          // vm.applicant.birthday = ''
         return false
       }
       return true
@@ -382,7 +376,7 @@ export default {
     },
     // 通讯地址选择
     address_selected(selected) {
-      if (selected.length == 0) return false
+      if (selected.length === 0) return false
       var vm = this
       var select_show = ''
       select_show += selected[0].explain
@@ -427,7 +421,7 @@ export default {
     checkPhone() {
       const tel = this.applicant.tel
       var toast_text = null
-      if (this.applicant.document_type == '7') {
+      if (this.applicant.document_type === '7') {
         if (!/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel.toString())) {
           toast_text = '请输入正确的11位或13位手机号'
         }
@@ -449,13 +443,13 @@ export default {
     // 设置职业
     setOccupation(selected) {
       this.$set(this.warranty, 'applicant_occupation_code', selected.bs_id)
-      this.$set(this.applicant, 'occupation_code', selected.bs_id)
+        // this.$set(this.applicant, 'occupation_code', selected.bs_id)
       this.$set(this.applicant, 'occupation', selected.explain)
     },
     // 清除职业
     clearOccupation() {
       this.$set(this.warranty, 'applicant_occupation_code', '')
-      this.$set(this.applicant, 'occupation_code', '')
+        // this.$set(this.applicant, 'occupation_code', '')
       this.$set(this.applicant, 'occupation', '')
       this.$refs.occupation.show = true
     },
@@ -467,7 +461,7 @@ export default {
         toast_text = '请填写投保人【姓名】'
       } else if (!vm.applicant.document_number) {
         toast_text = '请填写投保人【证件号码】'
-      } else if (vm.longTerm == false && (!vm.applicant.document_term || vm.applicant.document_term == "0000-00-00")) {
+      } else if (vm.longTerm === false && (!vm.applicant.document_term || vm.applicant.document_term === '0000-00-00')) {
         toast_text = '请填写投保人【证件有效期】'
       } else if (!vm.applicant.sex) {
         toast_text = '请选择投保人【性别】'
@@ -481,9 +475,9 @@ export default {
         toast_text = '请选择投保人【户籍】'
       } else if (!vm.applicant.province) {
         toast_text = '请选择投保人【通讯地址省份】'
-      } else if (!vm.applicant.city && vm.applicant.province != '3877') {
+      } else if (!vm.applicant.city && vm.applicant.province !== '3877') {
         toast_text = '请选择投保人【通讯地址市区】'
-      } else if (!vm.applicant.district && vm.applicant.province != '3877') {
+      } else if (!vm.applicant.district && vm.applicant.province !== '3877') {
         toast_text = '请选择投保人【通讯地址县/区】'
       } else if (!vm.applicant.address) {
         toast_text = '请填写投保人【详细地址】'
@@ -497,21 +491,21 @@ export default {
         return false
       } else if (!vm.applicant.annual_earnings) {
         toast_text = '请填写投保人【年收入】'
-      } else if (!vm.applicant.annual_earnings) {
-        toast_text = '请填写投保人【年收入】'
+      } else if (!vm.applicant.annual_source) {
+        toast_text = '请选择投保人【收入来源】'
       } else if (!vm.applicant.height) {
         toast_text = '请填写投保人【身高】'
       } else if (!vm.applicant.weight) {
         toast_text = '请填写投保人【体重】'
       } else if (!vm.warranty.is_assured) {
         toast_text = '请选择投保人【是投保人的】'
-      } else if (!vm.warranty.is_assured == 22) {
+      } else if (!vm.warranty.is_assured === 22) {
         toast_text = '请填写投保人【是投保人的】'
       } else if (!vm.warranty.applicant_occupation_code) {
         toast_text = '请选择投保人【职业】'
       } else if (!vm.warranty.contract_handle) {
         toast_text = '请选择【合同争议处理方式】'
-      } else if (vm.warranty.contract_handle == '109' && !vm.warranty.contract_handle_value) {
+      } else if (vm.warranty.contract_handle === '109' && !vm.warranty.contract_handle_value) {
         toast_text = '请填写【仲裁委员会】'
       }
       if (toast_text) {
@@ -526,16 +520,14 @@ export default {
         return false
       }
       this.$toast.open('', '')
-      var nextPage
-/*      if (this.applicant.annual_source != 7) {
-        this.$delete(this.applicant, 'annual_source_other')
-      }*/
-      // 如果被保险人是本人
-      if (this.warranty.is_assured == '21') {
+      var nextPage = null
+        // 如果被保险人是本人
+      if (this.warranty.is_assured === '21') {
         this.warranty.assured_occupation_code = this.warranty.applicant_occupation_code
         Api.queryID(this.applicant.document_number, 'assured', res => {
-          var assured = this.applicant
-          if (res) {
+          var assured = Api.obj2json(this.applicant)
+          assured.appl_id && (delete assured.appl_id)
+          if (res.assu_id) {
             assured.assu_id = res.assu_id
           }
           this.$store.dispatch('saveAssured', assured)

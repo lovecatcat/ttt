@@ -28,7 +28,7 @@ export default {
       return this.$store.state.tid
     },
     title() {
-      return this.state == 1 ? '投保成功' : '进入人工核保'
+      return this.state === 1 ? '投保成功' : '进入人工核保'
     }
   }
 }

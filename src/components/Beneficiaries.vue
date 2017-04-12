@@ -79,7 +79,7 @@ export default {
         for (var k = 0; k < benefited[j].length; k++) {
           sum += benefited[j][k]
         }
-        if (sum != 100 && benefited[j].length > 0) {
+        if (sum !== 100 && benefited[j].length > 0) {
           this.$toast.open('受益顺序为' + j + '的受益人的受益份额和为100%', '')
           return false
         }
@@ -88,16 +88,16 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == '/prospectus') {
+    if (to.path === '/prospectus') {
       next()
       return false
     }
     let vm = this
     let type = vm.warranty.benefited_type
-    if (type == 1) {
+    if (type === 1) {
       let children = vm.$refs.child
       for (let index in children) {
-        if (children[index].beneficiary.document_number == vm.$store.state.assured.document_number && children[index].beneficiary.name == vm.$store.state.assured.name) {
+        if (children[index].beneficiary.document_number === vm.$store.state.assured.document_number && children[index].beneficiary.name === vm.$store.state.assured.name) {
           vm.$toast.open('受益人和被保险人不能是同一人', '')
           return false
         }
@@ -105,7 +105,7 @@ export default {
           return false
         }
         children[index].$emit('save')
-        if (index == children.length - 1) {
+        if (index === children.length - 1) {
           vm.$store.commit('saveBeneficiary', Api.obj2json(vm.beneficiaries))
           if (!this.checkRatio()) return
           vm.$store.commit('setWarranty', vm.warranty)

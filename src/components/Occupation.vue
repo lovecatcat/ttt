@@ -6,7 +6,8 @@
       </div>
       <div class="am-dialog-body" slot="body">
         <div class="am-list" v-show="commonOccupation.length > 0">
-          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe695;</span> 常见职业</span></div>
+          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe695;</span> 常见职业</span>
+          </div>
           <div class="am-content">
             <div class="app-btns am-ft-left">
               <button type="button" class="am-button tiny" v-for="item in commonOccupation" @click="selectOccupation(item)">{{item.explain}}</button>
@@ -14,7 +15,8 @@
           </div>
         </div>
         <div class="am-list form">
-          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe609;</span> 选择职业</span></div>
+          <div class="am-list-header am-ft-left"><span class="am-ft-md am-ft-black"> <span class="app-iconfont app-color-warn">&#xe609;</span> 选择职业</span>
+          </div>
           <div class="am-list-body">
             <div class="am-list-item">
               <div class="am-list-label">{{selected_label}}</div>
@@ -29,7 +31,8 @@
           </div>
         </div>
         <div class="am-search-inpage">
-          <div class="am-ft-left"><span class="app-iconfont app-color-warn">&#xe611;</span> 搜索职业</span></div>
+          <div class="am-ft-left"><span class="app-iconfont app-color-warn">&#xe611;</span> 搜索职业</span>
+          </div>
           <div class="am-search-input">
             <input class="am-search-value" v-focus v-model.lazy="keyword" type="text" placeholder="或输入职业关键词" @keyup.enter="queryOccupation">
             <div class="am-search-clear" @click="keyword = ''" v-show="keyword !=''">
@@ -71,63 +74,63 @@ export default {
       showOccupation: false, //显示职业数据
       OccupationResult: [], //搜索结果
       commonOccupation: [{
-          explain: "公务员",
-          bs_id: 9764
-        }, {
-          explain: "行政业务办公人员（内勤）",
-          bs_id: 9759
-        }, {
-          explain: "行政业务办公人员（外勤）",
-          bs_id: 9760
-        }, {
-          explain: "金融一般内勤人员",
-          bs_id: 9579
-        }, {
-          explain: "企业职能部门经理或主管",
-          bs_id: 9306
-        }, {
-          explain: "会计人员",
-          bs_id: 9557
-        }, {
-          explain: "企业经理",
-          bs_id: 9305
-        }, {
-          explain: "工厂企业负责人",
-          bs_id: 9307
-        }, {
-          explain: "农夫",
-          bs_id: 10108
-        }, {
-          explain: "个体摊贩",
-          bs_id: 9846
-        }, {
-          explain: "杂货商",
-          bs_id: 10066
-        }, {
-          explain: "家庭主妇",
-          bs_id: 10049
-        }, {
-          explain: "服饰买卖商",
-          bs_id: 10084
-        }, {
-          explain: "食品商",
-          bs_id: 10081
-        }, {
-          explain: "幼儿教师",
-          bs_id: 9593
-        }, {
-          explain: "中学教师",
-          bs_id: 9591
-        }, {
-          explain: "小学教师",
-          bs_id: 9592
-        }, {
-          explain: "无业人员",
-          bs_id: 11336
-        }, {
-          explain: "退休人员",
-          bs_id: 11337
-        }] //常见职业
+        explain: '公务员',
+        bs_id: 9764
+      }, {
+        explain: '行政业务办公人员（内勤）',
+        bs_id: 9759
+      }, {
+        explain: '行政业务办公人员（外勤）',
+        bs_id: 9760
+      }, {
+        explain: '金融一般内勤人员',
+        bs_id: 9579
+      }, {
+        explain: '企业职能部门经理或主管',
+        bs_id: 9306
+      }, {
+        explain: '会计人员',
+        bs_id: 9557
+      }, {
+        explain: '企业经理',
+        bs_id: 9305
+      }, {
+        explain: '工厂企业负责人',
+        bs_id: 9307
+      }, {
+        explain: '农夫',
+        bs_id: 10108
+      }, {
+        explain: '个体摊贩',
+        bs_id: 9846
+      }, {
+        explain: '杂货商',
+        bs_id: 10066
+      }, {
+        explain: '家庭主妇',
+        bs_id: 10049
+      }, {
+        explain: '服饰买卖商',
+        bs_id: 10084
+      }, {
+        explain: '食品商',
+        bs_id: 10081
+      }, {
+        explain: '幼儿教师',
+        bs_id: 9593
+      }, {
+        explain: '中学教师',
+        bs_id: 9591
+      }, {
+        explain: '小学教师',
+        bs_id: 9592
+      }, {
+        explain: '无业人员',
+        bs_id: 11336
+      }, {
+        explain: '退休人员',
+        bs_id: 11337
+      }] //常见职业
     }
   },
   computed: {

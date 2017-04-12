@@ -118,14 +118,14 @@ export default {
           var field = ''
           for (var i in this.forms) {
             var j = this.forms[i]
-            if (!j.input && j.type != 'radio') {
+            if (!j.input && j.type !== 'radio') {
               this.$toast.open('请填写' + j.title, '')
               bool = false
               return false
             }
             let text
-            if (j.type == 'radio') {
-              text = j.input == true ? '是' : '否'
+            if (j.type === 'radio') {
+              text = j.input === true ? '是' : '否'
             } else {
               text = j.input
             }
@@ -341,13 +341,13 @@ export default {
         return
       }
       vm.matters = res.filter(matter => {
-        return matter.version == 2
+        return matter.version === '2'
       })
       vm.$store.dispatch('saveMatters', JSON.parse(JSON.stringify(vm.matters)))
     })
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == '/beneficiaries') {
+    if (to.path === '/beneficiaries') {
       next()
       return false
     }

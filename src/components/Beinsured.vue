@@ -168,7 +168,7 @@ export default {
         sex: 15, //性别
         height: '', //身高(厘米)
         weight: '', //体重(kg)
-        nationality: 63, //国籍
+        nationality: 99, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
         annual_source: 0, //收入来源
@@ -216,7 +216,7 @@ export default {
     },
     // 检查ID是否有效
     IDValidate() {
-      const vm = this;
+      const vm = this
       const type = vm.assured.document_type
       const id = vm.assured.document_number
       var toast_text = null
@@ -233,7 +233,7 @@ export default {
               1: 15,
               0: 16
             }
-            vm.assured.nationality = 63
+            vm.assured.nationality = 99
             vm.assured.birthday = idInfo.birth
             vm.assured.sex = sex[idInfo.sex]
             vm.assured.register_select = addr[code].name
@@ -250,27 +250,27 @@ export default {
             vm.assured.register_select = ''
             vm.assured.birthday = ''
           }
-          break;
+          break
         case '3': // 护照
           if (id.length <= 3) {
             toast_text = '护照必须是大于3位'
           }
-          break;
+          break
         case '2': // 军官证
           if (id.length > 18 || id.length < 10) {
             toast_text = '军官证必须是10-18位'
           }
-          break;
+          break
         case '7': //港澳
           if (id.length <= 8) {
             toast_text = '港澳居民来往内地通行证号码必须大于8位'
           }
-          break;
+          break
         case '6': //台湾
           if (id.length < 8) {
             toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'
           }
-          break;
+          break
       }
       if (toast_text) {
         vm.$toast.open(toast_text, '')
@@ -303,7 +303,7 @@ export default {
       var res = vm.cardinfo
 
       // 是否同人
-      if (vm.assured.name != res.name || vm.assured.document_type != res.document_type || vm.assured.document_number != res.document_number || vm.assured.birthday != res.birthday || vm.assured.sex != res.sex) {
+      if (vm.assured.name !== res.name || vm.assured.document_type !== res.document_type || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday || vm.assured.sex !== res.sex) {
         return
       }
       var assured = {}
@@ -316,10 +316,10 @@ export default {
       }
       assured.name = res.name
       assured.annual_earnings = res.annual_earnings
-      assured.annual_source = res.annual_source
+      assured.annual_source = res.annual_source || 0
       assured.annual_source_other = res.annual_source_other
       assured.document_term = res.document_term
-      if (res.document_term == '9999-12-30') vm.longTerm = true
+      if (res.document_term === '9999-12-30') vm.longTerm = true
       assured.height = res.height
       assured.weight = res.weight
       assured.register = res.register
@@ -385,7 +385,7 @@ export default {
     checkPhone() {
       const tel = this.assured.tel
       var toast_text = null
-      if (this.assured.document_type == '7' && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
+      if (this.assured.document_type === '7' && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
         toast_text = '请输入正确的11位或13位手机号'
       } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {
         toast_text = '请输入正确的11位手机号'
@@ -417,7 +417,7 @@ export default {
         toast_text = '请填写被保险人【姓名】'
       } else if (!vm.assured.document_number) {
         toast_text = '请填写被保险人【证件号码】'
-      } else if (vm.longTerm == false && (!vm.assured.document_term || vm.assured.document_term == "0000-00-00")) {
+      } else if (vm.longTerm === false && (!vm.assured.document_term || vm.assured.document_term === '0000-00-00')) {
         toast_text = '请填写被保险人【证件有效期】'
       } else if (!vm.assured.sex) {
         toast_text = '请选择被保险人【性别】'
@@ -429,9 +429,9 @@ export default {
         toast_text = '请选择被保险人【户籍】'
       } else if (!vm.assured.province) {
         toast_text = '请选择被保险人【通讯地址省份】'
-      } else if (!vm.assured.city && vm.assured.province != '3877') {
+      } else if (!vm.assured.city && vm.assured.province !== '3877') {
         toast_text = '请选择被保险人【通讯地址市区】'
-      } else if (!vm.assured.district && vm.assured.province != '3877') {
+      } else if (!vm.assured.district && vm.assured.province !== '3877') {
         toast_text = '请选择被保险人【通讯地址县/区】'
       } else if (!vm.assured.address) {
         toast_text = '请填写被保险人【详细地址】'
@@ -441,8 +441,8 @@ export default {
         return false
       } else if (vm.assured.annual_earnings === '') {
         toast_text = '请填写被保险人【年收入】'
-      } else if (vm.assured.annual_earnings < 0) {
-        toast_text = '请填写正确的年收入值'
+      } else if (!vm.assured.annual_source) {
+        toast_text = '请选择被保险人【收入来源】'
       } else if (!vm.assured.height) {
         toast_text = '请填写被保险人【身高】'
       } else if (!vm.assured.weight) {
@@ -459,7 +459,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == '/insured') {
+    if (to.path === '/insured') {
       next()
       return false
     }
