@@ -246,7 +246,7 @@ export default {
           vm.beneficiary.address_select = applicant.address_select
           vm.beneficiary.zipcode = applicant.zipcode
           vm.beneficiary.occupation = applicant.occupation
-          vm.beneficiary.occupation_code = applicant.occupation_code
+          vm.beneficiary.occupation_code = this.this.$store.state.warranty.applicant_occupation_code
           vm.beneficiary.visit_tel = applicant.visit_tel
           vm.beneficiary.tel = applicant.tel
         }

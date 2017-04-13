@@ -24,7 +24,7 @@
           </select>
         </app-select>
         <app-input label="基本保险金额">
-          <input slot="input" @change="insurance.period_money = ''" v-model.number="insurance.money" type="number" placeholder="请填写基本保险金额（元）" @blur="checkMoney()">
+          <input slot="input" @change="insurance.period_money = ''" v-model.number.lazy="insurance.money" type="number" placeholder="请填写基本保险金额（元）" @blur="checkMoney()">
           <div slot="icon" v-show="insurance.money != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="insurance.money = ''"></i></div>
         </app-input>
         <app-input label="期交保费">
@@ -38,12 +38,12 @@
             <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
           </select>
         </app-select>
-        <app-input label="邮箱" v-show="warranty.delivery_way == 117">
-          <input slot="input" @change="checkEmail" v-model="applicant.email" type="email" placeholder="请填写邮箱">
+        <app-input label="邮箱" v-show="warranty.delivery_way === '117'">
+          <input slot="input" @change="checkEmail" v-model.lazy="applicant.email" type="email" placeholder="请填写邮箱">
           <div slot="icon" v-show="applicant.email != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.email = ''"></i></div>
         </app-input>
       </div>
-      <div class="am-list-footer" v-if="warranty.delivery_way == 117">
+      <div class="am-list-footer" v-if="warranty.delivery_way === '117'">
         仅发送电子保单到投保人邮箱里
       </div>
       <div class="am-list-footer" v-else>
@@ -121,7 +121,7 @@ export default {
         period_money: '' //期交保费
       },
       warranty: {
-        delivery_way: 117
+        delivery_way: '117'
       },
       applicant: {
         email: '' //邮箱
@@ -191,8 +191,12 @@ export default {
         })
       }
     })
-    if (vm.$store.state.warranty && vm.$store.state.warranty.is_assured === '21') {
-      vm.back = '/insured'
+  },
+  activated() {
+    if (this.$store.state.warranty.is_assured === '21') {
+      this.back = '/insured'
+    } else {
+      this.back = '/beinsured'
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -206,7 +210,7 @@ export default {
       this.$toast.open('请点击计算期交保费', 'warn')
       return
     }
-    if (this.warranty.delivery_way === 117 && !this.checkEmail()) {
+    if (this.warranty.delivery_way === '117' && !this.checkEmail()) {
       return false
     }
     this.$store.commit('saveAssured', this.assured)
@@ -279,7 +283,7 @@ export default {
           vm.$toast.open('服务器开小差了', 'error')
           return
         }
-        if (res.status === 0) {
+        if (res.status === '0') {
           console.info(res.message)
           vm.$toast.open('计算失败：' + res.message)
           return

@@ -6,43 +6,71 @@
     <div v-show="showPup0ver" class="app-mask"></div>
     <div class="am-list am-list-6lb form" v-for="item,index in matters">
       <div class="am-list-item">
-        <div class="app-list-title">{{item.entry}}. {{item.content}}</div>
+        <div class="app-list-title">{{item.entry}}. {{item.content}} <span class="am-ft-red">{{item.answer}}</span></div>
       </div>
-      <div v-if="item.child">
+      <template v-if="item.child">
         <div class="am-list-body" v-for="childitem in item.child">
           <div class="am-list-item">
             <div class="app-list-title">{{childitem.entry}}. {{childitem.content}}</div>
           </div>
+          <div class="app-list" :class="{'flex-right':!isExempted}">
+            <div class="app-list-title" v-if="isExempted">被保险人</div>
+            <div class="am-switch">
+              <input type="checkbox" v-model="clientvalue.ass_amswer[childitem.ci_id]" @change="assChanged(clientvalue.ass_amswer,childitem.ci_id)" :value="childitem.ci_id" class="am-switch-checkbox" :id="'assmatter'+childitem.ci_id">
+              <label class="am-switch-label" :for="'assmatter'+childitem.ci_id">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
+          <div class="app-list" v-if="isExempted">
+            <div class="app-list-title">投保人</div>
+            <div class="am-switch">
+              <input type="checkbox" v-model="clientvalue.app_amswer[childitem.ci_id]" @change="appChanged(clientvalue.app_amswer,childitem.ci_id)" :value="childitem.ci_id" class="am-switch-checkbox" :id="'appmatter'+childitem.ci_id">
+              <label class="am-switch-label" :for="'appmatter'+childitem.ci_id">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
+          <div class="am-list-item" v-if="clientvalue.fields[childitem.ci_id]">
+            <div class="am-ft-md am-ft-red" v-html="clientvalue.fields[childitem.ci_id]"></div>
+          </div>
+          <app-form :ref="'form'+childitem.ci_id" :k="childitem.ci_id" v-if="forms[item.entry]" :forms="forms[item.entry]" :index="childitem.ci_id">
+            <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
+          </app-form>
         </div>
-      </div>
-      <div class="am-list-body">
-        <div class="app-list" :class="{'flex-right':!isExempted}">
-          <div class="app-list-title" v-if="isExempted">被保险人</div>
-          <div class="am-switch">
-            <input type="checkbox" v-model="clientvalue.ass_amswer[item.entry]" @change="assChanged(clientvalue.ass_amswer,item.entry)" :value="item.entry" class="am-switch-checkbox" :id="'assmatter'+item.entry">
-            <label class="am-switch-label" :for="'assmatter'+item.entry">
-              <div class="am-switch-inner"></div>
-              <div class="am-switch-switch"></div>
-            </label>
+      </template>
+      <template v-else>
+        <div class="am-list-body">
+          <div class="app-list" :class="{'flex-right':!isExempted}">
+            <div class="app-list-title" v-if="isExempted">被保险人</div>
+            <div class="am-switch">
+              <input type="checkbox" v-model="clientvalue.ass_amswer[item.ci_id]" @change="assChanged(clientvalue.ass_amswer,item.ci_id)" :value="item.ci_id" class="am-switch-checkbox" :id="'assmatter'+item.ci_id">
+              <label class="am-switch-label" :for="'assmatter'+item.ci_id">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
+          <div class="app-list" v-if="isExempted">
+            <div class="app-list-title">投保人</div>
+            <div class="am-switch">
+              <input type="checkbox" v-model="clientvalue.app_amswer[item.ci_id]" @change="appChanged(clientvalue.app_amswer,item.ci_id)" :value="item.ci_id" class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
+              <label class="am-switch-label" :for="'appmatter'+item.ci_id">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
+          <div class="am-list-item" v-if="clientvalue.fields[item.ci_id]">
+            <div class="am-ft-md am-ft-red" v-html="clientvalue.fields[item.ci_id]"></div>
           </div>
         </div>
-        <div class="app-list" v-if="isExempted">
-          <div class="app-list-title">投保人</div>
-          <div class="am-switch">
-            <input type="checkbox" v-model="clientvalue.app_amswer[item.entry]" @change="appChanged(clientvalue.app_amswer,item.entry)" :value="item.entry" class="am-switch-checkbox" :id="'appmatter'+item.entry">
-            <label class="am-switch-label" :for="'appmatter'+item.entry">
-              <div class="am-switch-inner"></div>
-              <div class="am-switch-switch"></div>
-            </label>
-          </div>
-        </div>
-        <div class="am-list-item" v-if="clientvalue.fields[item.entry]">
-          <div class="am-ft-md am-ft-red" v-html="clientvalue.fields[item.entry]"></div>
-        </div>
-      </div>
-      <app-form :ref="'form'+item.entry" :k="item.entry" v-if="forms[item.entry]" :forms="forms[item.entry]" :index="item.entry">
-        <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
-      </app-form>
+        <app-form :ref="'form'+item.ci_id" :k="item.ci_id" v-if="forms[item.entry]" :forms="forms[item.entry]" :index="item.ci_id">
+          <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
+        </app-form>
+      </template>
     </div>
     <div class="app-agreement">
       <div class="am-checkbox mini argument">
@@ -339,7 +367,7 @@ export default {
         this.save2local('clientvalue', val)
       },
       deep: true
-      // immediate: true
+        // immediate: true
     }
   },
   created() {
@@ -366,7 +394,7 @@ export default {
     if (!this.checkForm()) {
       return false
     }
-    this.$store.commit('saveClientValue', this.clientvalue)
+    this.$store.commit('saveClientValue', Api.obj2json(this.clientvalue))
     next()
   },
   methods: {
@@ -374,6 +402,7 @@ export default {
       console.log(val, id)
     },
     assChanged(val, id) {
+      console.log(val, id)
       this.allNo = false
 
       // 如果为否
@@ -384,9 +413,10 @@ export default {
         }
         this.$set(this.clientvalue.ass_amswer, id, false)
         this.$set(this.clientvalue.fields, id, '')
-      } else if (['3', '4', '5', '6', '7', '8', '9', '10', '16'].indexOf(id) > -1) {
+      } else if (['10', '11', '39', '40', '41', '42', '43'].indexOf(id) === -1) {
         // 为是且有必填项
         this.showPup0ver = true
+        console.log(this.$refs['form' + id])
         this.$refs['form' + id][0].show = true
       } else {
         this.$set(this.clientvalue.ass_amswer, id, true)

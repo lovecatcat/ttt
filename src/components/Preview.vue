@@ -291,49 +291,87 @@
         <div class="am-list-item">
           <div class="app-list-title">{{item.entry}}. {{item.content}}</div>
         </div>
-        <div v-if="item.child">
+        <template v-if="item.child">
           <div class="am-list-body" v-for="childitem in item.child">
             <div class="am-list-item">
               <div class="app-list-title">{{childitem.entry}}. {{childitem.content}}</div>
             </div>
-          </div>
-        </div>
-        <div class="am-list-body">
-          <div class="app-list" :class="{'flex-right':!isExempted}">
-            <div class="app-list-title" v-if="isExempted">被保险人</div>
-            <div class="am-switch">
-              <input type="checkbox" disabled v-model="clientvalue.ass_amswer[item.entry]" @change="assChanged(clientvalue.ass_amswer,item.entry)" :value="item.entry" class="am-switch-checkbox" :id="'assmatter'+item.entry">
-              <label class="am-switch-label" :for="'assmatter'+item.entry">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
+            <div class="am-list-body">
+              <div class="app-list" :class="{'flex-right':!isExempted}">
+                <div class="app-list-title" v-if="isExempted">被保险人</div>
+                <div class="am-switch">
+                  <input type="checkbox" disabled v-model="clientvalue.ass_amswer[childitem.ci_id]" :value="childitem.ci_id" class="am-switch-checkbox" :id="'assmatter'+childitem.ci_id">
+                  <label class="am-switch-label" :for="'assmatter'+childitem.ci_id">
+                    <div class="am-switch-inner"></div>
+                    <div class="am-switch-switch"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="app-list" v-if="isExempted">
+                <div class="app-list-title">投保人</div>
+                <div class="am-switch">
+                  <input type="checkbox" disabled v-model="clientvalue.app_amswer[childitem.ci_id]" :value="childitem.ci_id" class="am-switch-checkbox" :id="'appmatter'+childitem.ci_id">
+                  <label class="am-switch-label" :for="'appmatter'+childitem.ci_id">
+                    <div class="am-switch-inner"></div>
+                    <div class="am-switch-switch"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="am-list-body">
+              <div v-if="clientvalue.fields[childitem.ci_id]" class="app-list">
+                <div class="app-list-control app-color-error">
+                  <!-- <div class="app-list-brief">被保险人{{childitem.answer}}</div> -->
+                  {{clientvalue.fields[childitem.ci_id]}}
+                </div>
+              </div>
+              <div v-if="clientvalue.fields[childitem.ci_id] && isExempted" class="app-list">
+                <div class="app-list-control app-color-error">
+                  <!-- <div class="app-list-brief">投保人{{childitem.answer}}</div> -->
+                  {{clientvalue.fields[childitem.ci_id]}}
+                </div>
+              </div>
             </div>
           </div>
-          <div class="app-list" v-if="isExempted">
-            <div class="app-list-title">投保人</div>
-            <div class="am-switch">
-              <input type="checkbox" disabled v-model="clientvalue.app_amswer[item.entry]" @change="appChanged(clientvalue.app_amswer,item.entry)" :value="item.entry" class="am-switch-checkbox" :id="'appmatter'+item.entry">
-              <label class="am-switch-label" :for="'appmatter'+item.entry">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
+        </template>
+        <template v-else>
+          <div class="am-list-body">
+            <div class="app-list" :class="{'flex-right':!isExempted}">
+              <div class="app-list-title" v-if="isExempted">被保险人</div>
+              <div class="am-switch">
+                <input type="checkbox" disabled v-model="clientvalue.ass_amswer[item.ci_id]" :value="item.ci_id" class="am-switch-checkbox" :id="'assmatter'+item.ci_id">
+                <label class="am-switch-label" :for="'assmatter'+item.ci_id">
+                  <div class="am-switch-inner"></div>
+                  <div class="am-switch-switch"></div>
+                </label>
+              </div>
+            </div>
+            <div class="app-list" v-if="isExempted">
+              <div class="app-list-title">投保人</div>
+              <div class="am-switch">
+                <input type="checkbox" disabled v-model="clientvalue.app_amswer[item.ci_id]" :value="item.ci_id" class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
+                <label class="am-switch-label" :for="'appmatter'+item.ci_id">
+                  <div class="am-switch-inner"></div>
+                  <div class="am-switch-switch"></div>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="am-list-body">
-          <div v-if="clientvalue.fields[item.entry]" class="app-list">
-            <div class="app-list-control app-color-error">
-              <!-- <div class="app-list-brief">被保险人{{item.answer}}</div> -->
-              {{clientvalue.fields[item.entry]}}
+          <div class="am-list-body">
+            <div v-if="clientvalue.fields[item.entry]" class="app-list">
+              <div class="app-list-control app-color-error">
+                <!-- <div class="app-list-brief">被保险人{{item.answer}}</div> -->
+                {{clientvalue.fields[item.entry]}}
+              </div>
+            </div>
+            <div v-if="clientvalue.fields[item.entry] && isExempted" class="app-list">
+              <div class="app-list-control app-color-error">
+                <!-- <div class="app-list-brief">投保人{{item.answer}}</div> -->
+                {{clientvalue.fields[item.entry]}}
+              </div>
             </div>
           </div>
-          <div v-if="clientvalue.fields[item.entry] && isExempted" class="app-list">
-            <div class="app-list-control app-color-error">
-              <!-- <div class="app-list-brief">投保人{{item.answer}}</div> -->
-              {{clientvalue.fields[item.entry]}}
-            </div>
-          </div>
-        </div>
+        </template>
       </div>
     </app-dropdown>
     <app-dropdown v-if="!warData && warranty" label="收费信息">
@@ -504,7 +542,7 @@ export default {
       pushData['clientvalue_war_id'] = []
       var warId = ''
       vm.matters.forEach(i => {
-        var index = i.entry
+        var index = i.ci_id
         pushData['clientvalue_ci_id'].push(i.ci_id)
         pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
         pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
@@ -514,12 +552,13 @@ export default {
         pushData['clientvalue_war_id'].push(warId)
         if (i.child) {
           i.child.forEach(child => {
+            var index = child.ci_id
             // index = i.entry + child.entry
             pushData['clientvalue_ci_id'].push(child.ci_id)
             pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
             pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
-            pushData['clientvalue_app_fields'].push('')
-            pushData['clientvalue_fields'].push('')
+            pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
+            pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
             pushData['clientvalue_war_id'].push(warId)
           })
         }

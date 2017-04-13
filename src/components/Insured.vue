@@ -244,6 +244,9 @@ export default {
     if (this.applicant.document_term === '9999-12-30') {
       this.longTerm = true
     }
+    if (this.applicant.document_number) {
+      this.checkID()
+    }
   },
   methods: {
     // 证件号码校验
@@ -530,7 +533,7 @@ export default {
       if (!this.checkForm()) {
         return false
       }
-      this.$toast.open('', '')
+      this.$toast.close()
       var nextPage = null
         // 如果被保险人是本人
       if (this.warranty.is_assured === '21') {
@@ -543,14 +546,17 @@ export default {
           }
           this.assured = assured
           this.$store.dispatch('saveAssured', assured)
+          this.$store.dispatch('setApplicant', this.applicant)
+          this.$store.dispatch('setWarranty', this.warranty)
+          nextPage = '/prospectus'
+          this.$router.push(nextPage)
         })
-        nextPage = '/prospectus'
       } else {
         nextPage = '/beinsured'
+        this.$store.commit('setApplicant', this.applicant)
+        this.$store.commit('setWarranty', this.warranty)
+        this.$router.push(nextPage)
       }
-      this.$store.commit('setApplicant', this.applicant)
-      this.$store.commit('setWarranty', this.warranty)
-      this.$router.push(nextPage)
     }
   }
 }
