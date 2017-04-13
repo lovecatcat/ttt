@@ -28,7 +28,7 @@ export default {
   delBeneficiary(state, val) {
     let index = state.tmp.people.indexOf(val)
     state.tmp.people.splice(index, 1)
-    state.beneficiaries.splice(index, 1)
+    state.beneficiaries && state.beneficiaries.splice(index, 1)
   },
   saveBeneficiary(state, payload) {
     state.beneficiaries = payload

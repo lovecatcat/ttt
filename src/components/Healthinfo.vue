@@ -338,8 +338,8 @@ export default {
       handler(val) {
         this.save2local('clientvalue', val)
       },
-      deep: true,
-      immediate: true
+      deep: true
+      // immediate: true
     }
   },
   created() {
@@ -382,11 +382,15 @@ export default {
         for (var i in forms) {
           forms[i].input = ''
         }
+        this.$set(this.clientvalue.ass_amswer, id, false)
         this.$set(this.clientvalue.fields, id, '')
       } else if (['3', '4', '5', '6', '7', '8', '9', '10', '16'].indexOf(id) > -1) {
         // 为是且有必填项
         this.showPup0ver = true
         this.$refs['form' + id][0].show = true
+      } else {
+        this.$set(this.clientvalue.ass_amswer, id, true)
+        this.save2local('clientvalue', this.clientvalue)
       }
       this.$forceUpdate()
     },

@@ -154,9 +154,9 @@ export default {
     }
   },
   watch: {
-    insurances: {
+    insurance: {
       handler(val) {
-        this.save2local('insurances', val)
+        this.save2local('insurance', val)
       },
       deep: true
     },
@@ -181,7 +181,7 @@ export default {
         vm.$nextTick(function() {
           vm.attr = vm.main_insurance.attr
           vm.attr2 = unique(vm.attr, 'safe_year')
-          var insurance = vm.$storage.fetch('insurances')[0]
+          var insurance = vm.$storage.fetch('insurance')
           this.insurance.safe_id = insurance.safe_id
           this.insurance.money = insurance.money
           this.insurance.pay_year = insurance.pay_year

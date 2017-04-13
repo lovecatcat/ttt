@@ -207,6 +207,11 @@ export default {
       return this.$store.state.init || {}
     }
   },
+  created() {
+    if (this.assured.document_term === '9999-12-30') {
+      this.longTerm = true
+    }
+  },
   watch: {
     longTerm(val) {
       this.assured.document_term = val ? '9999-12-30' : ''

@@ -86,8 +86,9 @@ Vue.mixin({
       this.$storage.remove('assured')
       this.$storage.remove('warranty')
       this.$storage.remove('main_insurance')
-      this.$storage.remove('insurances')
+      this.$storage.remove('insurance')
       this.$storage.remove('clientvalue')
+      this.$storage.remove('init')
     }
   }
 })
@@ -102,4 +103,3 @@ var app = new Vue({
   template: '<App/>',
   components: { App }
 })
-

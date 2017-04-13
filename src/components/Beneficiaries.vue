@@ -22,8 +22,8 @@
         </label>
       </div>
     </div>
-    <app-beneficiary v-show="warranty.benefited_type == 1" ref=child :key="index" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
-    <div class="am-button-group" role="group" v-show="warranty.benefited_type == 1">
+    <app-beneficiary v-show="warranty.benefited_type === '1'" ref=child :key="index" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
+    <div class="am-button-group" role="group" v-show="warranty.benefited_type === '1'">
       <a @click="add" class="am-button" role="button"><span class="app-iconfont">&#xe667;</span> 继续添加 </a>
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
@@ -45,7 +45,7 @@ export default {
     return {
       beneficiaries: [],
       warranty: {
-        benefited_type: 0 //身故受益人类型：默认法定
+        benefited_type: '0' //身故受益人类型：默认法定
       }
     }
   },
@@ -58,12 +58,17 @@ export default {
   methods: {
     add() {
       var vm = this
+      for (var i in this.$refs.child) {
+        if (!this.$refs.child[i].checkForm()) {
+          return false
+        }
+      }
       vm.$dialog.open('确认添加受益人吗？', '', function() {
         vm.$store.commit('addBeneficiary')
         vm.$refs.child.forEach($vm => {
           $vm.$data.beneficiary.benefited_ratio = (100 / vm.$store.state.tmp.people.length).toFixed(0)
-          return
         })
+        return
       })
     },
     checkRatio() {
@@ -94,7 +99,7 @@ export default {
     }
     let vm = this
     let type = vm.warranty.benefited_type
-    if (type === 1) {
+    if (type === '1') {
       let children = vm.$refs.child
       for (let index in children) {
         if (children[index].beneficiary.document_number === vm.$store.state.assured.document_number && children[index].beneficiary.name === vm.$store.state.assured.name) {
@@ -105,7 +110,7 @@ export default {
           return false
         }
         children[index].$emit('save')
-        if (index === children.length - 1) {
+        if (Number(index) === children.length - 1) {
           vm.$store.commit('saveBeneficiary', Api.obj2json(vm.beneficiaries))
           if (!this.checkRatio()) return
           vm.$store.commit('setWarranty', vm.warranty)

@@ -53,7 +53,7 @@ export default {
       ready: true
     })
     if (applicant.name) {
-      this.$dialog.open('未完成订单', '是否继续完成该订单?', () => {
+      this.$dialog.open('未完成保单', '是否继续完成最近一笔保单?', () => {
         this.$store.commit('setParam', {
           todo: true
         })

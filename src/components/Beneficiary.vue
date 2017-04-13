@@ -135,12 +135,12 @@
           <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
         <!-- 职业 -->
-        <app-occupation ref="occupation"></app-occupation>
+        <app-occupation v-if="init.applicant" ref="occupation"></app-occupation>
         <!-- 职业 -->
       </div>
     </div>
     <!-- 通讯地址 -->
-    <app-region ref="address" v-on:regionselect="address_selected"></app-region>
+    <app-region ref="address" v-if="init.applicant" v-on:regionselect="address_selected"></app-region>
     <!-- 通讯地址 -->
   </section>
 </template>
@@ -191,13 +191,13 @@ export default {
 
         visit_tel: '', //回访电话
         tel: '', //联系电话
-        relationship: '' //关系
+        relationship: 0 //关系
       }
     }
   },
   computed: {
     init() {
-      return this.$store.state.init
+      return this.$store.state.init || {}
     },
     count() {
       return this.$store.state.tmp.people.length //人数
@@ -210,7 +210,7 @@ export default {
     },
     anti_money() {
       //单次投保达到反洗钱标准（年交保费*交费年期≥20万元）
-      return this.$store.state.anti_money
+      return true //this.$store.state.anti_money = true
     }
   },
   created() {
@@ -235,7 +235,7 @@ export default {
         vm.beneficiary.sex = applicant.sex
         vm.beneficiary.birthday = applicant.birthday
         if (['18', '19', '20', '23'].indexOf(vm.warranty.is_assured) > -1) {
-          vm.beneficiary.relationship = vm.warranty.is_assured
+          vm.beneficiary.relationship = Number(vm.warranty.is_assured)
         }
         if (this.$store.state.anti_money) {
           vm.beneficiary.nationality = applicant.nationality
@@ -388,9 +388,7 @@ export default {
           toast_text = '请填写' + sb + '受益人【通信邮编】'
         } else if (!vm.beneficiary.tel && !vm.beneficiary.visit_tel) {
           toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'
-        } else if (vm.beneficiary.tel && !vm.checkPhone()) {
-          return false
-        } else if (vm.beneficiary.visit_tel && !vm.checkTel()) {
+        } else if (!vm.checkZipcode() && !vm.checkTel()) {
           return false
         } else if (!vm.beneficiary.occupation_code) {
           toast_text = '请填写' + sb + '受益人【职业】'
@@ -471,13 +469,13 @@ export default {
     // 设置职业
     setOccupation(selected) {
       console.log(selected)
-      this.$set(this.beneficiary, 'occupation_code', selected.bs_id)
-      this.$set(this.beneficiary, 'occupation', selected.explain)
+      this.beneficiary.occupation_code = selected.bs_id
+      this.beneficiary.occupation = selected.explain
     },
     // 清除职业
     clearOccupation() {
-      this.$set(this.beneficiary, 'occupation_code', '')
-      this.$set(this.beneficiary, 'occupation', '')
+      this.beneficiary.occupation_code = ''
+      this.beneficiary.occupation = ''
       this.$refs.occupation.show = true
     }
   }

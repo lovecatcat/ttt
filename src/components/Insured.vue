@@ -216,6 +216,7 @@ export default {
         visit_tel: '', //回访电话
         tel: '' //联系电话
       },
+      assured: {},
       // 保单信息
       warranty: {
         is_assured: '21', //是被保险人的
@@ -237,6 +238,11 @@ export default {
   watch: {
     longTerm(val) {
       this.applicant.document_term = val ? '9999-12-30' : ''
+    }
+  },
+  created() {
+    if (this.applicant.document_term === '9999-12-30') {
+      this.longTerm = true
     }
   },
   methods: {
@@ -535,6 +541,7 @@ export default {
           if (res.assu_id) {
             assured.assu_id = res.assu_id
           }
+          this.assured = assured
           this.$store.dispatch('saveAssured', assured)
         })
         nextPage = '/prospectus'

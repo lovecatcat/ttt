@@ -343,7 +343,7 @@
             <input slot="input" readonly value="银行转账">
           </app-input>
           <app-input label="户名">
-            <input slot="input" readonly v-model.trim="warranty.applicant" type="text" placeholder="请填写户名">
+            <input slot="input" readonly v-model.trim="applicant.name" type="text" placeholder="请填写户名">
           </app-input>
           <app-input label="银行账号">
             <input slot="input" readonly v-model="warranty.bank_account" type="text" placeholder="请填写银行账号">
@@ -474,10 +474,6 @@ export default {
         if (filter.indexOf(j) > -1) {
           continue
         }
-        /*        if (j === 'address') {
-                  pushData[index] = vm.applicant['address_select'] + vm.applicant[j]
-                } else {
-                }*/
         pushData[index] = vm.applicant[j]
       }
       for (var k in vm.assured) {
@@ -486,10 +482,6 @@ export default {
         if (filter.indexOf(k) > -1) {
           continue
         }
-        /*        if (k === 'address') {
-                  pushData[o] = vm.assured['address_select'] + vm.assured[k]
-                } else {
-                }*/
         pushData[o] = vm.assured[k]
       }
       for (var m in vm.warranty) {
@@ -499,6 +491,7 @@ export default {
       }
       pushData['warranty_admin_id'] = vm.$store.state.admin_id
       pushData['warranty_sc_id'] = 19
+      pushData['warranty_applicant'] = vm.applicant.name
         // pushData['warranty_add_time'] = (Date.parse(new Date())).toString().substr(0, 10)
       pushData['warranty_is_save'] = 1
       pushData['warranty_source'] = 2

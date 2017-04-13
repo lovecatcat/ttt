@@ -9,7 +9,7 @@
           <input slot="input" disabled value="银行转账">
         </app-input>
         <app-input label="户名">
-          <input slot="input" disabled v-model.trim="warranty.applicant" type="text" placeholder="请填写户名">
+          <input slot="input" disabled v-model.trim="applicant.name" type="text" placeholder="请填写户名">
         </app-input>
         <app-input label="银行账号">
           <input slot="input" v-model="warranty.bank_account" type="text" placeholder="请填写银行账号" @change="checkAccount">
@@ -83,7 +83,7 @@ export default {
   },
   computed: {
     applicant() {
-      return this.$store.state.applicant.name //户名
+      return this.$store.state.applicant //户名
     },
     init() {
       return this.$store.state.init || {}
@@ -100,7 +100,7 @@ export default {
   methods: {
     checkForm() {
       var toast_text = ''
-      if (!this.warranty.applicant) {
+      if (!this.applicant.name) {
         toast_text = '户名不能为空'
       } else if (!this.warranty.bank_name) {
         toast_text = '银行名称不能为空'
