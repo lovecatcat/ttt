@@ -1,19 +1,19 @@
 <template>
-  <div class="mobileSelect" :class="{'mobileSelect-show':show}">
-    <div class="grayLayer"></div>
-    <div class="content">
-      <div class="btnBar">
-        <div class="fixWidth">
-          <div class="cancel" @click="close">取消</div>
-          <div class="title"></div>
-          <div class="ensure" @click="ok">选择</div>
-        </div>
-      </div>
-      <div class="panel">
-        <mt-picker :slots="addressSlots" @change="addrChange" :visible-item-count="5"></mt-picker>
+  <mt-picker v-show="show" :slots="addressSlots" @change="addrChange" :visible-item-count="5"></mt-picker>
+<!--   <div class="mobileSelect" :class="{'mobileSelect-show':false}">
+  <div class="grayLayer"></div>
+  <div class="content">
+    <div class="btnBar">
+      <div class="fixWidth">
+        <div class="cancel" @click="close">取消</div>
+        <div class="title"></div>
+        <div class="ensure" @click="ok">选择</div>
       </div>
     </div>
+    <div class="panel">
+    </div>
   </div>
+</div> -->
 </template>
 <script>
 import Api from '../api'

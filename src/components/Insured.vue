@@ -64,14 +64,25 @@
         <app-input label="户籍">
           <input slot="input" readonly v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍" @click="$refs.register.show = true">
           <div slot="icon" v-show="applicant.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
+          <div slot="button" class="am-list-button" @click="$refs.register.ok()">
+            <button type="button">确定</button>
+          </div>
         </app-input>
+        <!-- 户籍 -->
+        <app-region v-if="init.applicant" v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
         <!-- 户籍 -->
         <app-input label="通讯地址">
           <div slot="input" @click="$refs.address.show = true" placeholder="请点击进行选择" :class="{pd:!applicant.address_select}">
             {{applicant.address_select}}
           </div>
           <div slot="icon" v-show="applicant.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
+          <div slot="button" class="am-list-button" @click="$refs.address.ok()">
+            <button type="button">确定</button>
+          </div>
         </app-input>
+        <!-- 通讯地址 -->
+        <app-region v-if="init.applicant" v-on:regionselect="address_selected" ref="address"></app-region>
+        <!-- 通讯地址 -->
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -163,8 +174,6 @@
       <router-link to="/" class="am-tab-item">上一步</router-link>
       <a @click="next" class="am-tab-item selected">下一步</a>
     </div>
-    <app-region v-if="init.applicant" v-on:regionselect="address_selected" ref="address"></app-region>
-    <app-region v-if="init.applicant" v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
   </section>
 </template>
 <script>
@@ -378,6 +387,11 @@ export default {
     },
     // 户籍选择
     register_selected(selected) {
+      if (selected.length === 0) {
+        this.$toast.open('请先选择户籍', 'warn')
+        return false
+      }
+      this.local && console.log(selected)
       this.$set(this.applicant, 'register', selected[0].if_id)
       this.$set(this.applicant, 'register_select', selected[0].explain)
     },
@@ -389,7 +403,11 @@ export default {
     },
     // 通讯地址选择
     address_selected(selected) {
-      if (selected.length === 0) return false
+      if (selected.length === 0) {
+        this.$toast.open('请先选择通讯地址', 'warn')
+        return false
+      }
+      this.local && console.log(selected)
       var vm = this
       var select_show = ''
       select_show += selected[0].explain
