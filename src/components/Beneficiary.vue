@@ -210,7 +210,7 @@ export default {
     },
     anti_money() {
       //单次投保达到反洗钱标准（年交保费*交费年期≥20万元）
-      return true //this.$store.state.anti_money = true
+      return this.$store.state.anti_money
     }
   },
   created() {
@@ -246,7 +246,7 @@ export default {
           vm.beneficiary.address_select = applicant.address_select
           vm.beneficiary.zipcode = applicant.zipcode
           vm.beneficiary.occupation = applicant.occupation
-          vm.beneficiary.occupation_code = this.this.$store.state.warranty.applicant_occupation_code
+          vm.beneficiary.occupation_code = this.$store.state.warranty.applicant_occupation_code
           vm.beneficiary.visit_tel = applicant.visit_tel
           vm.beneficiary.tel = applicant.tel
         }

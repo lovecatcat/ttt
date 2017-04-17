@@ -8,7 +8,7 @@
         <template v-if="status == 1">
           <p>自核通过，稍后在线进行收费</p>
         </template>
-        <p v-else>自核不通过进入人工核保，并进行自动转为线下扣款</p>
+        <p v-else>自核不通过进入人工核保，并自动转为线下扣款</p>
         <br>
         <p v-show="tid">投保单号：{{tid}}</p>
         <br>

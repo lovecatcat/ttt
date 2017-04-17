@@ -109,6 +109,10 @@ export default {
               <input slot="input" :class="{'has':item.input != ''}" v-model="item.input" type="month" placeholder="请选择时间">
               <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
             </app-input>
+            <app-input :label="item.title" v-else-if="item.type=='number'">
+              <input slot="input" v-model="item.input" type="number" placeholder="必填">
+              <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+            </app-input>
             <app-input :label="item.title" v-else-if="item.type=='text'">
               <input slot="input" v-model="item.input" type="text" placeholder="必填">
               <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
@@ -156,6 +160,7 @@ export default {
               text = j.input === true ? '是' : '否'
             } else {
               text = j.input
+              j.input = ''
             }
             field += j.title + '：' + text + '\t'
           }
@@ -332,7 +337,7 @@ export default {
         }, {
           title: '已投保身故保险金额总和',
           input: '',
-          type: 'text'
+          type: 'number'
         }]
       },
       allNo: false,
@@ -402,7 +407,7 @@ export default {
       console.log(val, id)
     },
     assChanged(val, id) {
-      console.log(val, id)
+      this.local && console.log(val, id)
       this.allNo = false
 
       // 如果为否

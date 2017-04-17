@@ -51,15 +51,17 @@
       </div>
     </div>
     <div class="am-list">
-      <div class="am-list-item">
-        <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
-        <div class="am-list-control">
-          <div class="am-switch" v-if="init.assured">
-            <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
-            <label class="am-switch-label">
-              <div class="am-switch-inner"></div>
-              <div class="am-switch-switch"></div>
-            </label>
+      <div class="am-list-body">
+        <div class="am-list-item">
+          <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
+          <div class="am-list-control">
+            <div class="am-switch" v-if="init.assured">
+              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
+              <label class="am-switch-label">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
           </div>
         </div>
       </div>

@@ -17,7 +17,6 @@
       </app-input>
       <app-input label="证件有效期">
         <div v-if="applicant.document_term === '9999-12-30'" slot="input">长期有效</div>
-        <!-- <input v-if="applicant.document_term === '9999-12-30'" slot="input" :value="'长期有效'" type="text" readonly> -->
         <input v-else slot="input" v-model="applicant.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
@@ -321,13 +320,13 @@
             <div class="am-list-body">
               <div v-if="clientvalue.fields[childitem.ci_id]" class="app-list">
                 <div class="app-list-control app-color-error">
-                  <!-- <div class="app-list-brief">被保险人{{childitem.answer}}</div> -->
+                  <div class="app-list-brief" v-if="isExempted">被保险人</div>
                   {{clientvalue.fields[childitem.ci_id]}}
                 </div>
               </div>
               <div v-if="clientvalue.fields[childitem.ci_id] && isExempted" class="app-list">
                 <div class="app-list-control app-color-error">
-                  <!-- <div class="app-list-brief">投保人{{childitem.answer}}</div> -->
+                  <div class="app-list-brief">投保人</div>
                   {{clientvalue.fields[childitem.ci_id]}}
                 </div>
               </div>
@@ -358,16 +357,14 @@
             </div>
           </div>
           <div class="am-list-body">
-            <div v-if="clientvalue.fields[item.entry]" class="app-list">
+            <div v-if="clientvalue.fields[item.ci_id]" class="app-list">
               <div class="app-list-control app-color-error">
-                <!-- <div class="app-list-brief">被保险人{{item.answer}}</div> -->
-                {{clientvalue.fields[item.entry]}}
+                {{clientvalue.fields[item.ci_id]}}
               </div>
             </div>
-            <div v-if="clientvalue.fields[item.entry] && isExempted" class="app-list">
+            <div v-if="clientvalue.fields[item.ci_id] && isExempted" class="app-list">
               <div class="app-list-control app-color-error">
-                <!-- <div class="app-list-brief">投保人{{item.answer}}</div> -->
-                {{clientvalue.fields[item.entry]}}
+                {{clientvalue.fields[item.ci_id]}}
               </div>
             </div>
           </div>
