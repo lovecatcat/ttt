@@ -56,7 +56,7 @@
           <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
           <div class="am-list-control">
             <div class="am-switch" v-if="init.assured">
-              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+              <input type="checkbox" v-model="warranty.assu_social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
               <label class="am-switch-label">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -123,13 +123,11 @@ export default {
         period_money: '' //期交保费
       },
       warranty: {
-        delivery_way: '117'
+        delivery_way: '117',
+        assu_social_security: '15047'
       },
       applicant: {
         email: '' //邮箱
-      },
-      assured: {
-        social_security: '15047'
       },
       // pay_year: null, //交费年期
       // safe_year: null, //保险期间
@@ -192,10 +190,16 @@ export default {
           }
         })
       }
+      this.$nextTick(() => {
+        this.insurance = Object.assign({}, this.insurance, {
+          money: 50000
+        })
+        this.applicant.email = 'sdff@fsdfd.ss'
+      })
     })
   },
   activated() {
-    if (this.$store.state.warranty.is_assured === '21') {
+    if (this.$store.state.warranty.is_assured === 15000) {
       this.back = '/insured'
     } else {
       this.back = '/beinsured'

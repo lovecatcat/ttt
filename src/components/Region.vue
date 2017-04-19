@@ -77,13 +77,21 @@ export default {
       this.selected.splice(0, 3, this.province)
       this.changed()
       this.city = 0
-      this.level > 1 ? this.getRegion('city', this.province.code) : (this.show = false)
+      if (this.level > 1) {
+        this.getRegion('city', this.province.code)
+      } else {
+        this.show = false
+      }
     },
     cchanged() {
       this.selected.splice(1, 2, this.city)
       this.changed()
       this.district = 0
-      this.level > 2 ? this.getRegion('district', this.city.code) : (this.show = false)
+      if (this.level > 2) {
+        this.getRegion('district', this.city.code)
+      } else {
+        this.show = false
+      }
     },
     dchanged() {
       this.selected.splice(2, 1, this.district)

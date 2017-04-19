@@ -73,13 +73,13 @@ Vue.mixin({
   },
   methods: {
     save2local(key, val) {
-      this.local && console.log('存储到缓存' + key, JSON.stringify(val))
-      this.$storage.save(key, Object.assign(this.$storage.fetch(key), val))
+      // this.local && console.log('存储到缓存' + key, JSON.stringify(val))
+      // this.$storage.save(key, Object.assign(this.$storage.fetch(key), val))
     },
     setData(key, val) {
-      if (!this[key]) return
-      this.local && console.log('从缓存读取' + key, JSON.stringify(val))
-      this[key] = typeof this[key] === 'object' ? Object.assign({}, this[key], val) : Object.assign({}, val)
+      // if (!this[key]) return
+      // this.local && console.log('从缓存读取' + key, JSON.stringify(val))
+      // this[key] = typeof this[key] === 'object' ? Object.assign({}, this[key], val) : Object.assign({}, val)
     },
     clearStorage() {
       this.$storage.remove('applicant')

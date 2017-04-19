@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"next",
+				"nextTick"
+			],
+			[
+				"as",
+				"assured"
+			],
+			[
+				"ass",
+				"assign"
+			],
+			[
+				"appl",
+				"appl_annual_source"
+			],
+			[
 				"php",
 				"phpinfo"
 			],
@@ -52,24 +68,12 @@
 				"store"
 			],
 			[
-				"appl",
-				"appl_id"
-			],
-			[
-				"ass",
-				"assured"
-			],
-			[
 				"ma",
 				"main_insurance"
 			],
 			[
 				"co",
 				"commit"
-			],
-			[
-				"as",
-				"assured_"
 			],
 			[
 				"ti",
@@ -510,20 +514,16 @@
 			[
 				"ret",
 				"return"
-			],
-			[
-				"ja",
-				"jQuery.ajax\tjQuery.ajax"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/components/Prospectus.vue",
+			"file": "src/components/Beneficiary.vue",
 			"settings":
 			{
-				"buffer_size": 12886,
+				"buffer_size": 19378,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -532,16 +532,16 @@
 			"file": "src/components/Insured.vue",
 			"settings":
 			{
-				"buffer_size": 23387,
+				"buffer_size": 24226,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/store/state.js",
+			"file": "src/components/Prospectus.vue",
 			"settings":
 			{
-				"buffer_size": 2354,
+				"buffer_size": 13053,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -550,143 +550,7 @@
 			"file": "src/components/Region.vue",
 			"settings":
 			{
-				"buffer_size": 3169,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 1032,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Beinsured.vue",
-			"settings":
-			{
-				"buffer_size": 19386,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Healthinfo.vue",
-			"settings":
-			{
-				"buffer_size": 14610,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Billinfo.vue",
-			"settings":
-			{
-				"buffer_size": 5751,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "dist/XT_ins.html",
-			"settings":
-			{
-				"buffer_size": 1289,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Preview.vue",
-			"settings":
-			{
-				"buffer_size": 30078,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/assets/css/app-iconfont.scss",
-			"settings":
-			{
-				"buffer_size": 654,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "Searching 49 files for \"tel\" (whole word)\n\nE:\\programs\\vuejs\\XT_ins\\src\\components\\Beinsured.vue:\n   94          </app-input>\n   95          <app-input label=\"手机号码(选填)\">\n   96:           <input slot=\"input\" @change=\"checkPhone\" v-model.lazy=\"assured.tel\" type=\"text\" placeholder=\"请填写被保险人手机号码\">\n   97:           <div slot=\"icon\" v-show=\"assured.tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.tel = ''\"></i></div>\n   98          </app-input>\n   99          <app-input label=\"工作单位(选填)\">\n  ...\n  196          work_unit: '', //工作单位\n  197          visit_tel: '', //回访电话\n  198:         tel: '' //联系电话\n  199        },\n  200        // 保单信息\n  ...\n  333        assured.weight = res.weight\n  334        assured.register = res.register\n  335:       assured.tel = res.tel\n  336        assured.visit_tel = res.visit_tel\n  337        assured.work_unit = res.work_unit\n  ...\n  411      // 手机校验\n  412      checkPhone() {\n  413:       const tel = this.assured.tel\n  414        var toast_text = null\n  415:       if (this.assured.document_type === '7' && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {\n  416          toast_text = '请输入正确的11位或13位手机号'\n  417:       } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {\n  418          toast_text = '请输入正确的11位手机号'\n  419        }\n\nE:\\programs\\vuejs\\XT_ins\\src\\components\\Beneficiary.vue:\n  127          </app-input>\n  128          <app-input label=\"手机号码\">\n  129:           <input slot=\"input\" @change=\"checkPhone\" v-model.number.lazy=\"beneficiary.tel\" type=\"number\" placeholder=\"请填写受益人手机号码\">\n  130:           <div slot=\"icon\" v-show=\"beneficiary.tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"beneficiary.tel = ''\"></i></div>\n  131          </app-input>\n  132          <app-input label=\"固定电话\">\n  ...\n  191  \n  192          visit_tel: '', //回访电话\n  193:         tel: '', //联系电话\n  194          relationship: 0 //关系\n  195        }\n  ...\n  249            vm.beneficiary.occupation_code = this.$store.state.warranty.applicant_occupation_code\n  250            vm.beneficiary.visit_tel = applicant.visit_tel\n  251:           vm.beneficiary.tel = applicant.tel\n  252          }\n  253        } else {\n  ...\n  270            vm.beneficiary.occupation_code = ''\n  271            vm.beneficiary.visit_tel = ''\n  272:           vm.beneficiary.tel = ''\n  273          }\n  274        }\n  ...\n  387          } else if (!vm.beneficiary.zipcode && !vm.checkZipcode()) {\n  388            toast_text = '请填写' + sb + '受益人【通信邮编】'\n  389:         } else if (!vm.beneficiary.tel && !vm.beneficiary.visit_tel) {\n  390            toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'\n  391          } else if (!vm.checkZipcode() && !vm.checkTel()) {\n  ...\n  412      // 手机校验\n  413      checkPhone() {\n  414:       const tel = this.beneficiary.tel\n  415        var toast_text = null\n  416:       if (this.beneficiary.document_type === '7' && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {\n  417          toast_text = '请输入正确的11位或13位手机号'\n  418:       } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {\n  419          toast_text = '请输入正确的11位手机号'\n  420        }\n\nE:\\programs\\vuejs\\XT_ins\\src\\components\\Insured.vue:\n   94          </app-input>\n   95          <app-input label=\"手机号码\">\n   96:           <input slot=\"input\" @change=\"checkPhone\" v-model.lazy=\"applicant.tel\" type=\"text\" placeholder=\"请填写投保人手机号码\">\n   97:           <div slot=\"icon\" v-show=\"applicant.tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.tel = ''\"></i></div>\n   98          </app-input>\n   99          <app-input label=\"固定电话(选填)\">\n  ...\n  217          work_unit: '', //工作单位\n  218          visit_tel: '', //回访电话\n  219:         tel: '' //联系电话\n  220        },\n  221        assured: {},\n  ...\n  361        applicant.name = res.name\n  362        applicant.register = res.register\n  363:       applicant.tel = res.tel\n  364        applicant.visit_tel = res.visit_tel\n  365        applicant.work_unit = res.work_unit\n  ...\n  452      // 手机校验\n  453      checkPhone() {\n  454:       const tel = this.applicant.tel\n  455        var toast_text = null\n  456:       if (!tel) {\n  457          toast_text = '手机号不能为空'\n  458        } else if (this.applicant.document_type === '7') {\n  459:         if (!/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {\n  460            toast_text = '请输入正确的11位或13位手机号'\n  461          }\n  462:       } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {\n  463          toast_text = '请输入正确的11位手机号'\n  464        }\n\nE:\\programs\\vuejs\\XT_ins\\src\\components\\Preview.vue:\n   45          <input slot=\"input\" readonly :value=\"applicant.zipcode\" type=\"text\">\n   46        </app-input>\n   47:       <app-input label=\"手机号码\" v-show=\"applicant.tel\">\n   48:         <input slot=\"input\" readonly :value=\"applicant.tel\" type=\"text\">\n   49        </app-input>\n   50        <app-input label=\"固定电话\" v-show=\"applicant.visit_tel\">\n   ..\n  135          <input slot=\"input\" readonly :value=\"assured.zipcode\" type=\"text\">\n  136        </app-input>\n  137:       <app-input label=\"手机号码\" v-if=\"assured.tel\">\n  138:         <input slot=\"input\" readonly :value=\"assured.tel\" type=\"text\">\n  139        </app-input>\n  140        <app-input label=\"固定电话\" v-if=\"assured.visit_tel\">\n  ...\n  224            <input slot=\"input\" v-model.number=\"beneficiary.zipcode\" type=\"number\" placeholder=\"请填写受益人邮编\">\n  225          </app-input>\n  226:         <app-input label=\"手机号码\" v-show=\"beneficiary.tel\">\n  227:           <input slot=\"input\" v-model.number=\"beneficiary.tel\" type=\"number\" placeholder=\"请填写受益人手机号码\">\n  228          </app-input>\n  229          <app-input label=\"固定电话\" v-show=\"beneficiary.visit_tel\">\n\n39 matches across 4 files\n",
-			"settings":
-			{
-				"buffer_size": 5674,
-				"line_ending": "Unix",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "src/components/Success.vue",
-			"settings":
-			{
-				"buffer_size": 927,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Beneficiaries.vue",
-			"settings":
-			{
-				"buffer_size": 3983,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/E/svn/shop/data/config.php",
-			"settings":
-			{
-				"buffer_size": 496,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Notice.vue",
-			"settings":
-			{
-				"buffer_size": 3184,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/components/Beneficiary.vue",
-			"settings":
-			{
-				"buffer_size": 19271,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/store/mutations.js",
-			"settings":
-			{
-				"buffer_size": 1557,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/store/actions.js",
-			"settings":
-			{
-				"buffer_size": 671,
+				"buffer_size": 3249,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -695,60 +559,25 @@
 			"file": "src/main.js",
 			"settings":
 			{
-				"buffer_size": 2437,
+				"buffer_size": 2452,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/D/phpStudy/Apache/module.ini",
+			"file": "src/components/Preview.vue",
 			"settings":
 			{
-				"buffer_size": 460,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/widgets/index.js",
-			"settings":
-			{
-				"buffer_size": 1070,
+				"buffer_size": 30093,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/widgets/components/Dropdown.vue",
+			"file": "src/components/Beinsured.vue",
 			"settings":
 			{
-				"buffer_size": 1036,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "dist/sftp-config.json",
-			"settings":
-			{
-				"buffer_size": 1322,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/App.vue",
-			"settings":
-			{
-				"buffer_size": 693,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/router/index.js",
-			"settings":
-			{
-				"buffer_size": 2431,
+				"buffer_size": 20029,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -889,49 +718,59 @@
 	},
 	"expanded_folders":
 	[
+		"/E/programs/vuejs/XT_ins",
+		"/E/programs/vuejs/XT_ins/dist/static",
+		"/E/programs/vuejs/XT_ins/src",
+		"/E/programs/vuejs/XT_ins/src/api",
+		"/E/programs/vuejs/XT_ins/src/components"
 	],
 	"file_history":
 	[
+		"/E/programs/vuejs/XT_ins/src/store/state.js",
+		"/E/programs/vuejs/XT_ins/src/components/Prospectus.vue",
+		"/E/programs/vuejs/XT_ins/src/api/index.js",
+		"/E/programs/vuejs/XT_ins/src/components/Preview.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Occupation.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Insured.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Billinfo.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beneficiary.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beinsured.vue",
+		"/E/programs/vuejs/XT_ins/src/main.js",
+		"/D/phpStudy/Apache/module.ini",
+		"/E/programs/vuejs/XT_ins/src/widgets/index.js",
+		"/E/programs/vuejs/XT_ins/src/widgets/components/Dropdown.vue",
+		"/E/programs/vuejs/XT_ins/src/App.vue",
+		"/E/programs/vuejs/XT_ins/src/router/index.js",
+		"/E/programs/vuejs/XT_ins/src/components/Region.vue",
+		"/E/programs/vuejs/XT_ins/index.html",
+		"/E/programs/vuejs/XT_ins/src/components/Healthinfo.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Success.vue",
+		"/E/programs/vuejs/XT_ins/src/components/Beneficiaries.vue",
+		"/E/svn/shop/data/config.php",
+		"/E/programs/vuejs/XT_ins/src/components/Notice.vue",
+		"/E/programs/vuejs/XT_ins/src/store/mutations.js",
+		"/E/programs/vuejs/XT_ins/src/store/actions.js",
+		"/E/programs/vuejs/XT_ins/src/assets/css/app-iconfont.scss",
+		"/E/programs/vuejs/XT_ins/dist/XT_ins.html",
 		"/D/FED/Desktop/test.php",
 		"/D/WWW/test.php",
 		"/D/WWW/phpinfo.php",
 		"/D/phpStudy/tmp/tmp/sess_vov06j7s7c9q9qrf4su1jhkr25",
 		"/D/phpStudy/tmp/tmp/sess_cfcq3amis85d1mu5m4hqe20ol5",
 		"/D/phpStudy/php55n/php.ini",
-		"/E/programs/vuejs/XT_ins/src/components/Region.vue",
 		"/E/programs/vuejs/XT_ins/src/components/Region.vue.bak",
 		"/E/programs/vuejs/insurance/src/components/Region.vue",
 		"/D/FED/Pictures/Screenshots/屏幕截图(3).png",
 		"/E/programs/vuejs/insurance/src/views/Insured.vue",
-		"/E/programs/vuejs/XT_ins/dist/XT_ins.html",
 		"/E/programs/vuejs/XT_ins/dist/static/js/vendor.5c1d54cbccdbe88761c5.js",
 		"/D/Program Files/sublime text 3/Data/Packages/HTML-CSS-JS Prettify/.jsbeautifyrc",
-		"/E/programs/vuejs/XT_ins/src/main.js",
-		"/E/programs/vuejs/XT_ins/src/components/Prospectus.vue",
 		"/E/programs/vuejs/XT_ins/dist/static/js/app.c5d8ee45500199c455cf.js",
-		"/E/programs/vuejs/XT_ins/src/router/index.js",
-		"/E/programs/vuejs/XT_ins/src/components/Notice.vue",
-		"/E/programs/vuejs/XT_ins/src/store/mutations.js",
 		"/E/programs/vuejs/XT_ins/src/widgets/Dialog.js",
-		"/E/programs/vuejs/XT_ins/src/components/Billinfo.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Healthinfo.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Preview.vue",
 		"/E/programs/vuejs/XT_ins/src/widgets/components/Input.vue",
-		"/E/programs/vuejs/XT_ins/src/store/state.js",
-		"/E/programs/vuejs/XT_ins/src/components/Beneficiaries.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Beneficiary.vue",
 		"/E/programs/vuejs/XT_ins/src/widgets/mint-picker/mint-picker.css",
 		"/E/programs/vuejs/XT_ins/src/widgets/mint-picker/picker-slot.vue",
 		"/E/programs/vuejs/XT_ins/src/widgets/mint-picker/picker.css",
-		"/E/programs/vuejs/XT_ins/src/api/index.js",
-		"/E/programs/vuejs/XT_ins/src/components/Occupation.vue",
-		"/E/programs/vuejs/XT_ins/src/widgets/components/Dropdown.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Success.vue",
 		"/E/programs/vuejs/XT_ins/src/widgets/components/Alert.vue",
-		"/E/programs/vuejs/XT_ins/src/App.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Insured.vue",
-		"/E/programs/vuejs/XT_ins/src/components/Beinsured.vue",
-		"/E/programs/vuejs/XT_ins/src/store/actions.js",
 		"/E/programs/vuejs/XT_ins/src/widgets/Alert.js",
 		"/E/programs/vuejs/XT_ins/src/widgets/Local.js",
 		"/E/programs/vuejs/insurance/src/plugins.js",
@@ -941,14 +780,11 @@
 		"/E/programs/vuejs/XT_ins/package.json",
 		"/E/programs/vuejs/XT_ins/src/assets/css/app.scss",
 		"/E/programs/vuejs/XT_ins/src/widgets/components/Dialog.vue",
-		"/E/programs/vuejs/XT_ins/src/widgets/index.js",
 		"/E/programs/vuejs/XT_ins/src/widgets/Toast.js",
 		"/E/programs/vuejs/XT_ins/src/components/Alert.vue",
 		"/E/programs/vuejs/XT_ins/.eslintrc.js",
-		"/E/programs/vuejs/XT_ins/src/assets/css/app-iconfont.scss",
 		"/E/programs/vuejs/XT_ins/src/assets/css/picker.scss",
 		"/E/programs/vuejs/XT_ins/dist/server.bat",
-		"/E/programs/vuejs/XT_ins/index.html",
 		"/E/programs/vuejs/XT_ins/dist/static/css/app.5bb8722671fc74b06b92391955429ec8.css",
 		"/E/programs/vuejs/XT_ins/src/widgets/IDValidator.js",
 		"/E/programs/vuejs/XT_ins/src/components/Confirmation.vue",
@@ -1017,9 +853,7 @@
 		"/E/programs/hmhome/Theme/index/home/prospectus.html",
 		"/E/programs/hmhome/Theme/index/home/login-1223.html",
 		"/E/programs/hmhome/Theme/index/home/WxAddUser.html",
-		"/E/programs/hmhome/Theme/index/home/carins_login.html",
-		"/E/programs/hmhome/Theme/index/home/login.html",
-		"/E/programs/hmhome/Bin/Home/Controller/HmddController.class.php"
+		"/E/programs/hmhome/Theme/index/home/carins_login.html"
 	],
 	"find":
 	{
@@ -1030,6 +864,8 @@
 		"height": 108.0,
 		"where_history":
 		[
+			"E:\\programs\\vuejs\\XT_ins\\src",
+			"E:\\programs\\vuejs\\XT_ins\\src\\components",
 			"E:\\programs\\vuejs\\XT_ins\\src",
 			"E:\\programs\\vuejs\\XT_ins\\src\\components",
 			"E:\\programs\\vuejs\\XT_ins\\src",
@@ -1072,6 +908,45 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\"",
+			"occupation",
+			"nationality",
+			"document_type",
+			"applicant",
+			"assu",
+			"assu_",
+			"\"",
+			"21",
+			"appl_annual_source",
+			"appl_nation",
+			"warranty.appl_nation",
+			"occupation",
+			"warranty.assu_card_type",
+			"'5'",
+			"warranty.assu_card_type",
+			"applicant.document_type",
+			"applicant.annual_source",
+			"assu_annual_source",
+			"applicant.nationality",
+			"applicant.sex",
+			"vm.beneficiary.document_number",
+			"vm.beneficiary.document_number = warranty.appl_card_type",
+			"applicant.annual_source",
+			"applicant.nationality",
+			"applicant.sex",
+			"applicant.document_type",
+			"applicant.nationality",
+			"applicant.sex",
+			"applicant.document_number",
+			"3",
+			"initOccupations",
+			"appl_card_type",
+			"bs_id",
+			"if_id",
+			"bs_id",
+			"bs_is",
+			"\"",
+			"来源",
 			".applicant",
 			"applicant",
 			"app-dropdown",
@@ -1160,46 +1035,7 @@
 			"请点击进行选择",
 			"clientvalue",
 			"safe_id",
-			"this",
-			"insurance_changed",
-			"main_insurance",
-			"length",
-			"main_insurance",
-			"occupation",
-			"document_type",
-			"birthday",
-			"!== res",
-			"!== res.name || vm.applicant.document_type !== res.document_type || vm.app",
-			"!==",
-			"insurances",
-			"pay_way",
-			"ready",
-			"fetch",
-			"storage",
-			": function",
-			"store",
-			"val",
-			"save2local",
-			"console.log(val)",
-			"store.save",
-			"checkPhone",
-			"_code",
-			"annual_earnings",
-			"sex",
-			"annual_source",
-			"annual_earnings",
-			"==",
-			"annual_source",
-			"==",
-			"document_type",
-			"==",
-			"document_type",
-			"tel",
-			"zipcode",
-			"checkPhone",
-			"is_assured",
-			"==",
-			"annual_source"
+			"this"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1207,6 +1043,15 @@
 		"regex": false,
 		"replace_history":
 		[
+			"warranty.assu_card_type",
+			"warranty.appl_annual_source",
+			"warranty.assu_nation",
+			"warranty.appl_sex",
+			"warranty.appl_card_type",
+			"warranty.appl_nation",
+			"warranty.appl_sex",
+			"warranty.appl_card_type",
+			"if_id",
 			"'",
 			"===",
 			"99",
@@ -1312,30 +1157,30 @@
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": true,
+		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 17,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/components/Prospectus.vue",
+					"file": "src/components/Beneficiary.vue",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12886,
+						"buffer_size": 19378,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2123,
-								1992
+								10609,
+								10609
 							]
 						],
 						"settings":
@@ -1345,12 +1190,27 @@
 							{
 								"close":
 								{
+									"1":
+									[
+										11486,
+										11487
+									]
 								},
 								"icon":
 								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"brackethighlighter.default"
+									]
 								},
 								"open":
 								{
+									"1":
+									[
+										10122,
+										10123
+									]
 								},
 								"unmatched":
 								{
@@ -1358,41 +1218,46 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -1403,21 +1268,13 @@
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1425,10 +1282,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 171.0,
+						"translation.y": 4081.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1437,125 +1294,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 23387,
+						"buffer_size": 24226,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3951,
-								3951
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1358.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/store/state.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2354,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								288,
-								284
+								13410,
+								13410
 							]
 						],
 						"settings":
@@ -1567,8 +1314,8 @@
 								{
 									"1":
 									[
-										2352,
-										2353
+										13563,
+										13564
 									]
 								},
 								"icon":
@@ -1583,8 +1330,8 @@
 								{
 									"1":
 									[
-										142,
-										143
+										13084,
+										13085
 									]
 								},
 								"unmatched":
@@ -1593,11 +1340,16 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -1608,79 +1360,71 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
+								"bh_c_define_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 6201.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "src/components/Region.vue",
+					"buffer": 2,
+					"file": "src/components/Prospectus.vue",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3169,
+						"buffer_size": 13053,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2079,
-								2079
+								6885,
+								6885
 							]
 						],
 						"settings":
@@ -1692,1370 +1436,8 @@
 								{
 									"1":
 									[
-										2078,
-										2079
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										2023,
-										2024
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1139.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 16,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1032,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								871,
-								871
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 21,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/components/Beinsured.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19386,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3762,
-								3762
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1254.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/components/Healthinfo.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14610,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13146,
-								13146
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										13799,
-										13800
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										13078,
-										13079
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 7652.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 23,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/components/Billinfo.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5751,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1685,
-								1685
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1684,
-										1685
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										1660,
-										1661
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 258.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "dist/XT_ins.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1289,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								459,
-								459
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										427,
-										431
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/tag.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										427,
-										431
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/HTML/HTML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/components/Preview.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 30078,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								809,
-								819
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/assets/css/app-iconfont.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 654,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								439,
-								439
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										438,
-										439
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										11,
-										12
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Sass/Syntaxes/Sass.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5674,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										250,
-										253
-									],
-									[
-										344,
-										347
-									],
-									[
-										426,
-										429
-									],
-									[
-										614,
-										617
-									],
-									[
-										779,
-										782
-									],
-									[
-										789,
-										792
-									],
-									[
-										957,
-										960
-									],
-									[
-										976,
-										979
-									],
-									[
-										1117,
-										1120
-									],
-									[
-										1227,
-										1230
-									],
-									[
-										1510,
-										1513
-									],
-									[
-										1609,
-										1612
-									],
-									[
-										1695,
-										1698
-									],
-									[
-										1850,
-										1853
-									],
-									[
-										2122,
-										2125
-									],
-									[
-										2138,
-										2141
-									],
-									[
-										2319,
-										2322
-									],
-									[
-										2538,
-										2541
-									],
-									[
-										2774,
-										2777
-									],
-									[
-										2797,
-										2800
-									],
-									[
-										2942,
-										2945
-									],
-									[
-										3052,
-										3055
-									],
-									[
-										3322,
-										3325
-									],
-									[
-										3417,
-										3420
-									],
-									[
-										3501,
-										3504
-									],
-									[
-										3689,
-										3692
-									],
-									[
-										3861,
-										3864
-									],
-									[
-										3871,
-										3874
-									],
-									[
-										4043,
-										4046
-									],
-									[
-										4064,
-										4067
-									],
-									[
-										4121,
-										4124
-									],
-									[
-										4296,
-										4299
-									],
-									[
-										4425,
-										4428
-									],
-									[
-										4710,
-										4713
-									],
-									[
-										4778,
-										4781
-									],
-									[
-										5054,
-										5057
-									],
-									[
-										5120,
-										5123
-									],
-									[
-										5432,
-										5435
-									],
-									[
-										5503,
-										5506
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								4894,
-								4894
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-									"1":
-									[
-										4022,
-										4023
-									]
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"default_dir": "E:\\programs\\vuejs\\XT_ins",
-							"detect_indentation": false,
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"remote_loading": false,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"synced": false,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1938.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "src/components/Success.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 927,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								712,
-								712
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										915,
-										916
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										692,
-										693
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 22,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "src/components/Beneficiaries.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3983,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3737,
-								3750
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										3750,
-										3751
+										6884,
+										6885
 									]
 								},
 								"icon":
@@ -3070,8 +1452,8 @@
 								{
 									"1":
 									[
-										3733,
-										3734
+										5874,
+										5875
 									]
 								},
 								"unmatched":
@@ -3085,161 +1467,41 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1677.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 24,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "/E/svn/shop/data/config.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 496,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								46,
-								46
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										51,
-										52
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/double_quote.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										36,
-										37
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -3250,47 +1512,41 @@
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
+							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3572.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
-					"file": "src/components/Notice.vue",
+					"buffer": 3,
+					"file": "src/components/Region.vue",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3184,
+						"buffer_size": 3249,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3167,
-								3167
+								2595,
+								2595
 							]
 						],
 						"settings":
@@ -3302,8 +1558,130 @@
 								{
 									"1":
 									[
-										3166,
-										3167
+										2594,
+										2595
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"brackethighlighter.default"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										2593,
+										2594
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1254.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2452,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1402,
+								1402
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1424,
+										1425
 									]
 								},
 								"icon":
@@ -3318,243 +1696,8 @@
 								{
 									"1":
 									[
-										2975,
-										2976
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1710.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "src/components/Beneficiary.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19271,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5514,
-								5514
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1803.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "src/store/mutations.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1557,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1080,
-								1080
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1114,
-										1115
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										1079,
-										1080
+										1329,
+										1330
 									]
 								},
 								"unmatched":
@@ -3621,8 +1764,6 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
@@ -3630,27 +1771,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 399.0,
+						"translation.y": 988.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
-					"file": "src/store/actions.js",
+					"buffer": 5,
+					"file": "src/components/Preview.vue",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 671,
+						"buffer_size": 30093,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								669,
-								669
+								9460,
+								9483
 							]
 						],
 						"settings":
@@ -3660,27 +1801,12 @@
 							{
 								"close":
 								{
-									"1":
-									[
-										668,
-										669
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										15,
-										16
-									]
 								},
 								"unmatched":
 								{
@@ -3688,41 +1814,46 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -3733,55 +1864,47 @@
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3298.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 6,
+			"selected": 0,
 			"sheets":
 			[
 				{
-					"buffer": 19,
-					"file": "src/main.js",
+					"buffer": 6,
+					"file": "src/components/Beinsured.vue",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2437,
+						"buffer_size": 20029,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								617,
-								617
+								10873,
+								10873
 							]
 						],
 						"settings":
@@ -3793,476 +1916,8 @@
 								{
 									"1":
 									[
-										616,
-										617
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/round_bracket.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										615,
-										616
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 342.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 20,
-					"file": "/D/phpStudy/Apache/module.ini",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 460,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								460,
-								460
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 17,
-					"type": "text"
-				},
-				{
-					"buffer": 21,
-					"file": "src/widgets/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1070,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								138,
-								146
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										146,
-										147
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/single_quote.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										124,
-										125
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 22,
-					"file": "src/widgets/components/Dropdown.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1036,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								685,
-								685
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"file": "dist/sftp-config.json",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1322,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1320,
-										1321
+										11288,
+										11289
 									]
 								},
 								"icon":
@@ -4277,8 +1932,8 @@
 								{
 									"1":
 									[
-										0,
-										1
+										10720,
+										10721
 									]
 								},
 								"unmatched":
@@ -4287,11 +1942,16 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -4302,161 +1962,43 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 18,
-					"type": "text"
-				},
-				{
-					"buffer": 24,
-					"file": "src/App.vue",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 693,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								380,
-								380
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
+								"bh_c_define_content"
 							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -4464,135 +2006,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 6813.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 25,
-					"file": "src/router/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2431,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1746,
-								1754
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1754,
-										1755
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/single_quote.png",
-										"brackethighlighter.default"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										1744,
-										1745
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1083.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -4626,7 +2043,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.675520833333,
 			1.0
 		],
 		"rows":
@@ -4673,6 +2090,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"prospectus",
+				"src\\components\\Prospectus.vue"
+			],
 			[
 				"icon",
 				"src\\assets\\css\\app-iconfont.scss"

@@ -14,7 +14,7 @@
         <input slot="input" v-model="applicant.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="applicant.document_type" v-if="init.applicant" disabled>
+        <select v-model="warranty.assu_card_type" v-if="init.applicant" disabled>
           <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -26,7 +26,7 @@
         <input v-else slot="input" v-model="applicant.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
-        <select v-model="applicant.sex" v-if="init.applicant" disabled>
+        <select v-model="warranty.appl_sex" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.sex" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -34,7 +34,7 @@
         <input slot="input" v-model="applicant.birthday" type="text" readonly>
       </app-input>
       <app-select label="国籍" readonly="true">
-        <select v-model="applicant.nationality" v-if="init.applicant" disabled>
+        <select v-model="warranty.assu_nation" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -62,8 +62,8 @@
       <app-input label="年收入">
         <input slot="input" readonly :value="applicant.annual_earnings+'万元'" type="text">
       </app-input>
-      <app-select label="收入来源" v-show="applicant.annual_source != 7" readonly="true">
-        <select v-model="applicant.annual_source" disabled>
+      <app-select label="收入来源" v-show="warranty.appl_annual_source != 7" readonly="true">
+        <select v-model="warranty.appl_annual_source" disabled>
           <option value="1">工薪</option>
           <option value="2">个体</option>
           <option value="3">私营</option>
@@ -73,7 +73,7 @@
           <option value="7">其他</option>
         </select>
       </app-select>
-      <app-input label="收入来源" v-show="applicant.annual_source ==7">
+      <app-input label="收入来源" v-show="warranty.appl_annual_source ==7">
         <input slot="input" readonly :value="applicant.annual_source_other" type="text">
       </app-input>
       <app-input label="身高">
