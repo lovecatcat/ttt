@@ -25,7 +25,7 @@
         <app-select label="证件类型">
           <select v-model="beneficiary.document_type" v-if="init.applicant">
             <option disabled>请选择</option>
-            <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
+            <option v-for="type in init.warranty.appl_card_type" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="证件号码">
@@ -69,7 +69,7 @@
         <app-select label="是被保人的">
           <select v-model.number="beneficiary.relationship" v-if="init.beneficiary">
             <option disabled value="0">请选择</option>
-            <option v-for="item in init.beneficiary.relationship" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.beneficiary.relationship" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-select label="受益顺序">
@@ -92,11 +92,11 @@
         <app-select label="国籍" :readonly="beneficiary.document_type != 3">
           <select v-model="beneficiary.nationality" v-if="init.applicant" :disabled="beneficiary.document_type != 3">
             <option disabled>请选择</option>
-            <option v-for="type in init.applicant.nationality" :value="type.bs_id">{{type.explain}}</option>
+            <option v-for="type in init.warranty.appl_nation" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="通讯地址">
-          <div slot="input" @click="$refs.address.show = true" placeholder="请点击选择" :class="{pd:!beneficiary.address_select}">
+          <div slot="input" @click="clearAddress" placeholder="请点击选择" :class="{pd:!beneficiary.address_select}">
             {{beneficiary.address_select}}
           </div>
           <template slot="icon">
@@ -106,6 +106,9 @@
             </div>
           </template>
         </app-input>
+        <!-- 通讯地址 -->
+        <app-region ref="address" v-if="init.applicant" :provinces="init.applicant.province" v-on:regionselect="address_selected"></app-region>
+        <!-- 通讯地址 -->
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
@@ -139,9 +142,6 @@
         <!-- 职业 -->
       </div>
     </div>
-    <!-- 通讯地址 -->
-    <app-region ref="address" v-if="init.applicant" v-on:regionselect="address_selected"></app-region>
-    <!-- 通讯地址 -->
   </section>
 </template>
 <script>
@@ -228,17 +228,17 @@ export default {
       if (val) {
         var applicant = Api.obj2json(this.$store.state.applicant)
         vm.beneficiary.document_number = applicant.document_number
-        vm.beneficiary.document_type = applicant.document_type
+        vm.beneficiary.document_type = this.warranty.appl_card_type
         vm.beneficiary.document_term = applicant.document_term
         if (vm.beneficiary.document_term === '9999-12-30') vm.longTerm = true
         vm.beneficiary.name = applicant.name
-        vm.beneficiary.sex = applicant.sex
+        vm.beneficiary.sex = this.warranty.appl_sex
         vm.beneficiary.birthday = applicant.birthday
         if (['18', '19', '20', '23'].indexOf(vm.warranty.is_assured) > -1) {
           vm.beneficiary.relationship = Number(vm.warranty.is_assured)
         }
         if (this.$store.state.anti_money) {
-          vm.beneficiary.nationality = applicant.nationality
+          vm.beneficiary.nationality = this.warranty.appl_nation
           vm.beneficiary.province = applicant.province
           vm.beneficiary.city = applicant.city
           vm.beneficiary.district = applicant.district
@@ -316,7 +316,7 @@ export default {
             vm.beneficiary.birthday = idInfo.birth
             vm.beneficiary.sex = sex[idInfo.sex]
             vm.beneficiary.register_select = addr[code].name
-            vm.beneficiary.register = addr[code].bs_id
+            vm.beneficiary.register = addr[code].if_id
           } else {
             toast_text = '请输入18位正确格式的身份证'
             vm.beneficiary.register_select = ''
@@ -388,7 +388,9 @@ export default {
           toast_text = '请填写' + sb + '受益人【通信邮编】'
         } else if (!vm.beneficiary.tel && !vm.beneficiary.visit_tel) {
           toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'
-        } else if (!vm.checkZipcode() && !vm.checkTel()) {
+        } else if (vm.beneficiary.tel && !vm.checkPhone()) {
+          return false
+        } else if (vm.beneficiary.visit_tel && !vm.checkTel()) {
           return false
         } else if (!vm.beneficiary.occupation_code) {
           toast_text = '请填写' + sb + '受益人【职业】'
@@ -434,6 +436,11 @@ export default {
     },
     // 通讯地址选择
     address_selected(selected) {
+      if (selected.length === 0 || !selected[0]) {
+        this.$toast.open('请先选择通讯地址', 'warn')
+        return false
+      }
+      this.local && console.info(selected)
       var vm = this
       var select_show = ''
       select_show += selected[0].explain
@@ -464,12 +471,12 @@ export default {
       this.beneficiary.city = ''
       this.beneficiary.district = ''
       this.beneficiary.address_select = ''
-      this.$refs.address.show = true
+      this.$refs.address.clear()
     },
     // 设置职业
     setOccupation(selected) {
       console.log(selected)
-      this.beneficiary.occupation_code = selected.bs_id
+      this.beneficiary.occupation_code = selected.if_id
       this.beneficiary.occupation = selected.explain
     },
     // 清除职业

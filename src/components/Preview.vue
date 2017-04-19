@@ -3,13 +3,19 @@
     <div v-if="!warData" class="app-list-header am-flexbox">
       <div class="am-flexbox-item"><span class="app-iconfont">&#xe631;</span>投保信息预览</div>
     </div>
-    <app-dropdown v-if="!warData && applicant" label="投保人资料" up='up'>
+    <app-dropdown v-if="!warData && applicant" up='up'>
+      <template slot="header">
+        <div class="am-list-label">投保人资料</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/insured"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <app-input label="姓名">
         <input slot="input" v-model="applicant.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
         <select v-model="applicant.document_type" v-if="init.applicant" disabled>
-          <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
+          <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
       <app-input label="证件号码">
@@ -21,7 +27,7 @@
       </app-input>
       <app-select label="性别" readonly="true">
         <select v-model="applicant.sex" v-if="init.applicant" disabled>
-          <option v-for="item in init.applicant.sex" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.applicant.sex" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="出生日期">
@@ -29,7 +35,7 @@
       </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="applicant.nationality" v-if="init.applicant" disabled>
-          <option v-for="item in init.applicant.nationality" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="户籍">
@@ -78,7 +84,7 @@
       </app-input>
       <app-select label="是被保险人的" readonly="true">
         <select v-model="warranty.is_assured" v-if="init.warranty" disabled>
-          <option v-for="item in init.warranty.is_assured" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.warranty.is_assured" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="职业">
@@ -86,20 +92,26 @@
       </app-input>
       <app-select label="合同争议处理方式" readonly="true">
         <select v-model="warranty.contract_handle" v-if="init.warranty" disabled>
-          <option v-for="item in init.warranty.contract_handle" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.warranty.contract_handle" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="仲裁委员会" v-show="warranty.contract_handle == 109">
         <input slot="input" readonly :value="warranty.contract_handle_value" type="text">
       </app-input>
     </app-dropdown>
-    <app-dropdown v-if="!warData && assured" label="被保险人资料">
+    <app-dropdown v-if="!warData && assured">
+      <template slot="header">
+        <div class="am-list-label">被保险人资料</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/beinsured"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <app-input label="姓名">
         <input slot="input" v-model="assured.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
         <select v-model="assured.document_type" v-if="init.assured" disabled>
-          <option v-for="type in init.assured.document_type" :value="type.bs_id">{{type.explain}}</option>
+          <option v-for="type in init.assured.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
       <app-input label="证件号码">
@@ -111,7 +123,7 @@
       </app-input>
       <app-select label="性别" readonly="true">
         <select v-model="assured.sex" v-if="init.assured" disabled>
-          <option v-for="item in init.assured.sex" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.assured.sex" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="出生日期">
@@ -119,7 +131,7 @@
       </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="assured.nationality" v-if="init.assured" disabled>
-          <option v-for="item in init.assured.nationality" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="户籍">
@@ -170,13 +182,19 @@
         <input slot="input" readonly :value="assured.occupation" type="text">
       </app-input>
     </app-dropdown>
-    <app-dropdown v-if="beneficiary" label="身故受益人资料" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type == 1" :key="index">
+    <app-dropdown v-if="beneficiary" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type == 1" :key="index">
+      <template slot="header">
+        <div class="am-list-label">身故受益人资料</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/beneficiaries"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <app-input label="姓名">
         <input slot="input" v-model="beneficiary.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
         <select v-model="beneficiary.document_type" v-if="init.applicant" disabled>
-          <option v-for="type in init.applicant.document_type" :value="type.bs_id">{{type.explain}}</option>
+          <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
       <app-input label="证件号码">
@@ -188,7 +206,7 @@
       </app-input>
       <app-select label="性别" readonly="true">
         <select v-model="beneficiary.sex" v-if="init.applicant" disabled>
-          <option v-for="item in init.applicant.sex" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.applicant.sex" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="出生日期">
@@ -196,7 +214,7 @@
       </app-input>
       <app-select label="是被保险人的" readonly="true">
         <select v-model="beneficiary.relationship" v-if="init.beneficiary" disabled>
-          <option v-for="item in init.beneficiary.relationship" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.beneficiary.relationship" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-select label="受益顺序" readonly="true">
@@ -211,7 +229,7 @@
       <template v-if="anti_money">
         <app-select label="国籍" readonly="true">
           <select v-model="beneficiary.nationality" v-if="init.applicant">
-            <option :disabled="beneficiary.document_type == '57'" v-for="type in init.applicant.nationality" :value="type.bs_id">{{type.explain}}</option>
+            <option :disabled="beneficiary.document_type == '57'" v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="通讯地址">
@@ -244,7 +262,13 @@
         </div>
       </div>
     </div>
-    <app-dropdown v-if="!warData && insurances" :label="'保险计划信息'+(insurances.length>1? (index == 0 ? '(主险)': ('(附加险'+(index>2?index-1:'')+')') ) :'')" v-for="insurance,index in insurances" :key="index">
+    <app-dropdown v-if="!warData && insurances" v-for="insurance,index in insurances" :key="index">
+      <template slot="header">
+        <div class="am-list-label">{{'保险计划信息'+(insurances.length>1? (index == 0 ? '(主险)': ('(附加险'+(index>2?index-1:'')+')') ) :'')}}</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/prospectus"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <app-select label="险种" readonly="true">
         <select v-model="main_insurance" disabled>
           <option v-if="item.safe_id == 209 || item.safe_id == 210" v-for="item in safegoods" :value="item">{{item.name}}</option>
@@ -268,7 +292,7 @@
       </app-input>
       <app-select label="保单选项" readonly="true">
         <select v-model="warranty.delivery_way" v-if="init.warranty" disabled>
-          <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
+          <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
       <app-input label="邮箱" v-show="warranty.delivery_way == 117">
@@ -277,7 +301,7 @@
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-switch" v-if="init.assured">
-          <input type="checkbox" disabled v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
+          <input type="checkbox" disabled v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
           <label class="am-switch-label">
             <div class="am-switch-inner"></div>
             <div class="am-switch-switch"></div>
@@ -285,7 +309,13 @@
         </div>
       </div>
     </app-dropdown>
-    <app-dropdown v-if="!warData && matters" label="健康告知">
+    <app-dropdown v-if="!warData && matters">
+      <template slot="header">
+        <div class="am-list-label">健康告知</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/healthinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <div class="am-list am-list-6lb form" v-for="item,index in matters">
         <div class="am-list-item">
           <div class="app-list-title">{{item.entry}}. {{item.content}}</div>
@@ -371,7 +401,13 @@
         </template>
       </div>
     </app-dropdown>
-    <app-dropdown v-if="!warData && warranty" label="收费信息">
+    <app-dropdown v-if="!warData && warranty">
+      <template slot="header">
+        <div class="am-list-label">收费信息</div>
+        <div class="am-list-content am-ft-right">
+          <router-link to="/billinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+        </div>
+      </template>
       <div class="am-list am-list-6lb form">
         <div class="am-list-body">
           <app-input label="首期、续期交费方式">
@@ -385,12 +421,12 @@
           </app-input>
           <app-select label="开户行">
             <select v-model="warranty.bank_name" v-if="init.transferstate" disabled>
-              <option v-for="item in init.transferstate.bank_name" :value="item.bs_id">{{item.explain}}</option>
+              <option v-for="item in init.transferstate.bank_name" :value="item.if_id">{{item.explain}}</option>
             </select>
           </app-select>
           <app-select label="账户类别">
             <select v-model="warranty.bank_card" v-if="init.transferstate" disabled>
-              <option v-for="item in init.transferstate.bank_card" :value="item.bs_id">{{item.explain}}</option>
+              <option v-for="item in init.transferstate.bank_card" :value="item.if_id">{{item.explain}}</option>
             </select>
           </app-select>
           <app-input label="开户行所在地">
@@ -550,7 +586,7 @@ export default {
         if (i.child) {
           i.child.forEach(child => {
             var index = child.ci_id
-            // index = i.entry + child.entry
+              // index = i.entry + child.entry
             pushData['clientvalue_ci_id'].push(child.ci_id)
             pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
             pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
@@ -573,7 +609,7 @@ export default {
       pushData['beneficiary_relationship'] = []
       pushData['beneficiary_nationality'] = []
       pushData['beneficiary_register'] = []
-      if (vm.warranty.benefited_type === 1) {
+      if (vm.warranty.benefited_type === '1') {
         vm.beneficiaries.forEach(function(beneficiary) {
           pushData['beneficiary_war_id'].push(warId)
           pushData['beneficiary_name'].push(beneficiary.name)
@@ -605,6 +641,7 @@ export default {
         pushData['insurance_safe_year'].push(insurance.safe_year)
         pushData['insurance_period_money'].push(insurance.period_money)
       })
+      this.local && console.log(pushData)
       vm.$toast.open('正在投保中', 'loading')
       Api.pushWarranty(qs.stringify(pushData), res => {
         if (res.name && res.name.indexOf('Error') > -1) {

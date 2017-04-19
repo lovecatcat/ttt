@@ -10,7 +10,7 @@
         <app-select label="证件类型">
           <select v-model="assured.document_type" v-if="init.assured" @change="assured.document_number = ''">
             <option disabled>请选择证件类型</option>
-            <option v-for="item in init.assured.document_type" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.assured.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="证件号码">
@@ -58,25 +58,28 @@
         <app-select label="国籍" :readonly="assured.document_type !== '3'">
           <select v-model="assured.nationality" v-if="init.assured" :disabled="assured.document_type !== '3'">
             <option disabled>请选择国籍</option>
-            <option v-for="item in init.assured.nationality" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="户籍">
-          <input slot="input" readonly v-model="assured.register_select" type="text" placeholder="请选择被保险人户籍" @click="$refs.register.show=true">
+          <input slot="input" readonly v-model="assured.register_select" type="text" placeholder="请选择被保险人户籍" @click="clearRegister">
           <div slot="icon" v-show="assured.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
         <!-- 户籍 -->
+        <app-region v-if="init.applicant" :provinces="init.applicant.province" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
+        <!-- 户籍 -->
         <app-input label="通讯地址">
-          <div slot="input" @click="$refs.address.show = true" placeholder="请点击进行选择" :class="{pd:!assured.address_select}">
+          <div slot="input" @click="clearAddress" placeholder="请点击进行选择" :class="{pd:!assured.address_select}">
             {{assured.address_select}}
           </div>
           <div slot="icon" v-show="assured.address_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
         <!-- 通讯地址 -->
+        <app-region v-if="init.applicant" :provinces="init.applicant.province" ref="address" v-on:regionselect="address_selected"></app-region>
         <div class="am-list-item">
           <div class="am-list-label tar app-color-warn">详细地址</div>
           <div class="am-list-control">
-            <input v-model.trim="assured.address" type="text" placeholder="请填写详细通讯地址">
+            <input v-model.lazy.trim="assured.address" type="text" placeholder="请填写详细通讯地址">
           </div>
           <div slot="icon" v-show="assured.address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.address = ''"></i></div>
         </div>
@@ -94,7 +97,7 @@
           <div slot="icon" v-show="assured.tel != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.tel = ''"></i></div>
         </app-input>
         <app-input label="工作单位(选填)">
-          <input slot="input" v-model.trim="assured.work_unit" type="text" placeholder="请填写被保险人工作单位">
+          <input slot="input" v-model.lazy.trim="assured.work_unit" type="text" placeholder="请填写被保险人工作单位">
           <div slot="icon" v-show="assured.work_unit != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.work_unit = ''"></i></div>
         </app-input>
         <app-input label="年收入(万元)">
@@ -116,16 +119,16 @@
         <div class="am-list-item" v-show="assured.annual_source === 7">
           <div class="am-list-label tar app-color-warn">填写收入来源</div>
           <div class="am-list-control">
-            <input v-model="assured.annual_source_other" type="text" placeholder="请填写收入来源">
+            <input v-model.lazy="assured.annual_source_other" type="text" placeholder="请填写收入来源">
           </div>
           <div v-show="assured.annual_source_other != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.annual_source_other = ''"></i></div>
         </div>
         <app-input label="身高">
-          <input slot="input" v-model.number="assured.height" type="number" placeholder="请填写身高(cm)">
+          <input slot="input" v-model.lazy.number="assured.height" type="number" placeholder="请填写身高(cm)">
           <div slot="icon" v-show="assured.height != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.height = ''"></i></div>
         </app-input>
         <app-input label="体重">
-          <input slot="input" v-model.number="assured.weight" type="number" placeholder="请填写体重(Kg)">
+          <input slot="input" v-model.lazy.number="assured.weight" type="number" placeholder="请填写体重(Kg)">
           <div slot="icon" v-show="assured.weight != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.weight = ''"></i></div>
         </app-input>
         <app-input label="职业">
@@ -143,8 +146,6 @@
       <router-link to="/insured" class="am-tab-item">上一步</router-link>
       <router-link to="/prospectus" class="am-tab-item selected">下一步</router-link>
     </div>
-    <app-region v-if="init.applicant" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
-    <app-region v-if="init.applicant" ref="address" v-on:regionselect="address_selected"></app-region>
   </section>
 </template>
 <script>
@@ -245,7 +246,7 @@ export default {
             vm.assured.birthday = idInfo.birth
             vm.assured.sex = sex[idInfo.sex]
             vm.assured.register_select = addr[code].name
-            vm.assured.register = addr[code].bs_id
+            vm.assured.register = addr[code].if_id
 
             const age = new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
             if (age < 16) {
@@ -339,6 +340,11 @@ export default {
     },
     // 户籍选择
     register_selected(selected) {
+      if (selected.length === 0 || !selected[0]) {
+        this.$toast.open('请先选择户籍', 'warn')
+        return false
+      }
+      this.local && console.info(selected)
       this.$set(this.assured, 'register', selected[0].if_id)
       this.$set(this.assured, 'register_select', selected[0].explain)
     },
@@ -346,10 +352,15 @@ export default {
     clearRegister() {
       this.assured.register = ''
       this.assured.register_select = ''
-      this.$refs.register.show = true
+      this.$refs.register.clear()
     },
     // 通讯地址选择
     address_selected(selected) {
+      if (selected.length === 0 || !selected[0]) {
+        this.$toast.open('请先选择通讯地址', 'warn')
+        return false
+      }
+      this.local && console.info(selected)
       var vm = this
       var select_show = selected[0].explain
       vm.$set(vm.assured, 'province', selected[0].if_id)
@@ -379,7 +390,7 @@ export default {
       this.assured.city = ''
       this.assured.district = ''
       this.assured.address_select = ''
-      this.$refs.address.show = true
+      this.$refs.address.clear()
     },
     // 邮编校验
     checkZipcode() {
@@ -415,7 +426,7 @@ export default {
     // 设置职业
     setOccupation(selected) {
       this.local && console.log(selected)
-      this.warranty.assured_occupation_code = selected.bs_id
+      this.warranty.assured_occupation_code = selected.if_id
       this.assured.occupation = selected.explain
     },
     // 清除职业

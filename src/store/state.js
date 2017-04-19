@@ -7,7 +7,7 @@ export default {
   status: 0, //保单状态
   tid: '', //投保单号
   anti_money: false, //反洗钱标准
-  init: null, //初始化数据,
+  init: {}, //初始化数据,
   main_insurance: '0', //主险数据
   admin_id: admin_id,
   todo: false, //未完成订单
@@ -19,142 +19,145 @@ export default {
   addr: { // 地址
     11: {
       name: '北京',
-      bs_id: 28
+      if_id: 129
     },
     12: {
       name: '天津',
-      bs_id: 133
+      if_id: 147
     },
     13: {
       name: '河北',
-      bs_id: 134
+      if_id: 165
     },
     14: {
       name: '山西',
-      bs_id: 135
+      if_id: 348
     },
     15: {
       name: '内蒙古',
-      bs_id: 136
+      if_id: 479
     },
     21: {
       name: '辽宁',
-      bs_id: 137
+      if_id: 594
     },
     22: {
       name: '吉林',
-      bs_id: 139
+      if_id: 713
     },
     23: {
       name: '黑龙江',
-      bs_id: 140
+      if_id: 783
     },
     31: {
       name: '上海',
-      bs_id: 141
+      if_id: 929
     },
     32: {
       name: '江苏',
-      bs_id: 141
+      if_id: 948
     },
     33: {
       name: '浙江',
-      bs_id: 143
+      if_id: 1061
     },
     34: {
       name: '安徽',
-      bs_id: 145
+      if_id: 1174
     },
     35: {
       name: '福建',
-      bs_id: 146
+      if_id: 1296
     },
     36: {
       name: '江西',
-      bs_id: 148
+      if_id: 1391
     },
     37: {
       name: '山东',
-      bs_id: 149
+      if_id: 1503
     },
     41: {
       name: '河南',
-      bs_id: 151
+      if_id: 1660
     },
     42: {
       name: '湖北',
-      bs_id: 152
+      if_id: 1837
     },
     43: {
       name: '湖南',
-      bs_id: 153
+      if_id: 1955
     },
     44: {
       name: '广东',
-      bs_id: 29
+      if_id: 2092
     },
     45: {
       name: '广西',
-      bs_id: 156
+      if_id: 2290
     },
     46: {
       name: '海南',
-      bs_id: 157
+      if_id: 2419
     },
     50: {
       name: '重庆',
-      bs_id: 158
+      if_id: 2451
     },
     51: {
       name: '四川',
-      bs_id: 159
+      if_id: 2495
     },
     52: {
       name: '贵州',
-      bs_id: 160
+      if_id: 2700
     },
     53: {
       name: '云南',
-      bs_id: 161
+      if_id: 2798
     },
     54: {
       name: '西藏',
-      bs_id: 162
+      if_id: 2944
     },
     61: {
       name: '陕西',
-      bs_id: 163
+      if_id: 3026
     },
     62: {
       name: '甘肃',
-      bs_id: 164
+      if_id: 3150
     },
     63: {
       name: '青海',
-      bs_id: 165
+      if_id: 3254
     },
     64: {
       name: '宁夏',
-      bs_id: 166
+      if_id: 3306
     },
     65: {
       name: '新疆',
-      bs_id: 167
+      if_id: 3334
     },
     71: {
       name: '台湾',
-      bs_id: 147
+      if_id: 3453
     },
     81: {
       name: ' 香港',
-      bs_id: 144
+      if_id: 3844
     },
     82: {
       name: '澳门',
-      bs_id: 138
+      if_id: 3866
+    },
+    90: {
+      name: '钓鱼岛',
+      if_id: 3877
     }
   },
   districts: {},
   cities: {}
 }
-

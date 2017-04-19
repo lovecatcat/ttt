@@ -48,11 +48,11 @@ export default {
     }
   },
   created() {
-    var applicant = this.$storage.fetch('applicant')
     this.$store.commit('setParam', {
       ready: true
     })
-    if (applicant.name) {
+    var applicant = this.$storage.fetch('applicant')
+    if (applicant.dd) {
       this.$dialog.open('未完成保单', '是否继续完成最近一笔保单?', () => {
         this.$store.commit('setParam', {
           todo: true

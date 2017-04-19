@@ -1,6 +1,6 @@
 export default {
   saveInit(state, payload) {
-    state.init = payload
+    state.init = Object.assign({}, state.init, payload)
   },
   setWarranty(state, payload) {
     state.warranty = Object.assign({}, state.warranty, payload)
@@ -15,7 +15,6 @@ export default {
     if (payload.appl_id) {
       delete payload.appl_id
     }
-    // state.assured = payload
     state.assured = Object.assign({}, state.assured, payload)
   },
   // 添加受益人
@@ -49,7 +48,7 @@ export default {
     state.anti_money = bool
   },
   setParam(state, payload) {
-    if (typeof payload === 'boolean') {
+    if (typeof payload === 'boolean' || typeof payload === 'string') {
       state[index] = payload[index]
     } else {
       for (var index in payload) {

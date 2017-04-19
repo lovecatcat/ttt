@@ -57,6 +57,13 @@ const router = new Router({
       docTitle: '被保险人信息'
     }
   }, {
+    path: '/prospectus',
+    name: 'Prospectus',
+    component: Prospectus,
+    meta: {
+      docTitle: '选择险种'
+    }
+  }, {
     path: '/beneficiaries',
     name: 'Beneficiaries',
     component: Beneficiaries,
@@ -76,13 +83,6 @@ const router = new Router({
     component: Billinfo,
     meta: {
       docTitle: '填写收费信息'
-    }
-  }, {
-    path: '/prospectus',
-    name: 'Prospectus',
-    component: Prospectus,
-    meta: {
-      docTitle: '选择险种'
     }
   }, {
     path: '/preview',

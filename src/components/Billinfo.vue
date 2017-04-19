@@ -18,21 +18,22 @@
         <app-select label="开户行">
           <select v-model="warranty.bank_name" v-if="init.transferstate">
             <option disabled value="0">请选择开户行</option>
-            <option v-for="item in init.transferstate.bank_name" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.transferstate.bank_name" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-select label="账户类别">
           <select v-model="warranty.bank_card" v-if="init.transferstate">
             <option disabled value="0">请选择账户类别</option>
-            <option v-for="item in init.transferstate.bank_card" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.transferstate.bank_card" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="开户行所在地">
-          <div slot="input" @click="$refs.address.show = true" placeholder="请点击进行选择" :class="{pd:!warranty.bank_address}">
+          <div slot="input" @click="clearAddress" placeholder="请点击进行选择" :class="{pd:!warranty.bank_address}">
             {{warranty.bank_address}}
           </div>
           <div slot="icon" v-show="warranty.bank_address != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearAddress"></i></div>
         </app-input>
+        <app-region v-if="init.applicant" :provinces="init.applicant.province" ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
       </div>
     </div>
     <div class="app-agreement">
@@ -52,7 +53,6 @@
       <router-link to="/preview" class="am-tab-item selected">下一步</router-link>
     </div>
     <!-- 开户行所在地 -->
-    <app-region v-if="init.applicant" ref="address" :level="2" v-on:regionselect="address_selected"></app-region>
   </div>
 </template>
 <script>
@@ -124,10 +124,15 @@ export default {
       this.warranty.bank_city = ''
       this.warranty.bank_district = ''
       this.warranty.bank_address = ''
-      this.$refs.address.show = true
+      this.$refs.address.clear()
     },
     // 通讯地址选择
     address_selected(selected) {
+      if (selected.length === 0 || !selected[0]) {
+        this.$toast.open('请先选择通讯地址', 'warn')
+        return false
+      }
+      this.local && console.info(selected)
       var vm = this
       var select_show = selected[0].explain
       vm.$set(vm.warranty, 'bank_province', selected[0].if_id)

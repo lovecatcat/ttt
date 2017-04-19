@@ -35,7 +35,7 @@
         </app-input>
         <app-select label="保单选项">
           <select v-model="warranty.delivery_way" v-if="init.warranty">
-            <option v-for="item in init.warranty.delivery_way" :value="item.bs_id">{{item.explain}}</option>
+            <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="邮箱" v-show="warranty.delivery_way === '117'">
@@ -56,7 +56,7 @@
           <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
           <div class="am-list-control">
             <div class="am-switch" v-if="init.assured">
-              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].bs_id" v-bind:false-value="init.assured.social_security[1].bs_id" class="am-switch-checkbox">
+              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
               <label class="am-switch-label">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>

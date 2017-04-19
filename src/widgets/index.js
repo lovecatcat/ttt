@@ -4,13 +4,13 @@ import Input from './components/Input'
 import Select from './components/Select'
 import Dropdown from './components/Dropdown'
 import Dialog from './components/Dialog'
-import Picker from './Picker'
+// import Picker from './Picker'
 
 Vue.component('app-dialog', Dialog)
 Vue.component('app-input', Input)
 Vue.component('app-select', Select)
 Vue.component('app-dropdown', Dropdown)
-Vue.component('mt-picker', Picker)
+// Vue.component('mt-picker', Picker)
 
 ///////////
 // 日期格式化 //

@@ -79,6 +79,19 @@
         <label class="am-ft-md" for="agree2">【被保人】告知事项全是否</label>
       </div>
     </div>
+    <div class="app-agreement am-list">
+      <div class="am-checkbox mini argument">
+        <input id="promise" type="checkbox" v-model="promise">
+        <span class="icon-check"></span>
+        <label class="am-ft-md" for="promise">用户承诺</label>
+      </div>
+      <div class="am-list-item">
+        1. 本人承诺上述内容与客户告知事实一致，并无虚假和重大遗漏。
+      </div>
+      <div class="am-list-item">
+        2. 本人愿意承担因不实告知带来的所有责任。
+      </div>
+    </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
       <router-link to="/beneficiaries" class="am-tab-item">上一步</router-link>
       <router-link to="/billinfo" class="am-tab-item selected">下一步</router-link>
@@ -341,6 +354,7 @@ export default {
         }]
       },
       allNo: false,
+      promise: false,
       showPup0ver: false,
       matters: [], //健康告知问题
       clientvalue: {
@@ -439,6 +453,10 @@ export default {
       }
       if (!this.allNo && allFalse) {
         this.$toast.open('全为否，请选中下方按钮', '')
+        return false
+      }
+      if (!this.promise) {
+        this.$toast.open('请阅读用户承诺并确认', '')
         return false
       }
       return true

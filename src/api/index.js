@@ -5,14 +5,14 @@ import axios from 'axios'
  * 生产环境: production
  * @type {String}
  */
-// const env = location.port == '80801' ? 'development' : 'production'
 // 保险公司ID
 const SCID = 19
 
 // http数据交互插件
-axios.defaults.baseURL = 'http://cloud.ehuimeng.com/'
+// axios.defaults.baseURL = 'http://cloud.ehuimeng.com/'
 
-// axios.defaults.baseURL = env == 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
+const env = location.port === '8080' ? 'development' : 'production'
+axios.defaults.baseURL = env === 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
 
 const initField = function (cb) {
   axios.get('Warranty/initWarField?sc_id=' + SCID).then(response => {

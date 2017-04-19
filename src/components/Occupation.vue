@@ -75,61 +75,61 @@ export default {
       OccupationResult: [], //搜索结果
       commonOccupation: [{
         explain: '公务员',
-        bs_id: 9764
+        if_id: 9764
       }, {
         explain: '行政业务办公人员（内勤）',
-        bs_id: 9759
+        if_id: 9759
       }, {
         explain: '行政业务办公人员（外勤）',
-        bs_id: 9760
+        if_id: 9760
       }, {
         explain: '金融一般内勤人员',
-        bs_id: 9579
+        if_id: 9579
       }, {
         explain: '企业职能部门经理或主管',
-        bs_id: 9306
+        if_id: 9306
       }, {
         explain: '会计人员',
-        bs_id: 9557
+        if_id: 9557
       }, {
         explain: '企业经理',
-        bs_id: 9305
+        if_id: 9305
       }, {
         explain: '工厂企业负责人',
-        bs_id: 9307
+        if_id: 9307
       }, {
         explain: '农夫',
-        bs_id: 10108
+        if_id: 10108
       }, {
         explain: '个体摊贩',
-        bs_id: 9846
+        if_id: 9846
       }, {
         explain: '杂货商',
-        bs_id: 10066
+        if_id: 10066
       }, {
         explain: '家庭主妇',
-        bs_id: 10049
+        if_id: 10049
       }, {
         explain: '服饰买卖商',
-        bs_id: 10084
+        if_id: 10084
       }, {
         explain: '食品商',
-        bs_id: 10081
+        if_id: 10081
       }, {
         explain: '幼儿教师',
-        bs_id: 9593
+        if_id: 9593
       }, {
         explain: '中学教师',
-        bs_id: 9591
+        if_id: 9591
       }, {
         explain: '小学教师',
-        bs_id: 9592
+        if_id: 9592
       }, {
         explain: '无业人员',
-        bs_id: 11336
+        if_id: 11336
       }, {
         explain: '退休人员',
-        bs_id: 11337
+        if_id: 11337
       }] //常见职业
     }
   },
@@ -139,7 +139,7 @@ export default {
       return OccupationLevel[this.level]
     },
     initOccupations() {
-      return this.$store.state.init ? Api.obj2json(this.$store.state.init.applicant.occupation_code) : {}
+      return this.$store.state.init.applicant ? Api.obj2json(this.$store.state.init.applicant.occupation_code) : {}
     }
   },
   watch: {
@@ -161,10 +161,10 @@ export default {
       this.$toast.open('', 'loading')
     },
     // 获取职业数据
-    getOccupation(bs_id, explain) {
+    getOccupation(if_id, explain) {
       const vm = this
-      if (!bs_id) return
-      Api.queryOccupation(bs_id, data => {
+      if (!if_id) return
+      Api.queryOccupation(if_id, data => {
         if (data.name && data.name.indexOf('Error') > -1) {
           vm.$toast.open('服务器开小差了', 'error')
           return
@@ -174,7 +174,7 @@ export default {
           // set Occupation
           vm.$parent.setOccupation({
             explain: explain, //职业
-            bs_id: bs_id //职业代码
+            if_id: if_id //职业代码
           })
 
           // reset
@@ -193,7 +193,7 @@ export default {
     selectOccupation(item) {
       this.$parent.setOccupation({
         explain: item.explain, //职业
-        bs_id: item.bs_id //职业代码
+        if_id: item.if_id //职业代码
       })
       this.show = false
     },
