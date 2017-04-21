@@ -6,15 +6,9 @@ export default {
     state.warranty = Object.assign({}, state.warranty, payload)
   },
   setApplicant(state, payload) {
-    if (payload.assu_id) {
-      delete payload.assu_id
-    }
     state.applicant = Object.assign({}, state.applicant, payload)
   },
   saveAssured(state, payload) {
-    if (payload.appl_id) {
-      delete payload.appl_id
-    }
     state.assured = Object.assign({}, state.assured, payload)
   },
   // 添加受益人

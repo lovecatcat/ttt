@@ -6,7 +6,7 @@
         <a v-show="count > 1 && crt > 0" v-if="index>0" class="fn-right" @click="del">删除该受益人</a>
       </div>
       <div class="am-list-body">
-        <div class="am-list-item" v-if="warranty.is_assured && index == 0" v-show="warranty.is_assured != 21">
+        <div class="am-list-item" v-if="warranty.is_assured && index == 0" v-show="warranty.is_assured !== 15000">
           <div class="am-list-label">同投保人</div>
           <div class="am-list-control tar">
             <div class="am-switch">
@@ -23,9 +23,9 @@
           <div slot="icon" v-show="beneficiary.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model="beneficiary.document_type" v-if="init.applicant">
+          <select v-model.number="beneficiary.document_type" v-if="init.applicant">
             <option disabled>请选择</option>
-            <option v-for="type in init.warranty.appl_card_type" :value="type.if_id">{{type.explain}}</option>
+            <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="证件号码">
@@ -53,7 +53,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" class="am-switch-checkbox" :disabled="same || beneficiary.document_type in [1,5]" id="sex3" v-model="beneficiary.sex" :true-value="15" :false-value="16">
+              <input type="checkbox" class="am-switch-checkbox" :disabled="same || beneficiary.document_type in [57,15008]" id="sex3" v-model="beneficiary.sex" :true-value="15" :false-value="16">
               <label class="am-switch-label" for="sex3">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -62,8 +62,8 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" :class="{'has': beneficiary.birthday != ''}" v-model="beneficiary.birthday" :disabled="beneficiary.document_type in [1,5]" type="date" placeholder="请填写受益人出生日期">
-          <div slot="icon" v-show="beneficiary.birthday  && !same  && !beneficiary.document_type in [1,5]" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.birthday = ''"></i></div>
+          <input slot="input" :class="{'has': beneficiary.birthday != ''}" v-model="beneficiary.birthday" :disabled="beneficiary.document_type in [57,15008]" type="date" placeholder="请填写受益人出生日期">
+          <div slot="icon" v-show="beneficiary.birthday  && !same  && !beneficiary.document_type in [57,15008]" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.birthday = ''"></i></div>
         </app-input>
         </app-input>
         <app-select label="是被保人的">
@@ -89,10 +89,10 @@
     </div>
     <div class="am-list am-list-6lb form" v-if="anti_money">
       <div class="am-list-body">
-        <app-select label="国籍" :readonly="beneficiary.document_type != 3">
-          <select v-model="beneficiary.nationality" v-if="init.applicant" :disabled="beneficiary.document_type != 3">
+        <app-select label="国籍" :readonly="beneficiary.document_type !== 58">
+          <select v-model="beneficiary.nationality" v-if="init.applicant" :disabled="beneficiary.document_type !== 58">
             <option disabled>请选择</option>
-            <option v-for="type in init.warranty.appl_nation" :value="type.if_id">{{type.explain}}</option>
+            <option v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="通讯地址">
@@ -125,11 +125,11 @@
             </div>
           </template>
         </app-input>
-        <app-input label="手机号码">
+        <app-input label="手机号码(二必选一)">
           <input slot="input" @change="checkPhone" v-model.number.lazy="beneficiary.tel" type="number" placeholder="请填写受益人手机号码">
           <div slot="icon" v-show="beneficiary.tel != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.tel = ''"></i></div>
         </app-input>
-        <app-input label="固定电话">
+        <app-input label="固定电话(二必选一)">
           <input slot="input" @change="checkTel" v-model.lazy.trim="beneficiary.visit_tel" type="text" placeholder="请填写受益人固定电话">
           <div slot="icon" v-show="beneficiary.visit_tel != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.visit_tel = ''"></i></div>
         </app-input>
@@ -164,18 +164,16 @@ export default {
       longTerm: false, //长期有效
       // 受益人信息
       beneficiary: {
-        register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
-        sex: 15, //性别
-        nationality: 99, //国籍
-        register: '', //户籍
+        sex: '11338', //性别
+        nationality: 63, //国籍
         birthday: '', //出生日期
 
         benefited_ratio: (100 / (this.index + 1)).toFixed(0), //受益比例
         benefited_level: '1', //受益顺序
         // 证件
-        document_type: '1', //证件类型
+        document_type: 57, //证件类型
         document_type_val: '', //证件描述
         document_number: '', //证件号码
         document_term: '', //证件有效期
@@ -197,7 +195,10 @@ export default {
   },
   computed: {
     init() {
-      return this.$store.state.init || {}
+      return this.$store.state.init
+    },
+    applicant() {
+      return this.$store.state.applicant
     },
     count() {
       return this.$store.state.tmp.people.length //人数
@@ -226,18 +227,25 @@ export default {
     same(val) {
       const vm = this
       if (val) {
-        var applicant = Api.obj2json(this.$store.state.applicant)
-        vm.beneficiary.document_number = applicant.document_number
+        var applicant = Api.obj2json(this.applicant)
+        vm.beneficiary.sex = this.warranty.appl_sex
         vm.beneficiary.document_type = this.warranty.appl_card_type
+
+        vm.beneficiary.document_number = applicant.document_number
         vm.beneficiary.document_term = applicant.document_term
         if (vm.beneficiary.document_term === '9999-12-30') vm.longTerm = true
         vm.beneficiary.name = applicant.name
-        vm.beneficiary.sex = this.warranty.appl_sex
         vm.beneficiary.birthday = applicant.birthday
-        if (['18', '19', '20', '23'].indexOf(vm.warranty.is_assured) > -1) {
-          vm.beneficiary.relationship = Number(vm.warranty.is_assured)
+
+        // 对应关系
+        var rels = {
+          15001: 15006,
+          15002: 15004,
+          15003: 15005,
+          15016: 15044
         }
-        if (this.$store.state.anti_money) {
+        vm.beneficiary.relationship = rels[vm.warranty.is_assured] ? rels[vm.warranty.is_assured] : 0
+        if (this.anti_money) {
           vm.beneficiary.nationality = this.warranty.appl_nation
           vm.beneficiary.province = applicant.province
           vm.beneficiary.city = applicant.city
@@ -246,7 +254,7 @@ export default {
           vm.beneficiary.address_select = applicant.address_select
           vm.beneficiary.zipcode = applicant.zipcode
           vm.beneficiary.occupation = applicant.occupation
-          vm.beneficiary.occupation_code = this.$store.state.warranty.applicant_occupation_code
+          vm.beneficiary.occupation_code = this.warranty.applicant_occupation_code
           vm.beneficiary.visit_tel = applicant.visit_tel
           vm.beneficiary.tel = applicant.tel
         }
@@ -258,7 +266,7 @@ export default {
         vm.beneficiary.name = ''
         vm.beneficiary.birthday = ''
         vm.beneficiary.relationship = 0
-        if (this.$store.state.anti_money) {
+        if (this.anti_money) {
           vm.beneficiary.nationality = ''
           vm.beneficiary.province = ''
           vm.beneficiary.city = ''
@@ -276,16 +284,15 @@ export default {
   },
   methods: {
     sameZipcode() {
-      this.beneficiary.zipcode = Api.obj2json(this.$store.state.applicant.zipcode)
+      this.beneficiary.zipcode = this.applicant.zipcode
     },
     sameAddress() {
-      var applicant = Api.obj2json(this.$store.state.applicant)
+      var applicant = Api.obj2json(this.applicant)
       this.beneficiary.address = applicant.address
       this.beneficiary.province = applicant.province
       this.beneficiary.city = applicant.city
       this.beneficiary.district = applicant.district
       this.beneficiary.address_select = applicant.address_select
-      this.$refs.address.show = false
     },
     del() {
       this.$store.commit('delBeneficiary', this.people)
@@ -300,45 +307,39 @@ export default {
       var toast_text = null
 
       switch (type) {
-        case '5': // 户口簿
-        case '1': // 身份证
-
-          const addr = this.$store.state.addr
+        case 15008: // 户口簿
+        case 57: // 身份证
 
           if (Validator.isValid(id, 18)) {
             const idInfo = Validator.getInfo(id)
-            const code = idInfo.addrCode.substr(0, 2)
             const sex = { // 0为女，1为男
-              1: 15,
-              0: 16
+              1: '11338',
+              0: '11339'
             }
-            vm.beneficiary.nationality = 99
+            vm.beneficiary.nationality = 63
             vm.beneficiary.birthday = idInfo.birth
             vm.beneficiary.sex = sex[idInfo.sex]
-            vm.beneficiary.register_select = addr[code].name
-            vm.beneficiary.register = addr[code].if_id
           } else {
             toast_text = '请输入18位正确格式的身份证'
-            vm.beneficiary.register_select = ''
             vm.beneficiary.birthday = ''
           }
           break
-        case '3': // 护照
+        case 58: // 护照
           if (id.length <= 3) {
             toast_text = '护照必须是大于3位'
           }
           break
-        case '2': // 军官证
+        case 59: // 军官证
           if (id.length > 18 || id.length < 10) {
             toast_text = '军官证必须是10-18位'
           }
           break
-        case '7': //港澳
+        case 15009: //港澳
           if (id.length <= 8) {
             toast_text = '港澳居民来往内地通行证号码必须大于8位'
           }
           break
-        case '6': //台湾
+        case 15010: //台湾
           if (id.length < 8) {
             toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'
           }

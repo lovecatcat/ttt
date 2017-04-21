@@ -39,7 +39,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="assured.document_type === 57 || assured.document_type === 15008" id="sex2" v-model="assured.sex" :true-value="11338" :false-value="11339">
+              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="assured.document_type in [57 ,15008]" id="sex2" v-model="assured.sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex2">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -48,7 +48,7 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="assured.document_type === 57 || assured.document_type === 15008" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
+          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="assured.document_type in [57 ,15008]" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
           <div slot="icon" v-if="assured.document_type !== 57 && assured.document_type !== 15008" v-show="assured.birthday" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.birthday = ''"></i></div>
         </app-input>
       </div>
@@ -105,18 +105,12 @@
           <div slot="icon" v-show="assured.annual_earnings != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.annual_earnings = ''"></i></div>
         </app-input>
         <app-select label="收入来源">
-          <select v-model.number="assured.annual_source">
+          <select v-model.number="assured.annual_source" v-if="init.assured">
             <option disabled value="0">请选择收入来源</option>
-            <option value="1">工薪</option>
-            <option value="2">个体</option>
-            <option value="3">私营</option>
-            <option value="4">房屋出租</option>
-            <option value="5">证券投资</option>
-            <option value="6">银行利息</option>
-            <option value="7">其他</option>
+            <option v-for="item in init.assured.annual_source" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
-        <div class="am-list-item" v-show="assured.annual_source === 7">
+        <div class="am-list-item" v-show="assured.annual_source === 15457">
           <div class="am-list-label tar app-color-warn">填写收入来源</div>
           <div class="am-list-control">
             <input v-model.lazy="assured.annual_source_other" type="text" placeholder="请填写收入来源">
@@ -171,7 +165,7 @@ export default {
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
-        sex: '15', //性别
+        sex: '11338', //性别
         height: '', //身高(厘米)
         weight: '', //体重(kg)
         nationality: 63, //国籍
@@ -205,18 +199,18 @@ export default {
   },
   computed: {
     init() {
-      return this.$store.state.init || {}
+      return this.$store.state.init
     }
   },
   created() {
     if (this.assured.document_term === '9999-12-30') {
       this.longTerm = true
     }
-    this.assured = Object.assign({}, this.assured, {
-      assu_id: '6865',
+/*    this.assured = Object.assign({}, this.assured, {
       address_select: '河北省唐山市开平区',
       address: 'dsdfs',
-      annual_source: 6,
+      annual_source_other: '收费收费的',
+      annual_source: 15457,
       annual_earnings: 13,
       name: '123',
       province: '165',
@@ -235,7 +229,7 @@ export default {
       sex: '11339',
       weight: 60,
       zipcode: '063021'
-    })
+    })*/
   },
   watch: {
     longTerm(val) {
@@ -272,10 +266,11 @@ export default {
             vm.assured.register_select = addr[code].name
             vm.assured.register = addr[code].if_id
 
-            const age = new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
+            const age = Api.getAge(vm.assured.birthday)
+            //new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
             if (age < 16) {
               vm.assured.annual_earnings = 0 //小于16周岁默认为0，可修改
-              vm.assured.annual_source = 7
+              vm.assured.annual_source = 15457
               vm.assured.annual_source_other = '无'
             }
           } else {
@@ -320,14 +315,7 @@ export default {
           vm.$toast.open('服务器开小差了', 'error')
           return
         }
-
-        // 不存在 assu_id
-        if (!res.assu_id) {
-          vm.assured.assu_id && vm.$delete(vm.assured, 'assu_id')
-          return false
-        }
         vm.cardinfo = res
-        vm.$set(vm.assured, 'assu_id', res.assu_id)
         vm.setInfo()
       })
     },
@@ -352,7 +340,6 @@ export default {
       assured.annual_source = Number(res.annual_source)
       assured.annual_source_other = res.annual_source_other
       assured.document_term = res.document_term
-      if (res.document_term === '9999-12-30') vm.longTerm = true
       assured.height = res.height
       assured.weight = res.weight
       assured.register = res.register
@@ -360,6 +347,7 @@ export default {
       assured.visit_tel = res.visit_tel
       assured.work_unit = res.work_unit
       assured.zipcode = res.zipcode
+      if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.assured = Object.assign(vm.assured, assured)
     },
     // 户籍选择
@@ -485,10 +473,12 @@ export default {
         toast_text = '请填写被保险人【详细地址】'
       } else if (!this.checkZipcode()) {
         return false
-      } else if (!vm.assured.annual_earnings) {
+      } else if (!vm.assured.annual_earnings && vm.assured.annual_earnings !== 0) {
         toast_text = '请填写被保险人【年收入】'
       } else if (!vm.assured.annual_source) {
         toast_text = '请选择被保险人【收入来源】'
+      } else if (vm.assured.annual_source === 15457 && !vm.assured.annual_source_other) {
+        toast_text = '请填写投保人【收入来源】'
       } else if (!vm.assured.height) {
         toast_text = '请填写被保险人【身高】'
       } else if (!vm.assured.weight) {

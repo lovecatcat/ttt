@@ -45,6 +45,8 @@ const initField = function (cb) {
             res.applicant.sex = citem.children
           } else if (citem.a_id === '10') { //职业代码
             res.applicant.occupation_code = citem.children
+          } else if (citem.a_id === '111') { //收入来源
+            res.applicant.annual_source = citem.children
           }
         })
       } else if (item.name === 'assured') {
@@ -63,6 +65,8 @@ const initField = function (cb) {
             res.assured.occupation_code = citem.children
           } else if (citem.a_id === '46') { //社保（含新农合）
             res.assured.social_security = citem.children
+          } else if (citem.a_id === '111') { //收入来源
+            res.assured.annual_source = citem.children
           }
         })
       } else if (item.name === 'beneficiary') {
@@ -168,6 +172,21 @@ const queryZipcode = function (code, cb) {
   })
 }
 
+const getAge = function(str) {
+  if (!str) return
+  var now = new Date()
+  var year = now.getFullYear()
+  var month = now.getMonth() + 1
+  var day = now.getDate()
+
+  var r = str.split('-').map(item => parseInt(item))
+  var age = year - r[0]
+  if (r[1] > month || (r[1] === month && r[2] > day)) { // 当月
+    age -= 1
+  }
+  return age
+}
+
 const obj2json = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
@@ -182,6 +201,7 @@ export default {
   querySafegoods,
   pushWarranty,
   queryZipcode,
+  getAge,
   obj2json
 }
 

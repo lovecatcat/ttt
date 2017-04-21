@@ -56,7 +56,7 @@
           <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
           <div class="am-list-control">
             <div class="am-switch" v-if="init.assured">
-              <input type="checkbox" v-model="warranty.assu_social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
               <label class="am-switch-label">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -93,22 +93,6 @@ const unique = function(a, key) {
   return res
 }
 
-// 计算周岁
-const getAge = function(str) {
-  if (!str) return
-  var now = new Date()
-  var year = now.getFullYear()
-  var month = now.getMonth() + 1
-  var day = now.getDate()
-
-  var r = str.split('-').map(item => parseInt(item))
-  var age = year - r[0]
-  if (r[1] > month || (r[1] === month && r[2] > day)) { // 当月
-    age -= 1
-  }
-  return age
-}
-
 export default {
   name: 'prospectus',
   data() {
@@ -123,8 +107,10 @@ export default {
         period_money: '' //期交保费
       },
       warranty: {
-        delivery_way: '117',
-        assu_social_security: '15047'
+        delivery_way: '117'
+      },
+      assured: {
+        social_security: '15047'
       },
       applicant: {
         email: '' //邮箱
@@ -296,9 +282,6 @@ export default {
         } else {
           vm.$toast.close()
           vm.insurance.period_money = res.data[vm.insurance.safe_id]
-          vm.$store.dispatch('saveAssured', {
-            'assu_id': res.id.assured_assu_id
-          })
           vm.$store.dispatch('setApplicant', {
             'appl_id': res.id.applicant_appl_id
           })
@@ -369,7 +352,7 @@ export default {
     },
     checkAge() {
       var vm = this
-      var age = getAge(vm.$store.state.assured.birthday)
+      var age = Api.getAge(vm.$store.state.assured.birthday)
       var id = this.main_insurance.safe_id
       if (age > 60 && id === '209') {
         vm.$toast.open('被保险人年龄不能大于60周岁', '')

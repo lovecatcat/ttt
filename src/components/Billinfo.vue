@@ -70,7 +70,7 @@ export default {
     return {
       agreement: false, //协议
       warranty: {
-        bank_card: '45', //卡折标志
+        bank_card: '51', //卡折标志
         bank_name: 0, //银行名称
         bank_account: '', //银行帐号
         bank_province: '', //银行省编码

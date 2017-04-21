@@ -86,10 +86,7 @@
         <label class="am-ft-md" for="promise">用户承诺</label>
       </div>
       <div class="am-list-item">
-        1. 本人承诺上述内容与客户告知事实一致，并无虚假和重大遗漏。
-      </div>
-      <div class="am-list-item">
-        2. 本人愿意承担因不实告知带来的所有责任。
+        <div class="am-ft-sm">1. 本人承诺上述内容与客户告知事实一致，并无虚假和重大遗漏。<br>2. 本人愿意承担因不实告知带来的所有责任。</div>
       </div>
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">

@@ -111,18 +111,12 @@
           <div slot="icon" v-show="applicant.annual_earnings != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.annual_earnings = ''"></i></div>
         </app-input>
         <app-select label="收入来源">
-          <select v-model.number="warranty.appl_annual_source">
+          <select v-model.number="warranty.appl_annual_source" v-if="init.applicant">
             <option disabled value="0">请选择收入来源</option>
-            <option value="1">工薪</option>
-            <option value="2">个体</option>
-            <option value="3">私营</option>
-            <option value="4">房屋出租</option>
-            <option value="5">证券投资</option>
-            <option value="6">银行利息</option>
-            <option value="7">其他</option>
+            <option v-for="item in init.applicant.annual_source" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
-        <app-input label="" v-show="warranty.appl_annual_source === 7">
+        <app-input label="" v-show="warranty.appl_annual_source === 15457">
           <input slot="input" v-model.lazy="applicant.annual_source_other" type="text" placeholder="请填写收入来源">
           <div slot="icon" v-show="applicant.annual_source_other != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.annual_source_other = ''"></i></div>
         </app-input>
@@ -140,7 +134,7 @@
             <option v-for="item in init.warranty.is_assured" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
-        <app-input label="" v-show="warranty.is_assured === '22'">
+        <app-input label="" v-show="warranty.is_assured === 15017">
           <input slot="input" v-model="warranty.is_assured_val" type="text" placeholder="请填写是被保险人的">
           <div slot="icon" @click="warranty.is_assured_val = ''" v-show="warranty.is_assured_val != ''" class="am-list-clear"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
@@ -220,7 +214,9 @@ export default {
         visit_tel: '', //回访电话
         tel: '' //联系电话
       },
-      assured: {},
+      assured: {
+        war_id: ''
+      },
       // 保单信息
       warranty: {
         appl_sex: '11338', //性别
@@ -257,9 +253,9 @@ export default {
       this.checkID()
     }
     // 测试数据
-    this.applicant = Object.assign(this.applicant, {
+/*    this.applicant = Object.assign(this.applicant, {
       document_term: '2017-04-15',
-      appl_id: '3880',
+      appl_id: '3321',
       address: 'dsfdsf',
       address_select: '浙江省衢州市衢江区',
       annual_earnings: 12,
@@ -278,9 +274,9 @@ export default {
       zipcode: '324022'
     })
     this.warranty = Object.assign(this.warranty, {
-      appl_annual_source: 2,
+      appl_annual_source: 15451,
       applicant_occupation_code: 9592
-    })
+    })*/
   },
   methods: {
     // 证件号码校验
@@ -372,7 +368,7 @@ export default {
       var res = vm.cardinfo
 
       // 是否同人
-      if (vm.applicant.name !== res.name || vm.warranty.assu_card_type !== res.document_type || vm.applicant.document_number !== res.document_number || vm.applicant.birthday !== res.birthday || vm.warranty.appl_sex !== res.sex) {
+      if (vm.applicant.name !== res.name || vm.applicant.document_number !== res.document_number || vm.applicant.birthday !== res.birthday) {
         return
       }
       var applicant = {}
@@ -384,10 +380,8 @@ export default {
         applicant.address_select = res.ChPro + res.ChCity + res.ChDistrict
       }
       applicant.annual_earnings = Number(res.annual_earnings)
-      this.warranty.appl_annual_source = Number(res.annual_source)
       applicant.annual_source_other = res.annual_source_other
       applicant.document_term = res.document_term
-      if (res.document_term === '9999-12-30') vm.longTerm = true
       applicant.height = res.height
       applicant.weight = res.weight
       applicant.name = res.name
@@ -396,6 +390,8 @@ export default {
       applicant.visit_tel = res.visit_tel
       applicant.work_unit = res.work_unit
       applicant.zipcode = res.zipcode
+      vm.warranty.appl_annual_source = Number(res.annual_source)
+      if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.applicant = Object.assign(vm.applicant, applicant)
     },
     // 年龄验证
@@ -548,10 +544,12 @@ export default {
         return false
       } else if (!this.checkPhone()) {
         return false
-      } else if (!vm.applicant.annual_earnings) {
+      } else if (!vm.applicant.annual_earnings && vm.assured.annual_earnings !== 0) {
         toast_text = '请填写投保人【年收入】'
       } else if (!vm.warranty.appl_annual_source) {
         toast_text = '请选择投保人【收入来源】'
+      } else if (vm.warranty.appl_annual_source === 15457 && !vm.applicant.annual_source_other) {
+        toast_text = '请填写投保人【收入来源】'
       } else if (!vm.applicant.height) {
         toast_text = '请填写投保人【身高】'
       } else if (!vm.applicant.weight) {
@@ -581,16 +579,18 @@ export default {
 
       // 如果被保险人是本人
       if (this.warranty.is_assured === 15000) {
-        this.warranty.assured_occupation_code = this.warranty.applicant_occupation_code
-        Api.queryID(this.applicant.document_number, 'assured', res => {
-          var assured = Api.obj2json(this.applicant)
-          this.assured = assured
-          this.$store.dispatch('saveAssured', assured)
-          this.$store.dispatch('setApplicant', this.applicant)
-          this.$store.dispatch('setWarranty', this.warranty)
-          nextPage = '/prospectus'
-          this.$router.push(nextPage)
-        })
+        var assured = Api.obj2json(this.applicant)
+        assured.occupation_code = this.warranty.applicant_occupation_code
+        assured.sex = this.warranty.appl_sex
+        assured.document_type = this.warranty.appl_card_type
+        assured.nationality = this.warranty.appl_nation
+        assured.annual_source = this.warranty.appl_annual_source
+        this.assured = Object.assign(this.assured, assured)
+        this.$store.dispatch('saveAssured', this.assured)
+        this.$store.dispatch('setApplicant', this.applicant)
+        this.$store.dispatch('setWarranty', this.warranty)
+        nextPage = '/prospectus'
+        this.$router.push(nextPage)
       } else {
         nextPage = '/beinsured'
         this.$store.commit('setApplicant', this.applicant)

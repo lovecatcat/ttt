@@ -14,7 +14,7 @@
         <input slot="input" v-model="applicant.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="warranty.assu_card_type" v-if="init.applicant" disabled>
+        <select v-model="warranty.appl_card_type" v-if="init.applicant" disabled>
           <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -34,7 +34,7 @@
         <input slot="input" v-model="applicant.birthday" type="text" readonly>
       </app-input>
       <app-select label="国籍" readonly="true">
-        <select v-model="warranty.assu_nation" v-if="init.applicant" disabled>
+        <select v-model="warranty.appl_nation" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -62,18 +62,12 @@
       <app-input label="年收入">
         <input slot="input" readonly :value="applicant.annual_earnings+'万元'" type="text">
       </app-input>
-      <app-select label="收入来源" v-show="warranty.appl_annual_source != 7" readonly="true">
+      <app-select label="收入来源" v-if="warranty.appl_annual_source !== 15457" readonly="true">
         <select v-model="warranty.appl_annual_source" disabled>
-          <option value="1">工薪</option>
-          <option value="2">个体</option>
-          <option value="3">私营</option>
-          <option value="4">房屋出租</option>
-          <option value="5">证券投资</option>
-          <option value="6">银行利息</option>
-          <option value="7">其他</option>
+          <option v-for="item in init.applicant.annual_source" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input label="收入来源" v-show="warranty.appl_annual_source ==7">
+      <app-input label="收入来源" v-else>
         <input slot="input" readonly :value="applicant.annual_source_other" type="text">
       </app-input>
       <app-input label="身高">
@@ -95,7 +89,7 @@
           <option v-for="item in init.warranty.contract_handle" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input label="仲裁委员会" v-show="warranty.contract_handle == 109">
+      <app-input label="仲裁委员会" v-show="warranty.contract_handle === 109">
         <input slot="input" readonly :value="warranty.contract_handle_value" type="text">
       </app-input>
     </app-dropdown>
@@ -158,18 +152,12 @@
       <app-input label="年收入">
         <input slot="input" readonly :value="assured.annual_earnings+'万元'" type="text">
       </app-input>
-      <app-select v-if="assured.annual_source" label="收入来源" v-show="assured.annual_source != 7" readonly="true">
-        <select v-model="assured.annual_source" disabled>
-          <option value="1">工薪</option>
-          <option value="2">个体</option>
-          <option value="3">私营</option>
-          <option value="4">房屋出租</option>
-          <option value="5">证券投资</option>
-          <option value="6">银行利息</option>
-          <option value="7">其他</option>
+      <app-select label="收入来源" v-if="assured.annual_source !== 15457" readonly="true">
+        <select v-model="assured.annual_source" disabled v-if="init.assured">
+          <option v-for="item in init.assured.annual_source" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input v-if="assured.annual_source" label="收入来源" v-show="assured.annual_source ==7">
+      <app-input label="收入来源" v-else>
         <input slot="input" readonly :value="assured.annual_source_other" type="text">
       </app-input>
       <app-input label="身高">
@@ -182,7 +170,7 @@
         <input slot="input" readonly :value="assured.occupation" type="text">
       </app-input>
     </app-dropdown>
-    <app-dropdown v-if="beneficiary" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type == 1" :key="index">
+    <app-dropdown v-if="beneficiary" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type === '1'" :key="index">
       <template slot="header">
         <div class="am-list-label">身故受益人资料</div>
         <div class="am-list-content am-ft-right">
@@ -220,7 +208,7 @@
       <app-select label="受益顺序" readonly="true">
         <select v-model.number="beneficiary.benefited_level" disabled>
           <option disabled>请选择</option>
-          <option :value="item" v-for="item in [1,2,3,4,5,6,7,8,9,10]">{{item}}</option>
+          <option :value="item" v-for="item in 10">{{item}}</option>
         </select>
       </app-select>
       <app-input label="受益份额(%)">
@@ -229,30 +217,30 @@
       <template v-if="anti_money">
         <app-select label="国籍" readonly="true">
           <select v-model="beneficiary.nationality" v-if="init.applicant">
-            <option :disabled="beneficiary.document_type == '57'" v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
+            <option :disabled="beneficiary.document_type === 57" v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
         <app-input label="通讯地址">
-          <input slot="input" disabled v-model.trim="beneficiary.address_select" type="text" placeholder="请在下方选择和填写">
+          <input slot="input" readonly v-model.trim="beneficiary.address_select" type="text" placeholder="请在下方选择和填写">
         </app-input>
         <app-input label="详细地址">
-          <input slot="input" v-model.trim="beneficiary.address" type="text" placeholder="请填写详细通讯地址">
+          <input slot="input" readonly v-model.trim="beneficiary.address" type="text" placeholder="请填写详细通讯地址">
         </app-input>
         <app-input label="邮编">
-          <input slot="input" v-model.number="beneficiary.zipcode" type="number" placeholder="请填写受益人邮编">
+          <input slot="input" readonly v-model.number="beneficiary.zipcode" type="number" placeholder="请填写受益人邮编">
         </app-input>
         <app-input label="手机号码" v-show="beneficiary.tel">
-          <input slot="input" v-model.number="beneficiary.tel" type="number" placeholder="请填写受益人手机号码">
+          <input slot="input" readonly v-model.number="beneficiary.tel" type="number">
         </app-input>
         <app-input label="固定电话" v-show="beneficiary.visit_tel">
-          <input slot="input" v-model.lazy.trim="beneficiary.visit_tel" type="text" placeholder="请填写受益人固定电话">
+          <input slot="input" readonly v-model.lazy.trim="beneficiary.visit_tel" type="text">
         </app-input>
         <app-input label="职业">
-          <input slot="input" disabled v-model="beneficiary.occupation" placeholder="请选择职业" type="text">
+          <input slot="input" readonly v-model="beneficiary.occupation" type="text">
         </app-input>
       </template>
     </app-dropdown>
-    <div class="am-list" v-show="warranty.benefited_type == 0" v-if="warranty">
+    <div class="am-list" v-show="warranty.benefited_type === '0'" v-if="warranty">
       <div class="am-list-item">
         <div class="am-list-content">
           身故受益人
@@ -271,7 +259,7 @@
       </template>
       <app-select label="险种" readonly="true">
         <select v-model="main_insurance" disabled>
-          <option v-if="item.safe_id == 209 || item.safe_id == 210" v-for="item in safegoods" :value="item">{{item.name}}</option>
+          <option v-if="item.safe_id === '209' || item.safe_id === '210'" v-for="item in safegoods" :value="item">{{item.name}}</option>
         </select>
       </app-select>
       <app-select label="交费期间" readonly="true">
@@ -295,8 +283,8 @@
           <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input label="邮箱" v-show="warranty.delivery_way == 117">
-        <input slot="input" readonly v-model="applicant.email" type="email" placeholder="请填写邮箱">
+      <app-input label="邮箱" v-show="warranty.delivery_way === '117'">
+        <input slot="input" readonly v-model="applicant.email" type="email">
       </app-input>
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
@@ -414,23 +402,23 @@
             <input slot="input" readonly value="银行转账">
           </app-input>
           <app-input label="户名">
-            <input slot="input" readonly v-model.trim="applicant.name" type="text" placeholder="请填写户名">
+            <input slot="input" readonly v-model.trim="applicant.name" type="text">
           </app-input>
           <app-input label="银行账号">
-            <input slot="input" readonly v-model="warranty.bank_account" type="text" placeholder="请填写银行账号">
+            <input slot="input" readonly v-model="warranty.bank_account" type="text">
           </app-input>
-          <app-select label="开户行">
+          <app-select label="开户行" readonly="true">
             <select v-model="warranty.bank_name" v-if="init.transferstate" disabled>
               <option v-for="item in init.transferstate.bank_name" :value="item.if_id">{{item.explain}}</option>
             </select>
           </app-select>
-          <app-select label="账户类别">
+          <app-select label="账户类别" readonly="true">
             <select v-model="warranty.bank_card" v-if="init.transferstate" disabled>
               <option v-for="item in init.transferstate.bank_card" :value="item.if_id">{{item.explain}}</option>
             </select>
           </app-select>
           <app-input label="开户行所在地">
-            <input slot="input" readonly v-model.trim="warranty.bank_address" type="text" placeholder="请在下方选择">
+            <input slot="input" readonly v-model.trim="warranty.bank_address" type="text">
           </app-input>
         </div>
       </div>
@@ -596,20 +584,30 @@ export default {
           })
         }
       })
-      pushData['beneficiary_war_id'] = []
-      pushData['beneficiary_name'] = []
-      pushData['beneficiary_sex'] = []
-      pushData['beneficiary_birthday'] = []
-      pushData['beneficiary_benefited_ratio'] = []
-      pushData['beneficiary_benefited_level'] = []
-      pushData['beneficiary_document_type'] = []
-      pushData['beneficiary_document_type_val'] = []
-      pushData['beneficiary_document_number'] = []
-      pushData['beneficiary_document_term'] = []
-      pushData['beneficiary_relationship'] = []
-      pushData['beneficiary_nationality'] = []
-      pushData['beneficiary_register'] = []
       if (vm.warranty.benefited_type === '1') {
+        pushData['beneficiary_war_id'] = []
+        pushData['beneficiary_name'] = []
+        pushData['beneficiary_sex'] = []
+        pushData['beneficiary_birthday'] = []
+        pushData['beneficiary_benefited_ratio'] = []
+        pushData['beneficiary_benefited_level'] = []
+        pushData['beneficiary_document_type'] = []
+        pushData['beneficiary_document_type_val'] = []
+        pushData['beneficiary_document_number'] = []
+        pushData['beneficiary_document_term'] = []
+        pushData['beneficiary_relationship'] = []
+        if (vm.anti_money) {
+          pushData['beneficiary_address'] = []
+          pushData['beneficiary_province'] = []
+          pushData['beneficiary_city'] = []
+          pushData['beneficiary_district'] = []
+          pushData['beneficiary_zipcode'] = []
+          pushData['beneficiary_visit_tel'] = []
+          pushData['beneficiary_tel'] = []
+          pushData['beneficiary_occupation'] = []
+          pushData['beneficiary_occupation_code'] = []
+          pushData['beneficiary_nationality'] = []
+        }
         vm.beneficiaries.forEach(function(beneficiary) {
           pushData['beneficiary_war_id'].push(warId)
           pushData['beneficiary_name'].push(beneficiary.name)
@@ -622,8 +620,18 @@ export default {
           pushData['beneficiary_document_number'].push(beneficiary.document_number)
           pushData['beneficiary_document_term'].push(beneficiary.document_term)
           pushData['beneficiary_relationship'].push(beneficiary.relationship)
-          pushData['beneficiary_nationality'].push(beneficiary.nationality)
-          pushData['beneficiary_register'].push(beneficiary.register)
+          if (vm.anti_money) {
+            pushData['beneficiary_nationality'].push(beneficiary.nationality)
+            pushData['beneficiary_address'].push(beneficiary.address)
+            pushData['beneficiary_province'].push(beneficiary.province)
+            pushData['beneficiary_city'].push(beneficiary.city)
+            pushData['beneficiary_district'].push(beneficiary.district)
+            pushData['beneficiary_zipcode'].push(beneficiary.zipcode)
+            pushData['beneficiary_visit_tel'].push(beneficiary.visit_tel)
+            pushData['beneficiary_tel'].push(beneficiary.tel)
+            pushData['beneficiary_occupation'].push(beneficiary.occupation)
+            pushData['beneficiary_occupation_code'].push(beneficiary.occupation_code)
+          }
         })
       }
       pushData['insurance_war_id'] = []
