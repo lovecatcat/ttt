@@ -206,30 +206,6 @@ export default {
     if (this.assured.document_term === '9999-12-30') {
       this.longTerm = true
     }
-/*    this.assured = Object.assign({}, this.assured, {
-      address_select: '河北省唐山市开平区',
-      address: 'dsdfs',
-      annual_source_other: '收费收费的',
-      annual_source: 15457,
-      annual_earnings: 13,
-      name: '123',
-      province: '165',
-      nationality: 63,
-      district: '193',
-      birthday: '1994-02-25',
-      document_type: 57,
-      city: '189',
-      document_number: '450303199402251305',
-      document_term: '2017-04-08',
-      height: 170,
-      occupation: '中学教师',
-      occupation_code: 9591,
-      register: 2290,
-      register_select: '广西',
-      sex: '11339',
-      weight: 60,
-      zipcode: '063021'
-    })*/
   },
   watch: {
     longTerm(val) {

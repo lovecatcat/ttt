@@ -54,7 +54,6 @@ export default {
       return this.$store.state.tmp.people
     }
   },
-  created() {},
   methods: {
     add() {
       var vm = this

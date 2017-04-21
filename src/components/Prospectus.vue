@@ -176,12 +176,6 @@ export default {
           }
         })
       }
-      this.$nextTick(() => {
-        this.insurance = Object.assign({}, this.insurance, {
-          money: 50000
-        })
-        this.applicant.email = 'sdff@fsdfd.ss'
-      })
     })
   },
   activated() {

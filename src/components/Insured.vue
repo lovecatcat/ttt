@@ -252,31 +252,6 @@ export default {
     if (this.applicant.document_number) {
       this.checkID()
     }
-    // 测试数据
-/*    this.applicant = Object.assign(this.applicant, {
-      document_term: '2017-04-15',
-      appl_id: '3321',
-      address: 'dsfdsf',
-      address_select: '浙江省衢州市衢江区',
-      annual_earnings: 12,
-      city: '1131',
-      register: '594',
-      birthday: '1972-09-25',
-      document_number: '450302197209254162',
-      height: 170,
-      name: '123',
-      province: '1061',
-      district: '1133',
-      occupation: '小学教师',
-      register_select: '辽宁省',
-      tel: '18576793810',
-      weight: 60,
-      zipcode: '324022'
-    })
-    this.warranty = Object.assign(this.warranty, {
-      appl_annual_source: 15451,
-      applicant_occupation_code: 9592
-    })*/
   },
   methods: {
     // 证件号码校验
