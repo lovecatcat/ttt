@@ -161,7 +161,7 @@ export default {
       cardinfo: {}, //身份证信息
       // 被保险人信息
       assured: {
-        assured_war_id: '', //
+        war_id: '', //
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名

@@ -53,7 +53,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" class="am-switch-checkbox" :disabled="same || beneficiary.document_type in [57,15008]" id="sex3" v-model="beneficiary.sex" :true-value="15" :false-value="16">
+              <input type="checkbox" class="am-switch-checkbox" :disabled="same || beneficiary.document_type in [57,15008]" id="sex3" v-model="beneficiary.sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex3">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -244,7 +244,7 @@ export default {
           15003: 15005,
           15016: 15044
         }
-        vm.beneficiary.relationship = rels[vm.warranty.is_assured] ? rels[vm.warranty.is_assured] : 0
+        vm.beneficiary.relationship = rels[Number(vm.warranty.is_assured)] || 0
         if (this.anti_money) {
           vm.beneficiary.nationality = this.warranty.appl_nation
           vm.beneficiary.province = applicant.province
