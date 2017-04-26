@@ -23,8 +23,8 @@
           <div slot="icon" v-show="beneficiary.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="beneficiary.document_type" v-if="init.applicant">
-            <option disabled>请选择</option>
+          <select v-model.number="beneficiary.document_type" v-if="init.applicant" @change="beneficiary.document_number = '',beneficiary.nationality= beneficiary.document_type===58?0:63">
+            <option disabled value="0">请选择</option>
             <option v-for="type in init.applicant.document_type" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
@@ -53,7 +53,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" class="am-switch-checkbox" :disabled="same || beneficiary.document_type in [57,15008]" id="sex3" v-model="beneficiary.sex" :true-value="11338" :false-value="11339">
+              <input type="checkbox" class="am-switch-checkbox" :disabled="same || [57,15008].indexOf(beneficiary.document_type) > -1" id="sex3" v-model="beneficiary.sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex3">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -62,7 +62,7 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" :class="{'has': beneficiary.birthday != ''}" v-model="beneficiary.birthday" :disabled="beneficiary.document_type in [57,15008]" type="date" placeholder="请填写受益人出生日期">
+          <input slot="input" :class="{'has': beneficiary.birthday != ''}" v-model="beneficiary.birthday" :disabled="[57,15008].indexOf(beneficiary.document_type) > -1" type="date" placeholder="请填写受益人出生日期">
           <div slot="icon" v-show="beneficiary.birthday  && !same  && !beneficiary.document_type in [57,15008]" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.birthday = ''"></i></div>
         </app-input>
         </app-input>
@@ -89,12 +89,15 @@
     </div>
     <div class="am-list am-list-6lb form" v-if="anti_money">
       <div class="am-list-body">
-        <app-select label="国籍" :readonly="beneficiary.document_type !== 58">
-          <select v-model="beneficiary.nationality" v-if="init.applicant" :disabled="beneficiary.document_type !== 58">
-            <option disabled>请选择</option>
-            <option v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
+        <app-select label="国籍" v-if="beneficiary.document_type === 58">
+          <select v-model.number="beneficiary.nationality" v-if="init.applicant">
+            <option disabled value="0">请选择国籍</option>
+            <option v-if="type.if_id !== '63'" v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
           </select>
         </app-select>
+        <app-input label="国籍" v-else>
+          <div slot="input">中国</div>
+        </app-input>
         <app-input label="通讯地址">
           <div slot="input" @click="clearAddress" placeholder="请点击选择" :class="{pd:!beneficiary.address_select}">
             {{beneficiary.address_select}}
@@ -211,6 +214,7 @@ export default {
     },
     anti_money() {
       //单次投保达到反洗钱标准（年交保费*交费年期≥20万元）
+      // return true
       return this.$store.state.anti_money
     }
   },
@@ -254,7 +258,7 @@ export default {
           vm.beneficiary.address_select = applicant.address_select
           vm.beneficiary.zipcode = applicant.zipcode
           vm.beneficiary.occupation = applicant.occupation
-          vm.beneficiary.occupation_code = this.warranty.applicant_occupation_code
+          vm.beneficiary.occupation_code = this.warranty.appl_occupation_code
           vm.beneficiary.visit_tel = applicant.visit_tel
           vm.beneficiary.tel = applicant.tel
         }
@@ -267,7 +271,6 @@ export default {
         vm.beneficiary.birthday = ''
         vm.beneficiary.relationship = 0
         if (this.anti_money) {
-          vm.beneficiary.nationality = ''
           vm.beneficiary.province = ''
           vm.beneficiary.city = ''
           vm.beneficiary.district = ''
@@ -316,7 +319,6 @@ export default {
               1: '11338',
               0: '11339'
             }
-            vm.beneficiary.nationality = 63
             vm.beneficiary.birthday = idInfo.birth
             vm.beneficiary.sex = sex[idInfo.sex]
           } else {

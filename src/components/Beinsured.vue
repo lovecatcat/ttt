@@ -8,7 +8,7 @@
           <div slot="icon" v-show="assured.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="assured.document_type" v-if="init.assured" @change="assured.document_number = ''">
+          <select v-model.number="assured.document_type" v-if="init.assured" @change="assured.document_number = '',assured.nationality = assured.document_type===58?0:63">
             <option disabled>请选择证件类型</option>
             <option v-for="item in init.assured.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
@@ -55,12 +55,15 @@
     </div>
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
-        <app-select label="国籍" :readonly="assured.document_type !== 58">
-          <select v-model.number="assured.nationality" v-if="init.assured" :disabled="assured.document_type !== 58">
-            <option disabled>请选择国籍</option>
-            <option v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
+        <app-select label="国籍" v-if="assured.document_type === 58">
+          <select v-model.number="assured.nationality" v-if="init.assured">
+            <option disabled value="0">请选择国籍</option>
+            <option v-if="item.if_id!=='63'"  v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
+        <app-input label="国籍" v-else>
+          <div slot="input">中国</div>
+        </app-input>
         <app-input label="户籍">
           <input slot="input" readonly v-model="assured.register_select" type="text" placeholder="请选择被保险人户籍" @click="clearRegister">
           <div slot="icon" v-show="assured.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
@@ -190,7 +193,7 @@ export default {
         occupation_code: '', //职业代码
 
         work_unit: '', //工作单位
-        visit_tel: '', //回访电话
+        // visit_tel: '', //回访电话
         tel: '' //联系电话
       },
       // 保单信息
@@ -236,7 +239,6 @@ export default {
               1: '11338',
               0: '11339'
             }
-            vm.assured.nationality = 63
             vm.assured.birthday = idInfo.birth
             vm.assured.sex = sex[idInfo.sex]
             vm.assured.register_select = addr[code].name
@@ -300,7 +302,7 @@ export default {
       var res = vm.cardinfo
 
       // 是否同人
-      if (vm.assured.name !== res.name || vm.assured.document_type !== res.document_type || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday || vm.assured.sex !== res.sex) {
+      if (vm.assured.name !== res.name || vm.assured.document_type !== Number(res.document_type) || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday || vm.assured.sex !== res.sex) {
         return
       }
       var assured = {}
@@ -320,7 +322,7 @@ export default {
       assured.weight = res.weight
       assured.register = res.register
       assured.tel = res.tel
-      assured.visit_tel = res.visit_tel
+      // assured.visit_tel = res.visit_tel
       assured.work_unit = res.work_unit
       assured.zipcode = res.zipcode
       if (res.document_term === '9999-12-30') vm.longTerm = true

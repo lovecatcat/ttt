@@ -99,9 +99,6 @@ const initField = function (cb) {
 const queryID = function (id, tb, cb) {
   axios.get('Warranty/findApplOrAssu?table_name=' + tb + '&document_number=' + id).then(response => {
     var res = response.data.data
-    if (!res.appl_id && !res.assu_id) {
-      res = false
-    }
     cb(res)
   }).catch(error => {
     cb(error)

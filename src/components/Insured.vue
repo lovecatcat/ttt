@@ -8,9 +8,9 @@
           <div slot="icon" v-show="applicant.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="warranty.appl_card_type" v-if="init.applicant" @change="applicant.document_number = ''">
+          <select v-model.number="warranty.appl_card_type" v-if="init.applicant" @change="applicant.document_number = '',warranty.appl_nation = warranty.appl_card_type === 58 ? 0 : 64">
             <option disabled>请选择证件类型</option>
-            <option v-if="Number(item.if_id) !== 15007" v-for="item in init.applicant.document_type" :value="item.if_id">{{item.explain}}</option>
+            <option v-for="item in init.applicant.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="证件号码">
@@ -56,13 +56,16 @@
     </div>
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
-        <!-- 证件为国籍时 可以修改国籍 -->
-        <app-select label="国籍" :readonly="warranty.appl_card_type !== 58">
-          <select v-model.number="warranty.appl_nation" v-if="init.applicant" :disabled="warranty.appl_card_type !== 58">
-            <option disabled>请选择国籍</option>
-            <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
+        <!-- 证件为护照时 可以修改国籍 -->
+        <app-select label="国籍" v-if="warranty.appl_card_type === 58">
+          <select v-model.number="warranty.appl_nation" v-if="init.applicant">
+            <option disabled value="0">请选择国籍</option>
+            <option v-if="item.if_id !== '63'" v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
+        <app-input label="国籍" v-else>
+          <div slot="input">中国</div>
+        </app-input>
         <app-input label="户籍">
           <input slot="input" readonly @click="clearRegister" v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍">
           <div slot="icon" v-show="applicant.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
@@ -228,7 +231,7 @@ export default {
         is_assured_val: '', //是被保险人值
 
         // 职业
-        applicant_occupation_code: '', //职业代码
+        appl_occupation_code: '', //职业代码
 
         contract_handle: '108', //合同争议处理方式
         contract_handle_value: '' //填写仲裁委员会名称
@@ -254,8 +257,7 @@ export default {
     }
   },
   methods: {
-    // 证件号码校验
-    checkID() {
+    checkID() { // 证件号码校验
       this.IDValidate() && this.checkIDExist()
     },
     // 检查ID是否有效
@@ -278,7 +280,6 @@ export default {
               1: '11338',
               0: '11339'
             }
-            vm.warranty.assu_nation = 99
             vm.applicant.birthday = idInfo.birth
             vm.warranty.appl_sex = sex[idInfo.sex]
             vm.applicant.register_select = addr[code].name
@@ -365,7 +366,7 @@ export default {
       applicant.visit_tel = res.visit_tel
       applicant.work_unit = res.work_unit
       applicant.zipcode = res.zipcode
-      vm.warranty.appl_annual_source = Number(res.annual_source)
+      // vm.warranty.appl_annual_source = Number(res.annual_source)
       if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.applicant = Object.assign(vm.applicant, applicant)
     },
@@ -458,7 +459,7 @@ export default {
       var toast_text = null
       if (!tel) {
         toast_text = '手机号不能为空'
-      } else if (this.warranty.assu_card_type === 15009) {
+      } else if (this.warranty.appl_card_type === 15009) {
         if (!/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
           toast_text = '请输入正确的11位或13位手机号'
         }
@@ -480,12 +481,12 @@ export default {
     },
     // 设置职业
     setOccupation(selected) {
-      this.warranty.applicant_occupation_code = selected.if_id
+      this.warranty.appl_occupation_code = selected.if_id
       this.applicant.occupation = selected.explain
     },
     // 清除职业
     clearOccupation() {
-      this.warranty.applicant_occupation_code = ''
+      this.warranty.appl_occupation_code = ''
       this.applicant.occupation = ''
       this.$refs.occupation.show = true
     },
@@ -531,7 +532,7 @@ export default {
         toast_text = '请填写投保人【体重】'
       } else if (!vm.warranty.is_assured) {
         toast_text = '请选择投保人【是投保人的】'
-      } else if (!vm.warranty.applicant_occupation_code) {
+      } else if (!vm.warranty.appl_occupation_code) {
         toast_text = '请选择投保人【职业】'
       } else if (!vm.warranty.contract_handle) {
         toast_text = '请选择【合同争议处理方式】'
@@ -555,7 +556,7 @@ export default {
       // 如果被保险人是本人
       if (this.warranty.is_assured === 15000) {
         var assured = Api.obj2json(this.applicant)
-        assured.occupation_code = this.warranty.applicant_occupation_code
+        assured.occupation_code = this.warranty.appl_occupation_code
         assured.sex = this.warranty.appl_sex
         assured.document_type = this.warranty.appl_card_type
         assured.nationality = this.warranty.appl_nation

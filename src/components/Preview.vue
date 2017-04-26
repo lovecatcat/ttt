@@ -550,7 +550,7 @@ export default {
       }
       pushData['warranty_admin_id'] = vm.$store.state.admin_id
       pushData['warranty_sc_id'] = 19
-      pushData['warranty_applicant'] = vm.applicant.name
+      pushData['warranty_card_holder'] = vm.applicant.name
         // pushData['warranty_add_time'] = (Date.parse(new Date())).toString().substr(0, 10)
       pushData['warranty_is_save'] = 1
       pushData['warranty_source'] = 2
