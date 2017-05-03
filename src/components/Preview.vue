@@ -38,7 +38,7 @@
           <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input label="户籍">
+      <app-input label="户籍" v-if="applicant.register_select">
         <input slot="input" readonly :value="applicant.register_select" type="text">
       </app-input>
       <app-input label="通讯地址">
@@ -128,7 +128,7 @@
           <option v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
-      <app-input label="户籍">
+      <app-input label="户籍" v-if="assured.register_select">
         <input slot="input" readonly :value="assured.register_select" type="text">
       </app-input>
       <app-input label="通讯地址">

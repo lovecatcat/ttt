@@ -22,7 +22,7 @@
         </label>
       </div>
     </div>
-    <app-beneficiary v-show="warranty.benefited_type === '1'" ref=child :key="index" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
+    <app-beneficiary v-show="warranty.benefited_type === '1'" ref=child :key="person" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
     <div class="am-button-group" role="group" v-show="warranty.benefited_type === '1'">
       <a @click="add" class="am-button" role="button"><span class="app-iconfont">&#xe667;</span> 继续添加 </a>
     </div>

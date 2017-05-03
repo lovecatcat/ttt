@@ -8,7 +8,7 @@
           <div slot="icon" v-show="applicant.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="warranty.appl_card_type" v-if="init.applicant" @change="applicant.document_number = '',warranty.appl_nation = warranty.appl_card_type === 58 ? 0 : 64">
+          <select v-model.number="warranty.appl_card_type" v-if="init.applicant" @change="typeChange">
             <option disabled>请选择证件类型</option>
             <option v-for="item in init.applicant.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
@@ -66,12 +66,12 @@
         <app-input label="国籍" v-else>
           <div slot="input">中国</div>
         </app-input>
-        <app-input label="户籍">
+        <app-input label="户籍" v-if="warranty.appl_card_type !== 58">
           <input slot="input" readonly @click="clearRegister" v-model="applicant.register_select" type="text" placeholder="请选择投保人户籍">
           <div slot="icon" v-show="applicant.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
         <!-- 户籍 -->
-        <app-region v-if="init.applicant" :provinces="init.applicant.province" v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
+        <app-region v-if="init.applicant && warranty.appl_card_type !== 58" :provinces="init.applicant.province" v-on:regionselect="register_selected" ref="register" :level="1"></app-region>
         <!-- 户籍 -->
         <app-input label="通讯地址">
           <div slot="input" @click="clearAddress" placeholder="请点击进行选择" :class="{pd:!applicant.address_select}">
@@ -257,6 +257,12 @@ export default {
     }
   },
   methods: {
+    typeChange() {
+      this.applicant.document_number = ''
+      this.applicant.register_select = ''
+      this.applicant.register = ''
+      this.warranty.appl_nation = this.warranty.appl_card_type === 58 ? 0 : 63
+    },
     checkID() { // 证件号码校验
       this.IDValidate() && this.checkIDExist()
     },
@@ -366,7 +372,7 @@ export default {
       applicant.visit_tel = res.visit_tel
       applicant.work_unit = res.work_unit
       applicant.zipcode = res.zipcode
-      // vm.warranty.appl_annual_source = Number(res.annual_source)
+        // vm.warranty.appl_annual_source = Number(res.annual_source)
       if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.applicant = Object.assign(vm.applicant, applicant)
     },
@@ -384,11 +390,26 @@ export default {
     },
     // 户籍选择
     register_selected(selected) {
+      var toast_text = null
       if (selected.length === 0 || !selected[0]) {
-        this.$toast.open('请先选择户籍', 'warn')
-        return false
+        toast_text = '请先选择户籍'
       }
       this.local && console.info(selected)
+      if (this.warranty.appl_card_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {
+        toast_text = '证件类型为港澳居民来往内地通行证时，户籍必须是香港或澳门'
+      } else if (this.warranty.appl_card_type === 15010 && selected[0].if_id !== '3453') {
+        toast_text = '证件类型为台湾居民来往大陆通行证时，户籍必须是台湾'
+      } else if ([57, 59, 15008].indexOf(this.warranty.appl_card_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {
+        toast_text = '证件类型为身份证、户口簿或军官证时，户籍不能是香港、澳门或台湾'
+      }
+      if (toast_text) {
+        console.info(toast_text)
+        this.$toast.open(toast_text, '', 3000)
+        this.$nextTick(() => {
+          this.$refs.register.clear()
+        })
+        return false
+      }
       this.$set(this.applicant, 'register', selected[0].if_id)
       this.$set(this.applicant, 'register_select', selected[0].explain)
     },
@@ -506,7 +527,7 @@ export default {
         return false
       } else if (!vm.warranty.appl_nation) {
         toast_text = '请选择投保人【国籍】'
-      } else if (!vm.applicant.register) {
+      } else if (!vm.applicant.register && vm.warranty.appl_card_type !== 58) {
         toast_text = '请选择投保人【户籍】'
       } else if (!vm.applicant.province) {
         toast_text = '请选择投保人【通讯地址省份】'

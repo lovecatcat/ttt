@@ -11,7 +11,7 @@ const SCID = 19
 // http数据交互插件
 // axios.defaults.baseURL = 'http://cloud.ehuimeng.com/'
 
-const env = location.port === '8080' ? 'development' : 'production'
+const env = location.port === '80801' ? 'development' : 'production'
 axios.defaults.baseURL = env === 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
 
 const initField = function (cb) {

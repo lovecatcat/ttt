@@ -8,7 +8,7 @@
           <div slot="icon" v-show="assured.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="assured.document_type" v-if="init.assured" @change="assured.document_number = '',assured.nationality = assured.document_type===58?0:63">
+          <select v-model.number="assured.document_type" v-if="init.assured" @change="typeChange">
             <option disabled>请选择证件类型</option>
             <option v-for="item in init.assured.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
@@ -58,18 +58,18 @@
         <app-select label="国籍" v-if="assured.document_type === 58">
           <select v-model.number="assured.nationality" v-if="init.assured">
             <option disabled value="0">请选择国籍</option>
-            <option v-if="item.if_id!=='63'"  v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
+            <option v-if="item.if_id!=='63'" v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="国籍" v-else>
           <div slot="input">中国</div>
         </app-input>
-        <app-input label="户籍">
+        <app-input label="户籍" v-if="assured.document_type !== 58">
           <input slot="input" readonly v-model="assured.register_select" type="text" placeholder="请选择被保险人户籍" @click="clearRegister">
           <div slot="icon" v-show="assured.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
         <!-- 户籍 -->
-        <app-region v-if="init.applicant" :provinces="init.applicant.province" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
+        <app-region v-if="init.applicant && assured.document_type !== 58" :provinces="init.applicant.province" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
         <!-- 户籍 -->
         <app-input label="通讯地址">
           <div slot="input" @click="clearAddress" placeholder="请点击进行选择" :class="{pd:!assured.address_select}">
@@ -216,6 +216,12 @@ export default {
     }
   },
   methods: {
+    typeChange() {
+      this.assured.document_number = ''
+      this.assured.register = ''
+      this.assured.register_select = ''
+      this.assured.nationality = this.assured.document_type === 58 ? 0 : 63
+    },
     // 证件号码校验
     checkID() {
       this.IDValidate() && this.checkIDExist()
@@ -245,7 +251,7 @@ export default {
             vm.assured.register = addr[code].if_id
 
             const age = Api.getAge(vm.assured.birthday)
-            //new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
+              //new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
             if (age < 16) {
               vm.assured.annual_earnings = 0 //小于16周岁默认为0，可修改
               vm.assured.annual_source = 15457
@@ -322,7 +328,7 @@ export default {
       assured.weight = res.weight
       assured.register = res.register
       assured.tel = res.tel
-      // assured.visit_tel = res.visit_tel
+        // assured.visit_tel = res.visit_tel
       assured.work_unit = res.work_unit
       assured.zipcode = res.zipcode
       if (res.document_term === '9999-12-30') vm.longTerm = true
@@ -330,10 +336,27 @@ export default {
     },
     // 户籍选择
     register_selected(selected) {
+      var toast_text = null
       if (selected.length === 0 || !selected[0]) {
-        this.$toast.open('请先选择户籍', 'warn')
+        toast_text = '请先选择户籍'
+      }
+      this.local && console.info(selected)
+      if (this.assured.document_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {
+        toast_text = '证件类型为港澳居民来往内地通行证时，户籍必须是香港或澳门'
+      } else if (this.assured.document_type === 15010 && selected[0].if_id !== '3453') {
+        toast_text = '证件类型为台湾居民来往大陆通行证时，户籍必须是台湾'
+      } else if ([57, 59, 15008].indexOf(this.assured.document_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {
+        toast_text = '证件类型为身份证、户口簿或军官证时，户籍不能是香港、澳门或台湾'
+      }
+      if (toast_text) {
+        console.info(toast_text)
+        this.$toast.open(toast_text, '', 3000)
+        this.$nextTick(() => {
+          this.$refs.register.clear()
+        })
         return false
       }
+
       this.local && console.info(selected)
       this.$set(this.assured, 'register', selected[0].if_id)
       this.$set(this.assured, 'register_select', selected[0].explain)
@@ -439,7 +462,7 @@ export default {
         toast_text = '请选择被保险人【出生日期】'
       } else if (!vm.assured.nationality) {
         toast_text = '请选择被保险人【国籍】'
-      } else if (!vm.assured.register) {
+      } else if (!vm.assured.register && vm.assured.document_type !== 58) {
         toast_text = '请选择被保险人【户籍】'
       } else if (!vm.assured.province) {
         toast_text = '请选择被保险人【通讯地址省份】'
