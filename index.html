@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>在线投保</title>
+  <title>信泰人寿在线投保</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <link rel="shortcut icon" type="image/ico" href="//www.ehuimeng.com/Public/index/favicon.ico" />
@@ -15,11 +15,15 @@
   <meta name="x5-page-mode" content="app">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
   <script src="https://cdn.bootcss.com/babel-polyfill/6.23.0/polyfill.min.js"></script>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 </head>
 
 <body ontouchstart="">
   <div id="app"></div>
-  <input type="hidden" id="id" value="{$admin_id}">
+  <input type="hidden" value="{$appId}" id="appId">
+  <input type="hidden" value="{$timestamp}" id="timestamp">
+  <input type="hidden" value="{$noncestr}" id="noncestr">
+  <input type="hidden" value="{$signature}" id="signature">
   <!-- built files will be auto injected -->
 </body>
 

@@ -1,5 +1,11 @@
-var admin_id = document.getElementById('id').value
-admin_id = admin_id === '{$admin_id}' || admin_id === '' ? '911' : admin_id
+import $_GET from '../widgets/Get.js'
+import local from '../widgets/Local'
+
+var admin_id = $_GET['admin_id']
+if (!admin_id && !local) {
+  location.href = '/Wechat/login'
+}
+
 export default {
   warranty: {}, //保单信息
   applicant: {}, //投保人信息
@@ -9,7 +15,7 @@ export default {
   anti_money: false, //反洗钱标准
   init: {}, //初始化数据,
   main_insurance: '0', //主险数据
-  admin_id: admin_id,
+  admin_id: admin_id || 1846,
   todo: false, //未完成订单
   ready: false, //首页加载
   tmp: { //受益人

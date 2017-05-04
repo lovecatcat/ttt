@@ -27,7 +27,9 @@ Vue.use(Preview)
 import Storage from './widgets/Storage'
 Vue.use(Storage)
 
-require('./widgets/Local')
+import local from './widgets/Local'
+Vue.prototype.local = local
+
 Vue.directive('focus', {
   inserted: function (el) {
     el.focus()
@@ -37,7 +39,7 @@ Vue.mixin({
   created() {
     // 禁止从中间页进入
     let path = this.$route.fullPath
-    let whiteList = ['/', '/confirmation', '/tips']
+    let whiteList = ['/', '/confirmation', '/tips', '/insured']
     if (!this.local && !this.$store.state.ready && whiteList.indexOf(path) === -1) {
       window.location.href = '/Wechat/XT_ins'
     }
@@ -94,6 +96,9 @@ Vue.mixin({
 })
 
 Vue.config.productionTip = false
+import Wechat from './widgets/Wechat'
+import $_GET from './widgets/Get'
+import qs from 'qs'
 
 /* eslint-disable */
 var app = new Vue({
@@ -101,5 +106,20 @@ var app = new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  created(){
+    if($_GET['shared']){
+      this.$router.push('/insured')
+    }
+    var params = {
+      admin_id: $_GET['admin_id'],
+      shared: true
+    }
+    Wechat.share({
+      title: '信泰人寿在线投保',
+      desc: '\r\n【汇盟保险，更专业的保险管家】',
+      link: 'http://cloud.ehuimeng.com/Wechat/XT_ins2c?' + qs.stringify(params), // 分享链接
+      imgUrl: location.protocol + '//' + location.host + '/Theme/index/home/images/logo.png' // 分享图标
+    })
+  }
 })

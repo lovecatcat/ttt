@@ -29,7 +29,7 @@
         <div class="am-checkbox mini argument">
           <input id="agree2" type="checkbox" v-model="agreement">
           <span class="icon-check"></span>
-          <label class="am-ft-md" for="agree2">本人已向客户确认</label>
+          <label class="am-ft-md" for="agree2">本人(业务员)已向客户确认</label>
         </div>
       </div>
     </div>
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script>
+import $_GET from '../widgets/Get'
 export default {
   name: 'notice',
   data() {
@@ -51,6 +52,9 @@ export default {
     this.$store.commit('setParam', {
       ready: true
     })
+    if ($_GET['shared']) {
+      this.agreement = true
+    }
     var applicant = this.$storage.fetch('applicant')
     if (applicant.dd) {
       this.$dialog.open('未完成保单', '是否继续完成最近一笔保单?', () => {

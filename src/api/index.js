@@ -184,6 +184,15 @@ const getAge = function(str) {
   return age
 }
 
+const queryPersonInfo = function (id, cb) {
+  axios.get('http://cloud.ehuimeng.com/Home/Mycenter/index?user_id=' + id).then(response => {
+    cb(response)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
 const obj2json = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
@@ -199,6 +208,7 @@ export default {
   pushWarranty,
   queryZipcode,
   getAge,
+  queryPersonInfo,
   obj2json
 }
 
