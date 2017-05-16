@@ -39,7 +39,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="assured.document_type in [57 ,15008]" id="sex2" v-model="assured.sex" :true-value="11338" :false-value="11339">
+              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="[57 ,15008].indexOf(assured.document_type)>-1" id="sex2" v-model="assured.sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex2">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -48,7 +48,7 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="assured.document_type in [57 ,15008]" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
+          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="[57 ,15008].indexOf(assured.document_type)>-1" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
           <div slot="icon" v-if="assured.document_type !== 57 && assured.document_type !== 15008" v-show="assured.birthday" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.birthday = ''"></i></div>
         </app-input>
       </div>
@@ -128,13 +128,18 @@
           <input slot="input" v-model.lazy.number="assured.weight" type="number" placeholder="请填写体重(Kg)">
           <div slot="icon" v-show="assured.weight != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.weight = ''"></i></div>
         </app-input>
-        <app-input label="职业">
+        <!-- 职业 -->
+        <app-input label="职业" v-if="age > 15">
           <div slot="input" @click="$refs.occupation.show = true" placeholder="请点击选择职业" :class="{pd:!assured.occupation}">
             {{assured.occupation}}
           </div>
           <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
-        <!-- 职业 -->
+        <app-input label="职业" v-else>
+          <div slot="input" :class="{pd:!assured.occupation}">
+            {{assured.occupation}}
+          </div>
+        </app-input>
         <app-occupation ref="occupation"></app-occupation>
         <!-- 职业 -->
       </div>
@@ -162,6 +167,7 @@ export default {
     return {
       longTerm: false, //是否长期有效
       cardinfo: {}, //身份证信息
+      age: '', //年龄
       // 被保险人信息
       assured: {
         war_id: '', //
@@ -213,6 +219,18 @@ export default {
   watch: {
     longTerm(val) {
       this.assured.document_term = val ? '9999-12-30' : ''
+    },
+    age(val) {
+      if (val > 0 && val <= 6) {
+        this.assured.occupation = '学龄前儿童'
+        this.assured.occupation_code = 9602
+      } else if (val > 6 && val <= 15) {
+        this.assured.occupation = '一般学生'
+        this.assured.occupation_code = 9601
+      } else {
+        this.assured.occupation = ''
+        this.assured.occupation_code = ''
+      }
     }
   },
   methods: {
@@ -236,7 +254,8 @@ export default {
       switch (type) {
         case 15008: // 户口簿
         case 57: // 身份证
-          const addr = this.$store.state.addr
+          const addr = vm.$store.state.addr
+          vm.age = 0
 
           if (Validator.isValid(id, 18)) {
             const idInfo = Validator.getInfo(id)
@@ -251,7 +270,7 @@ export default {
             vm.assured.register = addr[code].if_id
 
             const age = Api.getAge(vm.assured.birthday)
-              //new Date().getFullYear() - vm.assured.birthday.substr(0, 4)
+            vm.age = age
             if (age < 16) {
               vm.assured.annual_earnings = 0 //小于16周岁默认为0，可修改
               vm.assured.annual_source = 15457
@@ -306,6 +325,10 @@ export default {
     setInfo() {
       var vm = this
       var res = vm.cardinfo
+
+      if (vm.assured.birthday) {
+        vm.age = Api.getAge(vm.assured.birthday)
+      }
 
       // 是否同人
       if (vm.assured.name !== res.name || vm.assured.document_type !== Number(res.document_type) || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday || vm.assured.sex !== res.sex) {
