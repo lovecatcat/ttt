@@ -245,7 +245,7 @@ export default {
       }
       pushData['warranty_admin_id'] = vm.$store.state.admin_id
       pushData['warranty_sc_id'] = 19
-      pushData['warranty_is_save'] = 0
+      pushData['warranty_is_save'] = 2
       pushData['warranty_source'] = 2
 
       pushData['insurance_war_id'] = []
