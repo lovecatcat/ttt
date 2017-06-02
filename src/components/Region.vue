@@ -76,6 +76,7 @@ export default {
       if (!this.province) return false
       this.selected.splice(0, 3, this.province)
       this.changed()
+      this.district = 0
       this.city = 0
       if (this.level > 1) {
         this.getRegion('city', this.province.code)

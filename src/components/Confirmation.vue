@@ -12,7 +12,7 @@
 export default {
   name: 'Confirmation',
   data() {
-    const baseUrl = 'http://cloud.ehuimeng.com/Theme/index/home/static/images/'
+    const baseUrl = '//cloud.ehuimeng.com/Theme/index/home/XT_ins/images/'
     return {
       list: [{
         src: baseUrl + '334886745985965796.jpg',
