@@ -318,7 +318,13 @@ export default {
           vm.$toast.open('服务器开小差了', 'error')
           return
         }
+        // 不存在 assu_id
+        if (!res.assu_id) {
+          vm.assured.assu_id && vm.$delete(vm.assured, 'assu_id')
+          return false
+        }
         vm.cardinfo = res
+        vm.$set(vm.assured, 'appl_id', res.assu_id)
         vm.setInfo()
       })
     },
