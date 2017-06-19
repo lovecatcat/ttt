@@ -104,7 +104,7 @@
         <input slot="input" v-model="assured.name" type="text" readonly>
       </app-input>
       <app-select label="证件类型" readonly="true">
-        <select v-model="assured.document_type" v-if="init.assured" disabled>
+        <select v-model="warranty.assu_card_type" v-if="init.assured" disabled>
           <option v-for="type in init.assured.document_type" :value="type.if_id">{{type.explain}}</option>
         </select>
       </app-select>
@@ -116,7 +116,7 @@
         <input v-else slot="input" v-model="assured.document_term" type="text" readonly>
       </app-input>
       <app-select label="性别" readonly="true">
-        <select v-model="assured.sex" v-if="init.assured" disabled>
+        <select v-model="warranty.assu_sex" v-if="init.assured" disabled>
           <option v-for="item in init.assured.sex" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -124,7 +124,7 @@
         <input slot="input" v-model="assured.birthday" type="text" readonly>
       </app-input>
       <app-select label="国籍" readonly="true">
-        <select v-model="assured.nationality" v-if="init.assured" disabled>
+        <select v-model="warranty.assu_nation" v-if="init.assured" disabled>
           <option v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -152,8 +152,8 @@
       <app-input label="年收入">
         <input slot="input" readonly :value="assured.annual_earnings+'万元'" type="text">
       </app-input>
-      <app-select label="收入来源" v-if="assured.annual_source !== 15457" readonly="true">
-        <select v-model="assured.annual_source" disabled v-if="init.assured">
+      <app-select label="收入来源" v-if="warranty.assu_annual_source !== 15457" readonly="true">
+        <select v-model="warranty.assu_annual_source" disabled v-if="init.assured">
           <option v-for="item in init.assured.annual_source" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -289,7 +289,7 @@
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-switch" v-if="init.assured">
-          <input type="checkbox" disabled v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+          <input type="checkbox" disabled v-model="assured.assu_social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
           <label class="am-switch-label">
             <div class="am-switch-inner"></div>
             <div class="am-switch-switch"></div>

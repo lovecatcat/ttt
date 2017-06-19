@@ -8,7 +8,7 @@
           <div slot="icon" v-show="assured.name != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.name = ''"></i></div>
         </app-input>
         <app-select label="证件类型">
-          <select v-model.number="assured.document_type" v-if="init.assured" @change="typeChange">
+          <select v-model.number="warranty.assu_card_type" v-if="init.assured" @change="typeChange">
             <option disabled>请选择证件类型</option>
             <option v-for="item in init.assured.document_type" :value="item.if_id">{{item.explain}}</option>
           </select>
@@ -39,7 +39,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="[57 ,15008].indexOf(assured.document_type)>-1" id="sex2" v-model="assured.sex" :true-value="11338" :false-value="11339">
+              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="[57 ,15008].indexOf(warranty.assu_card_type)>-1" id="sex2" v-model="warranty.assu_sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex2">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -48,15 +48,15 @@
           </div>
         </app-input>
         <app-input label="出生日期">
-          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="[57 ,15008].indexOf(assured.document_type)>-1" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
-          <div slot="icon" v-if="assured.document_type !== 57 && assured.document_type !== 15008" v-show="assured.birthday" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.birthday = ''"></i></div>
+          <input slot="input" @change="setInfo" :class="{'has': assured.birthday != ''}" :readonly="[57 ,15008].indexOf(warranty.assu_card_type)>-1" v-model="assured.birthday" type="date" placeholder="请填写被保险人出生日期">
+          <div slot="icon" v-if="warranty.assu_card_type !== 57 && warranty.assu_card_type !== 15008" v-show="assured.birthday" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.birthday = ''"></i></div>
         </app-input>
       </div>
     </div>
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
-        <app-select label="国籍" v-if="assured.document_type === 58">
-          <select v-model.number="assured.nationality" v-if="init.assured">
+        <app-select label="国籍" v-if="warranty.assu_card_type === 58">
+          <select v-model.number="warranty.assu_card_type" v-if="init.assured">
             <option disabled value="0">请选择国籍</option>
             <option v-if="item.if_id!=='63'" v-for="item in init.assured.nationality" :value="item.if_id">{{item.explain}}</option>
           </select>
@@ -64,12 +64,12 @@
         <app-input label="国籍" v-else>
           <div slot="input">中国</div>
         </app-input>
-        <app-input label="户籍" v-if="assured.document_type !== 58">
+        <app-input label="户籍" v-if="warranty.assu_card_type !== 58">
           <input slot="input" readonly v-model="assured.register_select" type="text" placeholder="请选择被保险人户籍" @click="clearRegister">
           <div slot="icon" v-show="assured.register_select != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearRegister"></i></div>
         </app-input>
         <!-- 户籍 -->
-        <app-region v-if="init.applicant && assured.document_type !== 58" :provinces="init.applicant.province" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
+        <app-region v-if="init.applicant && warranty.assu_card_type !== 58" :provinces="init.applicant.province" :level="1" ref="register" v-on:regionselect="register_selected"></app-region>
         <!-- 户籍 -->
         <app-input label="通讯地址">
           <div slot="input" @click="clearAddress" placeholder="请点击进行选择" :class="{pd:!assured.address_select}">
@@ -108,12 +108,12 @@
           <div slot="icon" v-show="assured.annual_earnings != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.annual_earnings = ''"></i></div>
         </app-input>
         <app-select label="收入来源">
-          <select v-model.number="assured.annual_source" v-if="init.assured">
+          <select v-model.number="warranty.assu_annual_source" v-if="init.assured">
             <option disabled value="0">请选择收入来源</option>
             <option v-for="item in init.assured.annual_source" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
-        <div class="am-list-item" v-show="assured.annual_source === 15457">
+        <div class="am-list-item" v-show="warranty.assu_annual_source === 15457">
           <div class="am-list-label tar app-color-warn">填写收入来源</div>
           <div class="am-list-control">
             <input v-model.lazy="assured.annual_source_other" type="text" placeholder="请填写收入来源">
@@ -174,17 +174,13 @@ export default {
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
-        sex: '11338', //性别
         height: '', //身高(厘米)
         weight: '', //体重(kg)
-        nationality: 63, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
-        annual_source: 0, //收入来源
         annual_source_other: '', //其他收入来源
         birthday: '', //出生日期
         // 证件
-        document_type: 57, //证件类型
         document_type_val: '', //证件描述
         document_number: '', //证件号码
         document_term: '', //证件有效期
@@ -196,14 +192,18 @@ export default {
         zipcode: '', //通信邮编
         // 职业
         occupation: '', //职业
-        occupation_code: '', //职业代码
 
         work_unit: '', //工作单位
-        // visit_tel: '', //回访电话
         tel: '' //联系电话
       },
       // 保单信息
-      warranty: {}
+      warranty: {
+        assu_sex: '11338', //性别
+        assu_card_type: 57, //证件类型
+        assu_nation: 63, //国籍
+        assu_annual_source: 0, //收入来源
+        assu_occupation_code: '' //职业代码
+      }
     }
   },
   computed: {
@@ -223,13 +223,13 @@ export default {
     age(val) {
       if (val > 0 && val <= 6) {
         this.assured.occupation = '学龄前儿童'
-        this.assured.occupation_code = 9602
+        this.warranty.assu_occupation_code = 9602
       } else if (val > 6 && val <= 15) {
         this.assured.occupation = '一般学生'
-        this.assured.occupation_code = 9601
+        this.warranty.assu_occupation_code = 9601
       } else {
         this.assured.occupation = ''
-        this.assured.occupation_code = ''
+        this.warranty.assu_occupation_code = ''
       }
     }
   },
@@ -238,7 +238,7 @@ export default {
       this.assured.document_number = ''
       this.assured.register = ''
       this.assured.register_select = ''
-      this.assured.nationality = this.assured.document_type === 58 ? 0 : 63
+      this.warranty.assu_nation = this.warranty.assu_card_type === 58 ? 0 : 63
     },
     // 证件号码校验
     checkID() {
@@ -247,7 +247,7 @@ export default {
     // 检查ID是否有效
     IDValidate() {
       const vm = this
-      const type = vm.assured.document_type
+      const type = vm.warranty.assu_card_type
       const id = vm.assured.document_number
       var toast_text = null
 
@@ -265,7 +265,7 @@ export default {
               0: '11339'
             }
             vm.assured.birthday = idInfo.birth
-            vm.assured.sex = sex[idInfo.sex]
+            vm.warranty.assu_sex = sex[idInfo.sex]
             vm.assured.register_select = addr[code].name
             vm.assured.register = addr[code].if_id
 
@@ -273,7 +273,7 @@ export default {
             vm.age = age
             if (age < 16) {
               vm.assured.annual_earnings = 0 //小于16周岁默认为0，可修改
-              vm.assured.annual_source = 15457
+              vm.warranty.assu_annual_source = 15457
               vm.assured.annual_source_other = '无'
             }
           } else {
@@ -337,27 +337,18 @@ export default {
       }
 
       // 是否同人
-      if (vm.assured.name !== res.name || vm.assured.document_type !== Number(res.document_type) || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday || vm.assured.sex !== res.sex) {
+      if (vm.assured.name !== res.name || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday) {
         return
       }
       var assured = {}
-      if (res.ChPro && res.ChCity && res.ChDistrict) {
-        assured.province = res.province
-        assured.city = res.city
-        assured.district = res.district
-        assured.address = res.address
-        assured.address_select = res.ChPro + res.ChCity + res.ChDistrict
-      }
+
       assured.name = res.name
       assured.annual_earnings = Number(res.annual_earnings)
-      assured.annual_source = Number(res.annual_source)
-      assured.annual_source_other = res.annual_source_other
       assured.document_term = res.document_term
       assured.height = res.height
       assured.weight = res.weight
       assured.register = res.register
       assured.tel = res.tel
-        // assured.visit_tel = res.visit_tel
       assured.work_unit = res.work_unit
       assured.zipcode = res.zipcode
       if (res.document_term === '9999-12-30') vm.longTerm = true
@@ -370,11 +361,11 @@ export default {
         toast_text = '请先选择户籍'
       }
       this.local && console.info(selected)
-      if (this.assured.document_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {
+      if (this.warranty.assu_card_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {
         toast_text = '证件类型为港澳居民来往内地通行证时，户籍必须是香港或澳门'
-      } else if (this.assured.document_type === 15010 && selected[0].if_id !== '3453') {
+      } else if (this.warranty.assu_card_type === 15010 && selected[0].if_id !== '3453') {
         toast_text = '证件类型为台湾居民来往大陆通行证时，户籍必须是台湾'
-      } else if ([57, 59, 15008].indexOf(this.assured.document_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {
+      } else if ([57, 59, 15008].indexOf(this.warranty.assu_card_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {
         toast_text = '证件类型为身份证、户口簿或军官证时，户籍不能是香港、澳门或台湾'
       }
       if (toast_text) {
@@ -454,7 +445,7 @@ export default {
     checkPhone() {
       const tel = this.assured.tel
       var toast_text = null
-      if (this.assured.document_type === 15009 && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
+      if (this.warranty.assu_card_type === 15009 && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
         toast_text = '请输入正确的11位或13位手机号'
       } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {
         toast_text = '请输入正确的11位手机号'
@@ -469,12 +460,12 @@ export default {
     setOccupation(selected) {
       this.local && console.log(selected)
       this.assured.occupation = selected.explain
-      this.assured.occupation_code = selected.if_id
+      this.warranty.assu_occupation_code = selected.if_id
     },
     // 清除职业
     clearOccupation() {
       this.assured.occupation = ''
-      this.assured.occupation_code = ''
+      this.warranty.assu_occupation_code = ''
       this.$refs.occupation.show = true
     },
     // 校验表单
@@ -489,9 +480,9 @@ export default {
         toast_text = '请填写被保险人【证件有效期】'
       } else if (!vm.assured.birthday) {
         toast_text = '请选择被保险人【出生日期】'
-      } else if (!vm.assured.nationality) {
+      } else if (!vm.warranty.assu_nation) {
         toast_text = '请选择被保险人【国籍】'
-      } else if (!vm.assured.register && vm.assured.document_type !== 58) {
+      } else if (!vm.assured.register && vm.warranty.assu_card_type !== 58) {
         toast_text = '请选择被保险人【户籍】'
       } else if (!vm.assured.province) {
         toast_text = '请选择被保险人【通讯地址省份】'
@@ -505,15 +496,15 @@ export default {
         return false
       } else if (!vm.assured.annual_earnings && vm.assured.annual_earnings !== 0) {
         toast_text = '请填写被保险人【年收入】'
-      } else if (!vm.assured.annual_source) {
+      } else if (!vm.warranty.assu_annual_source) {
         toast_text = '请选择被保险人【收入来源】'
-      } else if (vm.assured.annual_source === 15457 && !vm.assured.annual_source_other) {
+      } else if (vm.warranty.assu_annual_source === 15457 && !vm.assured.annual_source_other) {
         toast_text = '请填写投保人【收入来源】'
       } else if (!vm.assured.height) {
         toast_text = '请填写被保险人【身高】'
       } else if (!vm.assured.weight) {
         toast_text = '请填写被保险人【体重】'
-      } else if (!vm.assured.occupation_code) {
+      } else if (!vm.warranty.assu_occupation_code) {
         toast_text = '请填写被保险人【职业】'
       }
       if (toast_text) {

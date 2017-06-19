@@ -56,7 +56,7 @@
           <div class="am-list-label">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
           <div class="am-list-control">
             <div class="am-switch" v-if="init.assured">
-              <input type="checkbox" v-model="assured.social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+              <input type="checkbox" v-model="warranty.assu_social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
               <label class="am-switch-label">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -107,10 +107,8 @@ export default {
         period_money: '' //期交保费
       },
       warranty: {
-        delivery_way: '117'
-      },
-      assured: {
-        social_security: '15047'
+        delivery_way: '117',
+        assu_social_security: '15047'
       },
       applicant: {
         email: '' //邮箱
@@ -199,7 +197,6 @@ export default {
     if (this.warranty.delivery_way === '117' && !this.checkEmail()) {
       return false
     }
-    this.$store.commit('saveAssured', this.assured)
     this.$store.commit('setWarranty', this.warranty)
     this.$store.commit('setApplicant', this.applicant)
     this.$store.commit('saveInsurance', Api.obj2json([this.insurance]))
@@ -278,6 +275,9 @@ export default {
           vm.insurance.period_money = res.data[vm.insurance.safe_id]
           vm.$store.dispatch('setApplicant', {
             'appl_id': res.id.applicant_appl_id
+          })
+          vm.$store.dispatch('saveAssured', {
+            'assu_id': res.id.applicant_assu_id
           })
           let pay_year
           vm.attr.forEach(item => {

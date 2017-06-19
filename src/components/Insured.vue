@@ -190,10 +190,8 @@ export default {
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
-        // sex: '15', //性别
         height: '', //身高(厘米)
         weight: '', //体重(kg)
-        // nationality: 99, //国籍
         register: '', //户籍
         annual_earnings: '', //年收入
         // annual_source: 0, //收入来源
@@ -226,12 +224,10 @@ export default {
         appl_card_type: 57, //证件类型
         appl_nation: 63, //国籍
         appl_annual_source: 0, //收入来源
+        appl_occupation_code: '', //职业代码
 
         is_assured: 15000, //是被保险人的
         is_assured_val: '', //是被保险人值
-
-        // 职业
-        appl_occupation_code: '', //职业代码
 
         contract_handle: '108', //合同争议处理方式
         contract_handle_value: '' //填写仲裁委员会名称
@@ -354,15 +350,8 @@ export default {
         return
       }
       var applicant = {}
-      if (res.ChPro && res.ChCity && res.ChDistrict) {
-        applicant.province = res.province
-        applicant.city = res.city
-        applicant.district = res.district
-        applicant.address = res.address
-        applicant.address_select = res.ChPro + res.ChCity + res.ChDistrict
-      }
+
       applicant.annual_earnings = Number(res.annual_earnings)
-      applicant.annual_source_other = res.annual_source_other
       applicant.document_term = res.document_term
       applicant.height = res.height
       applicant.weight = res.weight
@@ -372,7 +361,6 @@ export default {
       applicant.visit_tel = res.visit_tel
       applicant.work_unit = res.work_unit
       applicant.zipcode = res.zipcode
-        // vm.warranty.appl_annual_source = Number(res.annual_source)
       if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.applicant = Object.assign(vm.applicant, applicant)
     },
@@ -572,27 +560,33 @@ export default {
         return false
       }
       this.$toast.close()
-      var nextPage = null
 
       // 如果被保险人是本人
       if (this.warranty.is_assured === 15000) {
         var assured = Api.obj2json(this.applicant)
-        assured.occupation_code = this.warranty.appl_occupation_code
-        assured.sex = this.warranty.appl_sex
-        assured.document_type = this.warranty.appl_card_type
-        assured.nationality = this.warranty.appl_nation
-        assured.annual_source = this.warranty.appl_annual_source
+        this.warranty.assu_card_type = this.warranty.appl_card_type
+        this.warranty.assu_nation = this.warranty.appl_nation
+        this.warranty.assu_annual_source = this.warranty.appl_annual_source
+        this.warranty.assu_occupation_code = this.warranty.appl_occupation_code
+        this.warranty.assu_sex = this.warranty.appl_sex
         this.assured = Object.assign(this.assured, assured)
-        this.$store.dispatch('saveAssured', this.assured)
         this.$store.dispatch('setApplicant', this.applicant)
         this.$store.dispatch('setWarranty', this.warranty)
-        nextPage = '/prospectus'
-        this.$router.push(nextPage)
+
+        Api.queryID(this.applicant.document_number, 'assured', res => {
+          if (res && res.assu_id) {
+            this.assured.assu_id = res.assu_id
+          } else {
+            this.$delete(this.assured, 'assu_id')
+          }
+          this.$delete(this.assured, 'appl_id')
+          this.$store.dispatch('saveAssured', this.assured)
+          this.$router.push('/prospectus')
+        })
       } else {
-        nextPage = '/beinsured'
         this.$store.commit('setApplicant', this.applicant)
         this.$store.commit('setWarranty', this.warranty)
-        this.$router.push(nextPage)
+        this.$router.push('/beinsured')
       }
     }
   }
