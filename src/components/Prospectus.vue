@@ -227,7 +227,6 @@ export default {
       let assured = vm.$store.state.assured
       for (var j in assured) {
         var open = 'assured_' + j
-        if (j === 'appl_id') continue
         if (filter.indexOf(j) > -1) {
           continue
         }
@@ -274,10 +273,10 @@ export default {
           vm.$toast.close()
           vm.insurance.period_money = res.data[vm.insurance.safe_id]
           vm.$store.dispatch('setApplicant', {
-            'appl_id': res.id.applicant_appl_id
+            'appl_id': res.id.appl_id
           })
           vm.$store.dispatch('saveAssured', {
-            'assu_id': res.id.applicant_assu_id
+            'assu_id': res.id.assu_id
           })
           let pay_year
           vm.attr.forEach(item => {

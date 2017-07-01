@@ -8,7 +8,7 @@ export default {
         if (typeof data === 'object') {
           data = JSON.stringify(data)
         }
-        localStorage.setItem(KEY, data)
+        return localStorage.setItem(KEY, data)
       },
       remove(KEY) {
         return localStorage.removeItem(KEY)

@@ -33,6 +33,9 @@
       <app-input label="出生日期">
         <input slot="input" v-model="applicant.birthday" type="text" readonly>
       </app-input>
+      <app-input label="个人税收居民身份类型" v-if="getAge(applicant.birthday) >= 16">
+        <div v-if="warranty.appl_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
+      </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="warranty.appl_nation" v-if="init.applicant" disabled>
           <option v-for="item in init.applicant.nationality" :value="item.if_id">{{item.explain}}</option>
@@ -63,7 +66,7 @@
         <input slot="input" readonly :value="applicant.annual_earnings+'万元'" type="text">
       </app-input>
       <app-select label="收入来源" v-if="warranty.appl_annual_source !== 15457" readonly="true">
-        <select v-model="warranty.appl_annual_source" disabled>
+        <select v-model="warranty.appl_annual_source" disabled v-if="init.applicant">
           <option v-for="item in init.applicant.annual_source" :value="item.if_id">{{item.explain}}</option>
         </select>
       </app-select>
@@ -122,6 +125,9 @@
       </app-select>
       <app-input label="出生日期">
         <input slot="input" v-model="assured.birthday" type="text" readonly>
+      </app-input>
+      <app-input label="个人税收居民身份类型" v-if="getAge(assured.birthday) >= 16">
+        <div v-if="warranty.assu_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
       </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="warranty.assu_nation" v-if="init.assured" disabled>
@@ -214,6 +220,9 @@
       <app-input label="受益份额(%)">
         <input slot="input" readonly type="number" v-model.number.lazy="beneficiary.benefited_ratio">
       </app-input>
+      <app-input label="个人税收居民身份类型" v-if="getAge(beneficiary.birthday) >= 16">
+        <div v-if="beneficiary.tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
+      </app-input>
       <template v-if="anti_money">
         <app-select label="国籍" readonly="true">
           <select v-model="beneficiary.nationality" v-if="init.applicant">
@@ -240,13 +249,14 @@
         </app-input>
       </template>
     </app-dropdown>
-    <div class="am-list" v-show="warranty.benefited_type === '0'" v-if="warranty">
+    <div class="am-list" v-show="warranty.benefited_type === '0'">
       <div class="am-list-item">
         <div class="am-list-content">
           身故受益人
         </div>
         <div class="am-list-extra">
           法定受益人
+          <router-link to="/healthinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
         </div>
       </div>
     </div>
@@ -289,7 +299,7 @@
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-switch" v-if="init.assured">
-          <input type="checkbox" disabled v-model="assured.assu_social_security" v-bind:true-value="init.assured.social_security[0].if_id" v-bind:false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+          <input type="checkbox" disabled v-model="warranty.assu_social_security" :true-value="init.assured.social_security[0].if_id" :false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
           <label class="am-switch-label">
             <div class="am-switch-inner"></div>
             <div class="am-switch-switch"></div>
@@ -537,7 +547,6 @@ export default {
       }
       for (var k in vm.assured) {
         var o = 'assured_' + k
-        if (k === 'appl_id') continue
         if (filter.indexOf(k) > -1) {
           continue
         }
@@ -651,6 +660,8 @@ export default {
       })
       this.local && console.log(pushData)
       vm.$toast.open('正在投保中', 'loading')
+
+      // if (pushData) return false
       Api.pushWarranty(qs.stringify(pushData), res => {
         if (res.name && res.name.indexOf('Error') > -1) {
           vm.$toast.open('服务器开小差了', 'error')

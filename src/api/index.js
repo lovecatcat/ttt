@@ -75,6 +75,8 @@ const initField = function (cb) {
         item.list.forEach(citem => {
           if (citem.a_id === '66') {
             res.beneficiary.relationship = citem.children
+          } else if (citem.a_id === '52') {
+            res.beneficiary.tax_type = citem.children
           }
         })
       } else if (item.name === 'transferstate') {

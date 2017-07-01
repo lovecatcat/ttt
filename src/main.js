@@ -74,6 +74,19 @@ Vue.mixin({
     }
   },
   methods: {
+    getAge(str) {
+      if (!str) return
+      var now = new Date()
+      var year = now.getFullYear()
+      var month = now.getMonth() + 1
+      var day = now.getDate()
+      var r = str.split('-').map(item => parseInt(item))
+      var age = year - r[0]
+      if (r[1] > month || (r[1] === month && r[2] > day)) { // 当月
+        age -= 1
+      }
+      return age
+    },
     save2local(key, val) {
       // this.local && console.log('存储到缓存' + key, JSON.stringify(val))
       // this.$storage.save(key, Object.assign(this.$storage.fetch(key), val))
@@ -107,8 +120,8 @@ var app = new Vue({
   store,
   template: '<App/>',
   components: { App },
-  created(){
-    if($_GET['shared']){
+  created() {
+    if ($_GET['shared']) {
       this.$router.push('/insured')
     }
     var params = {

@@ -87,6 +87,18 @@
         </div>
       </div>
     </div>
+    <div class="am-list" v-if="getAge(beneficiary.birthday) >= 16">
+      <div class="am-list-header">请选择个人税收居民身份类型</div>
+      <div class="am-list-body" v-if="init.beneficiary">
+        <label class="am-list-item checkbox" v-for="item in init.beneficiary.tax_type">
+          <div class="am-checkbox app-checkbox">
+            <input type="radio" :value="item.if_id" v-model="beneficiary.tax_type">
+            <span class="icon-check"></span>
+          </div>
+          <div class="am-list-content">{{item.explain}}</div>
+        </label>
+      </div>
+    </div>
     <div class="am-list am-list-6lb form" v-if="anti_money">
       <div class="am-list-body">
         <app-select label="国籍" v-if="beneficiary.document_type === 58">
@@ -180,6 +192,7 @@ export default {
         document_type_val: '', //证件描述
         document_number: '', //证件号码
         document_term: '', //证件有效期
+        tax_type: '', //税收类型
         // 通信
         address: '', //通信地址
         province: '', //省
@@ -234,6 +247,7 @@ export default {
         var applicant = Api.obj2json(this.applicant)
         vm.beneficiary.sex = this.warranty.appl_sex
         vm.beneficiary.document_type = this.warranty.appl_card_type
+        vm.beneficiary.tax_type = this.warranty.appl_tax_type
 
         vm.beneficiary.document_number = applicant.document_number
         vm.beneficiary.document_term = applicant.document_term
@@ -376,6 +390,8 @@ export default {
         toast_text = '请选择' + sb + '受益人【受益顺序】'
       } else if (!vm.beneficiary.benefited_ratio) {
         toast_text = '请填写' + sb + '受益人【受益比例】'
+      } else if (!vm.beneficiary.tax_type && vm.getAge(vm.beneficiary.birthday) >= 16) {
+        toast_text = '请选择' + sb + '个人税收居民身份类型'
       } else if (vm.anti_money) {
         if (!vm.beneficiary.nationality) {
           toast_text = '请选择' + sb + '受益人【国籍】'
@@ -398,6 +414,11 @@ export default {
         } else if (!vm.beneficiary.occupation_code) {
           toast_text = '请填写' + sb + '受益人【职业】'
         }
+      }
+
+      // 重置税收类型
+      if (vm.getAge(vm.beneficiary.birthday) < 16) {
+        this.beneficiary.tax_type = ''
       }
       if (toast_text) {
         console.info(toast_text)
