@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"ret",
+				"return"
+			],
+			[
 				"ass",
 				"assu_nation"
 			],
@@ -510,20 +514,19 @@
 			[
 				"h",
 				"height\tAttr"
-			],
-			[
-				"check",
-				"checkFee"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"contents": "<template>\n  <section id=\"Beinsured\">\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"app-list-header\"><span class=\"app-iconfont\">&#xe631;</span>被保险人信息</div>\n      <div class=\"am-list-body\">\n        <app-input label=\"姓名\">\n          <input slot=\"input\" @change=\"setInfo\" v-model.lazy.trim=\"assured.name\" type=\"text\" placeholder=\"请填写被保险人姓名\">\n          <div slot=\"icon\" v-show=\"assured.name != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.name = ''\"></i></div>\n        </app-input>\n        <app-select label=\"证件类型\">\n          <select v-model.number=\"warranty.assu_card_type\" v-if=\"init.assured\" @change=\"typeChange\">\n            <option disabled>请选择证件类型</option>\n            <option v-for=\"item in init.assured.document_type\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"证件号码\">\n          <input slot=\"input\" class=\"uppercase\" @change=\"checkID\" v-model.lazy=\"assured.document_number\" type=\"text\" placeholder=\"请填写被保险人证件号码\">\n          <div slot=\"icon\" v-show=\"assured.document_number != ''\" class=\"am-list-clear\" @click=\"assured.document_number = ''\"><i class=\"am-icon-clear am-icon\"></i></div>\n        </app-input>\n        <app-input label=\"证件有效期\">\n          <div class=\"am-ft-right\" slot=\"input\">\n            <span>长期有效&nbsp;&nbsp;</span>\n          </div>\n          <div class=\"am-switch\" slot=\"icon\">\n            <input type=\"checkbox\" class=\"am-switch-checkbox\" id=\"longTerm2\" v-model=\"longTerm\">\n            <label class=\"am-switch-label\" for=\"longTerm2\">\n              <div class=\"am-switch-inner\"></div>\n              <div class=\"am-switch-switch\"></div>\n            </label>\n          </div>\n        </app-input>\n        <div class=\"am-list-item\" v-show=\"!longTerm\">\n          <div class=\"am-list-label tar app-color-warn\">有效日期</div>\n          <div class=\"am-list-control\">\n            <input :class=\"{'has': assured.document_term != ''}\" :readonly=\"longTerm\" v-model=\"assured.document_term\" type=\"date\" placeholder=\"请填写证件有效期\">\n          </div>\n          <div v-show=\"assured.document_term\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.document_term = ''\"></i></div>\n        </div>\n        <app-input label=\"性别\">\n          <div class=\"am-ft-right\" slot=\"input\">\n            <div class=\"am-switch am-sex\">\n              <input type=\"checkbox\" @change=\"setInfo\" class=\"am-switch-checkbox\" :disabled=\"[57 ,15008].indexOf(warranty.assu_card_type)>-1\" id=\"sex2\" v-model=\"warranty.assu_sex\" :true-value=\"11338\" :false-value=\"11339\">\n              <label class=\"am-switch-label\" for=\"sex2\">\n                <div class=\"am-switch-inner\"></div>\n                <div class=\"am-switch-switch\"></div>\n              </label>\n            </div>\n          </div>\n        </app-input>\n        <app-input label=\"出生日期\">\n          <input slot=\"input\" @change=\"setInfo\" :class=\"{'has': assured.birthday != ''}\" :readonly=\"[57 ,15008].indexOf(warranty.assu_card_type)>-1\" v-model=\"assured.birthday\" type=\"date\" placeholder=\"请填写被保险人出生日期\">\n          <div slot=\"icon\" v-if=\"warranty.assu_card_type !== 57 && warranty.assu_card_type !== 15008\" v-show=\"assured.birthday\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.birthday = ''\"></i></div>\n        </app-input>\n      </div>\n    </div>\n    <div class=\"am-list\" v-if=\"age >= 16\">\n      <div class=\"am-list-header\">请选择个人税收居民身份类型</div>\n      <div class=\"am-list-body\">\n        <label class=\"am-list-item checkbox\" v-for=\"item in init.beneficiary.tax_type\">\n          <div class=\"am-checkbox app-checkbox\">\n            <input type=\"radio\" :value=\"item.if_id\" v-model=\"warranty.assu_tax_type\">\n            <span class=\"icon-check\"></span>\n          </div>\n          <div class=\"am-list-content\">{{item.explain}}</div>\n        </label>\n      </div>\n    </div>\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"am-list-body\">\n        <app-select label=\"国籍\" v-if=\"warranty.assu_card_type === 58 || warranty.assu_card_type === 24001\">\n          <select v-model.number=\"warranty.assu_nation\" v-if=\"init.assured\">\n            <option disabled value=\"0\">请选择国籍</option>\n            <option v-if=\"item.if_id!=='63'\" v-for=\"item in init.assured.nationality\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"国籍\" v-else>\n          <div slot=\"input\">中国</div>\n        </app-input>\n        <app-input label=\"户籍\" v-if=\"warranty.assu_card_type !== 58 && warranty.assu_card_type !== 24001\">\n          <input slot=\"input\" readonly v-model=\"assured.register_select\" type=\"text\" placeholder=\"请选择被保险人户籍\" @click=\"clearRegister\">\n          <div slot=\"icon\" v-show=\"assured.register_select != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"clearRegister\"></i></div>\n        </app-input>\n        <!-- 户籍 -->\n        <app-region v-if=\"init.applicant && warranty.assu_card_type !== 58  && warranty.appl_card_type !== 24001\" :provinces=\"init.applicant.province\" :level=\"1\" ref=\"register\" v-on:regionselect=\"register_selected\"></app-region>\n        <!-- 户籍 -->\n        <app-input label=\"通讯地址\">\n          <div slot=\"input\" @click=\"clearAddress\" placeholder=\"请点击进行选择\" :class=\"{pd:!assured.address_select}\">\n            {{assured.address_select}}\n          </div>\n          <div slot=\"icon\" v-show=\"assured.address_select != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"clearAddress\"></i></div>\n        </app-input>\n        <!-- 通讯地址 -->\n        <app-region v-if=\"init.applicant\" :provinces=\"init.applicant.province\" ref=\"address\" v-on:regionselect=\"address_selected\"></app-region>\n        <div class=\"am-list-item\">\n          <div class=\"am-list-label tar app-color-warn\">详细地址</div>\n          <div class=\"am-list-control\">\n            <input v-model.lazy.trim=\"assured.address\" type=\"text\" placeholder=\"请填写详细通讯地址\">\n          </div>\n          <div slot=\"icon\" v-show=\"assured.address != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.address = ''\"></i></div>\n        </div>\n        <!-- 通讯地址 -->\n      </div>\n    </div>\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"am-list-body\">\n        <app-input label=\"邮编\">\n          <input slot=\"input\" @change=\"checkZipcode\" maxlength=\"6\" v-model.lazy=\"assured.zipcode\" type=\"text\" placeholder=\"请填写被保险人邮编\">\n          <div slot=\"icon\" v-show=\"assured.zipcode != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.zipcode = ''\"></i></div>\n        </app-input>\n        <app-input label=\"手机号码(选填)\">\n          <input slot=\"input\" @change=\"checkPhone\" v-model.lazy=\"assured.tel\" type=\"text\" placeholder=\"请填写被保险人手机号码\">\n          <div slot=\"icon\" v-show=\"assured.tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.tel = ''\"></i></div>\n        </app-input>\n        <app-input label=\"工作单位(选填)\">\n          <input slot=\"input\" v-model.lazy.trim=\"assured.work_unit\" type=\"text\" placeholder=\"请填写被保险人工作单位\">\n          <div slot=\"icon\" v-show=\"assured.work_unit != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.work_unit = ''\"></i></div>\n        </app-input>\n        <app-input label=\"年收入(万元)\">\n          <input slot=\"input\" @change=\"assured.annual_earnings >= 1000000 ? ($toast.open('数值超出范围，请确认单位为万元','warn'),assured.annual_earnings=''):''\" v-model.number.lazy=\"assured.annual_earnings\" type=\"number\" placeholder=\"请填写年收入(万元)\">\n          <div slot=\"icon\" v-show=\"assured.annual_earnings != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.annual_earnings = ''\"></i></div>\n        </app-input>\n        <app-select label=\"收入来源\">\n          <select v-model.number=\"warranty.assu_annual_source\" v-if=\"init.assured\">\n            <option disabled value=\"0\">请选择收入来源</option>\n            <option v-for=\"item in init.assured.annual_source\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <div class=\"am-list-item\" v-show=\"warranty.assu_annual_source === 15457\">\n          <div class=\"am-list-label tar app-color-warn\">填写收入来源</div>\n          <div class=\"am-list-control\">\n            <input v-model.lazy=\"assured.annual_source_other\" type=\"text\" placeholder=\"请填写收入来源\">\n          </div>\n          <div v-show=\"assured.annual_source_other != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.annual_source_other = ''\"></i></div>\n        </div>\n        <app-input label=\"身高\">\n          <input slot=\"input\" v-model.lazy.number=\"assured.height\" type=\"number\" placeholder=\"请填写身高(cm)\">\n          <div slot=\"icon\" v-show=\"assured.height != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.height = ''\"></i></div>\n        </app-input>\n        <app-input label=\"体重\">\n          <input slot=\"input\" v-model.lazy.number=\"assured.weight\" type=\"number\" placeholder=\"请填写体重(Kg)\">\n          <div slot=\"icon\" v-show=\"assured.weight != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"assured.weight = ''\"></i></div>\n        </app-input>\n        <!-- 职业 -->\n        <app-input label=\"职业\" v-if=\"age > 15\">\n          <div slot=\"input\" @click=\"$refs.occupation.show = true\" placeholder=\"请点击选择职业\" :class=\"{pd:!assured.occupation}\">\n            {{assured.occupation}}\n          </div>\n          <div slot=\"icon\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"clearOccupation\"></i></div>\n        </app-input>\n        <app-input label=\"职业\" v-else>\n          <div slot=\"input\" :class=\"{pd:!assured.occupation}\">\n            {{assured.occupation}}\n          </div>\n        </app-input>\n        <app-occupation ref=\"occupation\"></app-occupation>\n        <!-- 职业 -->\n      </div>\n    </div>\n    <div class=\"am-tab am-fixed am-fixed-bottom app-navi\">\n      <router-link to=\"/insured\" class=\"am-tab-item\">上一步</router-link>\n      <router-link to=\"/prospectus\" class=\"am-tab-item selected\">下一步</router-link>\n    </div>\n  </section>\n</template>\n<script>\nimport Validator from '../widgets/IDValidator'\nimport Api from '../api'\n// 区域选择器\nimport Region from './Region'\nimport Occupation from './Occupation'\n\nexport default {\n  name: 'beinsured',\n  components: {\n    'app-region': Region,\n    'app-occupation': Occupation\n  },\n  data() {\n    return {\n      longTerm: false, //是否长期有效\n      cardinfo: {}, //身份证信息\n      age: '', //年龄\n      // 被保险人信息\n      assured: {\n        war_id: '', //\n        register_select: '', //户籍展示\n        address_select: '', //通信展示\n        name: '', //姓名\n        height: '', //身高(厘米)\n        weight: '', //体重(kg)\n        register: '', //户籍\n        annual_earnings: '', //年收入\n        annual_source_other: '', //其他收入来源\n        birthday: '', //出生日期\n        // 证件\n        document_type_val: '', //证件描述\n        document_number: '', //证件号码\n        document_term: '', //证件有效期\n        // 通信\n        address: '', //通信地址\n        province: '', //省\n        city: '', //市\n        district: '', //区\n        zipcode: '', //通信邮编\n        // 职业\n        occupation: '', //职业\n\n        work_unit: '', //工作单位\n        tel: '' //联系电话\n      },\n      // 保单信息\n      warranty: {\n        assu_sex: '11338', //性别\n        assu_card_type: 57, //证件类型\n        assu_nation: 63, //国籍\n        assu_annual_source: 0, //收入来源\n        assu_tax_type: '', //税收类型\n        assu_occupation_code: '' //职业代码\n      }\n    }\n  },\n  computed: {\n    init() {\n      return this.$store.state.init\n    }\n  },\n  created() {\n    if (this.assured.document_term === '9999-12-30') {\n      this.longTerm = true\n    }\n  },\n  watch: {\n    longTerm(val) {\n      this.assured.document_term = val ? '9999-12-30' : ''\n    },\n    age(val) {\n      if (val >= 0 && val <= 6) {\n        this.assured.occupation = '学龄前儿童'\n        this.warranty.assu_occupation_code = 9602\n      } else if (val > 6 && val <= 15) {\n        this.assured.occupation = '一般学生'\n        this.warranty.assu_occupation_code = 9601\n      } else {\n        this.assured.occupation = ''\n        this.warranty.assu_occupation_code = ''\n      }\n      if (val < 16) {\n        this.warranty.assu_tax_type = ''\n      }\n    }\n  },\n  methods: {\n    typeChange() {\n      this.assured.document_number = ''\n      this.assured.register = ''\n      this.assured.register_select = ''\n      this.warranty.assu_nation = this.warranty.assu_card_type === 58 || this.warranty.assu_card_type === 24001 ? 0 : 63\n    },\n    // 证件号码校验\n    checkID() {\n      this.IDValidate() && this.checkIDExist()\n    },\n    // 检查ID是否有效\n    IDValidate() {\n      const vm = this\n      const type = vm.warranty.assu_card_type\n      const id = vm.assured.document_number\n      var toast_text = null\n\n      switch (type) {\n        case 15008: // 户口簿\n        case 57: // 身份证\n          const addr = vm.$store.state.addr\n          vm.age = 0\n\n          if (Validator.isValid(id, 18)) {\n            const idInfo = Validator.getInfo(id)\n            const code = idInfo.addrCode.substr(0, 2)\n            const sex = { // 0为女，1为男\n              1: '11338',\n              0: '11339'\n            }\n            vm.assured.birthday = idInfo.birth\n            vm.warranty.assu_sex = sex[idInfo.sex]\n            vm.assured.register_select = addr[code].name\n            vm.assured.register = addr[code].if_id\n\n            const age = vm.getAge(vm.assured.birthday)\n            vm.age = age\n            if (age < 16) {\n              vm.assured.annual_earnings = 0 //小于16周岁默认为0，可修改\n              vm.warranty.assu_annual_source = 15457\n              vm.assured.annual_source_other = '无'\n            }\n          } else {\n            toast_text = '请输入正确的18位数证件号码'\n            vm.assured.register_select = ''\n            vm.assured.birthday = ''\n          }\n          break\n        case 58: // 护照\n          if (id.length <= 3) {\n            toast_text = '护照必须是大于3位'\n          }\n          break\n        case 59: // 军官证\n          if (id.length > 18 || id.length < 10) {\n            toast_text = '军官证必须是10-18位'\n          }\n          break\n        case 15009: //港澳\n          if (id.length <= 8) {\n            toast_text = '港澳居民来往内地通行证号码必须大于8位'\n          }\n          break\n        case 15010: //台湾\n          if (id.length < 8) {\n            toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'\n          }\n          break\n        case 24001: // 外国人身份证\n          if (id.length !== 15) {\n            toast_text = '外国人永久居留身份证位为15位'\n          } else if (!/^[a-z]{3}\\d{12}$/gi.test(id)) {\n            toast_text = '外国人永久居留身份证号码不正确'\n          }\n          break\n        default:\n          break\n      }\n      if (toast_text) {\n        vm.$toast.open(toast_text, '')\n        return false\n      }\n      vm.assured.document_number = id.toUpperCase()\n      return true\n    },\n    // 检查ID是否存在\n    checkIDExist() {\n      const vm = this\n      const id = vm.assured.document_number\n      Api.queryID(id, 'assured', res => {\n        if (res.name && res.name.indexOf('Error') > -1) {\n          vm.$toast.open('服务器开小差了', 'error')\n          return\n        }\n        // 不存在 assu_id\n        if (!res.assu_id) {\n          vm.assured.assu_id && vm.$delete(vm.assured, 'assu_id')\n          return false\n        }\n        vm.cardinfo = res\n        vm.$set(vm.assured, 'assu_id', res.assu_id)\n        vm.setInfo()\n      })\n    },\n    setInfo() {\n      var vm = this\n      var res = vm.cardinfo\n\n      if (vm.assured.birthday) {\n        vm.age = Api.getAge(vm.assured.birthday)\n      }\n\n      // 是否同人\n      if (vm.assured.name !== res.name || vm.assured.document_number !== res.document_number || vm.assured.birthday !== res.birthday) {\n        return\n      }\n      var assured = {}\n\n      assured.name = res.name\n      assured.annual_earnings = Number(res.annual_earnings)\n      assured.document_term = res.document_term\n      assured.height = res.height\n      assured.weight = res.weight\n      assured.register = res.register\n      assured.tel = res.tel\n      assured.work_unit = res.work_unit\n      assured.zipcode = res.zipcode\n      if (res.document_term === '9999-12-30') vm.longTerm = true\n      vm.assured = Object.assign(vm.assured, assured)\n    },\n    // 户籍选择\n    register_selected(selected) {\n      var toast_text = null\n      if (selected.length === 0 || !selected[0]) {\n        toast_text = '请先选择户籍'\n      }\n      this.local && console.info(selected)\n      if (this.warranty.assu_card_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {\n        toast_text = '证件类型为港澳居民来往内地通行证时，户籍必须是香港或澳门'\n      } else if (this.warranty.assu_card_type === 15010 && selected[0].if_id !== '3453') {\n        toast_text = '证件类型为台湾居民来往大陆通行证时，户籍必须是台湾'\n      } else if ([57, 59, 15008].indexOf(this.warranty.assu_card_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {\n        toast_text = '证件类型为身份证、户口簿或军官证时，户籍不能是香港、澳门或台湾'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, '', 3000)\n        this.$nextTick(() => {\n          this.$refs.register.clear()\n        })\n        return false\n      }\n\n      this.local && console.info(selected)\n      this.$set(this.assured, 'register', selected[0].if_id)\n      this.$set(this.assured, 'register_select', selected[0].explain)\n    },\n    // 清除户籍\n    clearRegister() {\n      this.assured.register = ''\n      this.assured.register_select = ''\n      this.$refs.register.clear()\n    },\n    // 通讯地址选择\n    address_selected(selected) {\n      if (selected.length === 0 || !selected[0]) {\n        this.$toast.open('请先选择通讯地址', 'warn')\n        return false\n      }\n      this.local && console.info(selected)\n      var vm = this\n      var select_show = selected[0].explain\n      vm.$set(vm.assured, 'province', selected[0].if_id)\n      if (selected[1]) {\n        select_show += selected[1].explain\n        vm.$set(vm.assured, 'city', selected[1].if_id)\n      }\n      if (selected[2]) {\n        select_show += selected[2].explain\n        vm.$set(vm.assured, 'district', selected[2].if_id)\n        Api.queryZipcode(selected[2].code, response => {\n          if (!response) {\n            Api.queryZipcode(selected[1].code, response => {\n              if (!response) return\n              vm.$set(vm.assured, 'zipcode', response)\n            })\n            return\n          }\n          vm.assured.zipcode = response\n        })\n      }\n      vm.$set(vm.assured, 'address_select', select_show)\n    },\n    // 清除通讯地址\n    clearAddress() {\n      this.assured.province = ''\n      this.assured.city = ''\n      this.assured.district = ''\n      this.assured.address_select = ''\n      this.$refs.address.clear()\n    },\n    // 邮编校验\n    checkZipcode() {\n      var zipcode = this.assured.zipcode\n      var toast_text = null\n      if (!zipcode) {\n        toast_text = '邮编不能为空'\n      } else if (!/^[0-9]{6}$/.test(zipcode)) {\n        toast_text = '请输入6位数字邮编'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, 'warn')\n        return false\n      }\n      return true\n    },\n    // 手机校验\n    checkPhone() {\n      const tel = this.assured.tel\n      var toast_text = null\n      if (this.warranty.assu_card_type === 15009 && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {\n        toast_text = '请输入正确的11位或13位手机号'\n      } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {\n        toast_text = '请输入正确的11位手机号'\n      }\n      if (toast_text) {\n        this.$toast.open(toast_text, 'warn')\n        return false\n      }\n      return true\n    },\n    // 设置职业\n    setOccupation(selected) {\n      this.local && console.log(selected)\n      this.assured.occupation = selected.explain\n      this.warranty.assu_occupation_code = selected.if_id\n    },\n    // 清除职业\n    clearOccupation() {\n      this.assured.occupation = ''\n      this.warranty.assu_occupation_code = ''\n      this.$refs.occupation.show = true\n    },\n    // 校验表单\n    checkForm() {\n      const vm = this\n      var toast_text = null\n      if (!vm.assured.name) {\n        toast_text = '请填写被保险人【姓名】'\n      } else if (!vm.IDValidate()) {\n        toast_text = '请填写被保险人【证件号码】'\n      } else if (vm.longTerm === false && (!vm.assured.document_term || vm.assured.document_term === '0000-00-00')) {\n        toast_text = '请填写被保险人【证件有效期】'\n      } else if (!vm.assured.birthday) {\n        toast_text = '请选择被保险人【出生日期】'\n      } else if (!vm.warranty.assu_tax_type && vm.age >= 16) {\n        toast_text = '请选择被保险人个人税收居民身份类型'\n      } else if (!vm.warranty.assu_nation) {\n        toast_text = '请选择被保险人【国籍】'\n      } else if (!vm.assured.register && vm.warranty.assu_card_type !== 58 && vm.warranty.assu_card_type !== 24001) {\n        toast_text = '请选择被保险人【户籍】'\n      } else if (!vm.assured.province) {\n        toast_text = '请选择被保险人【通讯地址省份】'\n      } else if (!vm.assured.city && vm.assured.province !== '3877') {\n        toast_text = '请选择被保险人【通讯地址市区】'\n      } else if (!vm.assured.district && vm.assured.province !== '3877') {\n        toast_text = '请选择被保险人【通讯地址县/区】'\n      } else if (!vm.assured.address) {\n        toast_text = '请填写被保险人【详细地址】'\n      } else if (!this.checkZipcode()) {\n        return false\n      } else if (!vm.assured.annual_earnings && vm.assured.annual_earnings !== 0) {\n        toast_text = '请填写被保险人【年收入】'\n      } else if (!vm.warranty.assu_annual_source) {\n        toast_text = '请选择被保险人【收入来源】'\n      } else if (vm.warranty.assu_annual_source === 15457 && !vm.assured.annual_source_other) {\n        toast_text = '请填写投保人【收入来源】'\n      } else if (!vm.assured.height) {\n        toast_text = '请填写被保险人【身高】'\n      } else if (!vm.assured.weight) {\n        toast_text = '请填写被保险人【体重】'\n      } else if (!vm.warranty.assu_occupation_code) {\n        toast_text = '请填写被保险人【职业】'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, '')\n        return false\n      }\n      return this.IDValidate()\n    }\n  },\n  beforeRouteLeave(to, from, next) {\n    if (to.path === '/insured') {\n      next()\n      return false\n    }\n    if (!this.checkForm()) {\n      return false\n    }\n    this.$store.commit('saveAssured', this.assured)\n    this.$store.commit('setWarranty', this.warranty)\n    next()\n  }\n}\n</script>\n",
 			"file": "src/components/Beinsured.vue",
+			"file_size": 23907,
+			"file_write_time": 131432971079347195,
 			"settings":
 			{
-				"buffer_size": 21902,
+				"buffer_size": 21962,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -595,25 +598,20 @@
 			"file": "src/components/Beneficiary.vue",
 			"settings":
 			{
-				"buffer_size": 20061,
+				"buffer_size": 20179,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "<template>\n  <section id=\"Insured\">\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"app-list-header\"><span class=\"app-iconfont\">&#xe631;</span>投保人信息</div>\n      <div class=\"am-list-body\">\n        <app-input label=\"姓名\">\n          <input slot=\"input\" v-model.lazy.trim=\"applicant.name\" type=\"text\" placeholder=\"请填写投保人姓名\" @change=\"setInfo\">\n          <div slot=\"icon\" v-show=\"applicant.name != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.name = ''\"></i></div>\n        </app-input>\n        <app-select label=\"证件类型\">\n          <select v-model.number=\"warranty.appl_card_type\" v-if=\"init.applicant\" @change=\"typeChange\">\n            <option disabled>请选择证件类型</option>\n            <option v-for=\"item in init.applicant.document_type\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"证件号码\">\n          <input slot=\"input\" v-model.lazy=\"applicant.document_number\" type=\"text\" placeholder=\"请填写投保人证件号码\" class=\"uppercase\">\n          <div slot=\"icon\" v-show=\"applicant.document_number != ''\" class=\"am-list-clear\" @click=\"applicant.document_number = ''\"><i class=\"am-icon-clear am-icon\"></i></div>\n        </app-input>\n        <app-input label=\"证件有效期\">\n          <div class=\"am-ft-right\" slot=\"input\">\n            <span>长期有效&nbsp;&nbsp;</span>\n          </div>\n          <div class=\"am-switch\" slot=\"icon\">\n            <input type=\"checkbox\" class=\"am-switch-checkbox\" id=\"longTerm\" v-model=\"longTerm\">\n            <label class=\"am-switch-label\" for=\"longTerm\">\n              <div class=\"am-switch-inner\"></div>\n              <div class=\"am-switch-switch\"></div>\n            </label>\n          </div>\n        </app-input>\n        <div class=\"am-list-item\" v-show=\"!longTerm\">\n          <div class=\"am-list-label tar app-color-warn\">有效日期</div>\n          <div class=\"am-list-control\">\n            <input :class=\"{'has': applicant.document_term != ''}\" :readonly=\"longTerm\" v-model=\"applicant.document_term\" type=\"date\" placeholder=\"请填写证件有效期\">\n          </div>\n          <div v-show=\"applicant.document_term\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.document_term = ''\"></i></div>\n        </div>\n        <app-input label=\"性别\">\n          <div class=\"am-ft-right\" slot=\"input\">\n            <div class=\"am-switch am-sex\">\n              <input type=\"checkbox\" @change=\"setInfo\" class=\"am-switch-checkbox\" for=\"sex\" :disabled=\"warranty.appl_card_type === 57 || warranty.appl_card_type === 15008\" v-model=\"warranty.appl_sex\" :true-value=\"11338\" :false-value=\"11339\">\n              <label class=\"am-switch-label\" for=\"sex\">\n                <div class=\"am-switch-inner\"></div>\n                <div class=\"am-switch-switch\"></div>\n              </label>\n            </div>\n          </div>\n        </app-input>\n        <!-- 证件为身份证和户口本 性别和 出生日期 不允许修改 -->\n        <app-input label=\"出生日期\">\n          <input slot=\"input\" @change=\"setInfo\" :class=\"{'has': applicant.birthday != ''}\" :readonly=\"warranty.appl_card_type === 57 || warranty.appl_card_type === 15008\" v-model=\"applicant.birthday\" type=\"date\" placeholder=\"请填写投保人出生日期\">\n          <div slot=\"icon\" v-if=\"warranty.appl_card_type !== 57 && warranty.appl_card_type !== 15008\" v-show=\"applicant.birthday\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.birthday = ''\"></i></div>\n        </app-input>\n      </div>\n    </div>\n    <div class=\"am-list\" v-if=\"getAge(applicant.birthday) >= 16\">\n      <div class=\"am-list-header\">请选择个人税收居民身份类型</div>\n      <div class=\"am-list-body\">\n        <label class=\"am-list-item checkbox\" v-for=\"item in init.beneficiary.tax_type\">\n          <div class=\"am-checkbox app-checkbox\">\n            <input type=\"radio\" :value=\"item.if_id\" v-model=\"warranty.appl_tax_type\">\n            <span class=\"icon-check\"></span>\n          </div>\n          <div class=\"am-list-content\">{{item.explain}}</div>\n        </label>\n      </div>\n    </div>\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"am-list-body\">\n        <!-- 证件为护照时 可以修改国籍 -->\n        <app-select label=\"国籍\" v-if=\"warranty.appl_card_type === 58 || warranty.appl_card_type === 24001\">\n          <select v-model.number=\"warranty.appl_nation\" v-if=\"init.applicant\">\n            <option disabled value=\"0\">请选择国籍</option>\n            <option v-if=\"item.if_id !== '63'\" v-for=\"item in init.applicant.nationality\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"国籍\" v-else>\n          <div slot=\"input\">中国</div>\n        </app-input>\n        <app-input label=\"户籍\" v-if=\"warranty.appl_card_type !== 58 && warranty.appl_card_type !== 24001\">\n          <input slot=\"input\" readonly @click=\"clearRegister\" v-model=\"applicant.register_select\" type=\"text\" placeholder=\"请选择投保人户籍\">\n          <div slot=\"icon\" v-show=\"applicant.register_select != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"clearRegister\"></i></div>\n        </app-input>\n        <!-- 户籍 -->\n        <app-region v-if=\"init.applicant && warranty.appl_card_type !== 58 && warranty.appl_card_type !== 24001\" :provinces=\"init.applicant.province\" v-on:regionselect=\"register_selected\" ref=\"register\" :level=\"1\"></app-region>\n        <!-- 户籍 -->\n        <app-input label=\"通讯地址\">\n          <div slot=\"input\" @click=\"clearAddress\" placeholder=\"请点击进行选择\" :class=\"{pd:!applicant.address_select}\">\n            {{applicant.address_select}}\n          </div>\n          <div slot=\"icon\" v-show=\"applicant.address_select != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"clearAddress\"></i></div>\n        </app-input>\n        <!-- 通讯地址 -->\n        <app-region v-if=\"init.applicant\" :provinces=\"init.applicant.province\" v-on:regionselect=\"address_selected\" ref=\"address\"></app-region>\n        <!-- 通讯地址 -->\n        <div class=\"am-list-item\">\n          <div class=\"am-list-label tar app-color-warn\">详细地址</div>\n          <div class=\"am-list-control\">\n            <input v-model.lazy.trim=\"applicant.address\" type=\"text\" placeholder=\"请填写详细通讯地址\">\n          </div>\n          <div slot=\"icon\" v-show=\"applicant.address != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.address = ''\"></i></div>\n        </div>\n      </div>\n    </div>\n    <div class=\"am-list am-list-6lb form\">\n      <div class=\"am-list-body\">\n        <app-input label=\"邮编\">\n          <input slot=\"input\" @change=\"checkZipcode\" maxlength=\"6\" v-model.lazy=\"applicant.zipcode\" type=\"text\" placeholder=\"请填写投保人邮编\">\n          <div slot=\"icon\" v-show=\"applicant.zipcode != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.zipcode = ''\"></i></div>\n        </app-input>\n        <app-input label=\"手机号码\">\n          <input slot=\"input\" @change=\"checkPhone\" v-model.lazy=\"applicant.tel\" type=\"text\" placeholder=\"请填写投保人手机号码\">\n          <div slot=\"icon\" v-show=\"applicant.tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.tel = ''\"></i></div>\n        </app-input>\n        <app-input label=\"固定电话(选填)\">\n          <input slot=\"input\" @change=\"checkTel\" v-model.lazy.trim=\"applicant.visit_tel\" type=\"text\" placeholder=\"请填写投保人固定电话\">\n          <div slot=\"icon\" v-show=\"applicant.visit_tel != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.visit_tel = ''\"></i></div>\n        </app-input>\n        <app-input label=\"工作单位(选填)\">\n          <input slot=\"input\" v-model.lazy.trim=\"applicant.work_unit\" type=\"text\" placeholder=\"请填写投保人工作单位\">\n          <div slot=\"icon\" v-show=\"applicant.work_unit != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.work_unit = ''\"></i></div>\n        </app-input>\n        <app-input label=\"年收入(万元)\">\n          <input slot=\"input\" @change=\"applicant.annual_earnings >= 1000000 ? ($toast.open('数值超出范围，请确认单位为万元','warn'),applicant.annual_earnings=''):''\" v-model.number.lazy=\"applicant.annual_earnings\" type=\"number\" placeholder=\"请填写年收入(万元)\">\n          <div slot=\"icon\" v-show=\"applicant.annual_earnings != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.annual_earnings = ''\"></i></div>\n        </app-input>\n        <app-select label=\"收入来源\">\n          <select v-model.number=\"warranty.appl_annual_source\" v-if=\"init.applicant\">\n            <option disabled value=\"0\">请选择收入来源</option>\n            <option v-for=\"item in init.applicant.annual_source\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"\" v-show=\"warranty.appl_annual_source === 15457\">\n          <input slot=\"input\" v-model.lazy=\"applicant.annual_source_other\" type=\"text\" placeholder=\"请填写收入来源\">\n          <div slot=\"icon\" v-show=\"applicant.annual_source_other != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.annual_source_other = ''\"></i></div>\n        </app-input>\n        <app-input label=\"身高\">\n          <input slot=\"input\" v-model.number.lazy=\"applicant.height\" type=\"number\" placeholder=\"请填写身高(cm)\">\n          <div slot=\"icon\" v-show=\"applicant.height != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.height = ''\"></i></div>\n        </app-input>\n        <app-input label=\"体重\">\n          <input slot=\"input\" v-model.number.lazy=\"applicant.weight\" type=\"number\" placeholder=\"请填写体重(Kg)\">\n          <div slot=\"icon\" v-show=\"applicant.weight != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"applicant.weight = ''\"></i></div>\n        </app-input>\n        <app-select label=\"是被保险人的\">\n          <select v-model.number=\"warranty.is_assured\" v-if=\"init.warranty\">\n            <option disabled>请选择</option>\n            <option v-for=\"item in init.warranty.is_assured\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"\" v-show=\"warranty.is_assured === 15017\">\n          <input slot=\"input\" v-model=\"warranty.is_assured_val\" type=\"text\" placeholder=\"请填写是被保险人的\">\n          <div slot=\"icon\" @click=\"warranty.is_assured_val = ''\" v-show=\"warranty.is_assured_val != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\"></i></div>\n        </app-input>\n        <app-input label=\"职业\">\n          <div slot=\"input\" @click=\"$refs.occupation.show = true\" placeholder=\"请点击选择职业\" :class=\"{pd:!applicant.occupation}\">\n            {{applicant.occupation}}\n          </div>\n          <div slot=\"icon\" v-show=\"applicant.occupation\" @click=\"clearOccupation\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\"></i></div>\n        </app-input>\n        <!-- 职业 -->\n        <app-occupation ref=\"occupation\"></app-occupation>\n        <!-- 职业 -->\n        <app-select label=\"合同争议处理方式\">\n          <select v-model=\"warranty.contract_handle\" v-if=\"init.warranty\">\n            <option disabled>请选择</option>\n            <option v-for=\"item in init.warranty.contract_handle\" :value=\"item.if_id\">{{item.explain}}</option>\n          </select>\n        </app-select>\n        <app-input label=\"仲裁委员会\" v-show=\"warranty.contract_handle === '109'\">\n          <input slot=\"input\" v-model.lazy=\"warranty.contract_handle_value\" type=\"text\" placeholder=\"请填写仲裁委员会名称\">\n          <div slot=\"icon\" v-show=\"warranty.contract_handle_value != ''\" class=\"am-list-clear\"><i class=\"am-icon-clear am-icon\" @click=\"warranty.contract_handle_value = ''\"></i></div>\n        </app-input>\n      </div>\n    </div>\n    <div class=\"am-tab am-fixed am-fixed-bottom app-navi\">\n      <router-link to=\"/\" class=\"am-tab-item\">上一步</router-link>\n      <a @click=\"next\" class=\"am-tab-item selected\">下一步</a>\n    </div>\n  </section>\n</template>\n<script>\nimport Validator from '../widgets/IDValidator'\nimport Api from '../api'\n// 区域选择器\nimport Region from './Region'\nimport Occupation from './Occupation'\n\nexport default {\n  name: 'Insured',\n  components: {\n    'app-region': Region,\n    'app-occupation': Occupation\n  },\n  data() {\n    return {\n      longTerm: false, //是否长期有效\n      cardinfo: {}, //身份证信息\n      // 投保人信息\n      applicant: {\n        register_select: '', //户籍展示\n        address_select: '', //通信展示\n        name: '', //姓名\n        height: '', //身高(厘米)\n        weight: '', //体重(kg)\n        register: '', //户籍\n        annual_earnings: '', //年收入\n        // annual_source: 0, //收入来源\n        annual_source_other: '', //其他收入来源\n        birthday: '', //出生日期\n        // 证件\n        // document_type: '1', //证件类型\n        document_type_val: '', //证件描述\n        document_number: '', //证件号码\n        document_term: '', //证件有效期\n        // 通信\n        address: '', //通信地址\n        province: '', //省\n        city: '', //市\n        district: '', //区\n        zipcode: '', //通信邮编\n        // 职业\n        occupation: '', //职业\n\n        work_unit: '', //工作单位\n        visit_tel: '', //回访电话\n        tel: '' //联系电话\n      },\n      assured: {\n        war_id: ''\n      },\n      // 保单信息\n      warranty: {\n        appl_sex: '11338', //性别\n        appl_card_type: 57, //证件类型\n        appl_nation: 63, //国籍\n        appl_annual_source: 0, //收入来源\n        appl_occupation_code: '', //职业代码\n        appl_tax_type: '', //税收类型\n\n        is_assured: 15000, //是被保险人的\n        is_assured_val: '', //是被保险人值\n\n        contract_handle: '108', //合同争议处理方式\n        contract_handle_value: '' //填写仲裁委员会名称\n      }\n    }\n  },\n  computed: {\n    init() {\n      return this.$store.state.init || {}\n    }\n  },\n  watch: {\n    longTerm(val) {\n      this.applicant.document_term = val ? '9999-12-30' : ''\n    }\n  },\n  created() {\n/*    if (this.applicant.document_term === '9999-12-30') {\n      this.longTerm = true\n    }\n    if (this.applicant.document_number) {\n      this.checkID()\n    }*/\n    this.$watch('applicant.document_number', val => {\n      this.IDValidate() && this.checkIDExist()\n    })\n  },\n  methods: {\n    typeChange() {\n      this.applicant.document_number = ''\n      this.applicant.register_select = ''\n      this.applicant.register = ''\n      this.warranty.appl_nation = this.warranty.appl_card_type === 58 || this.warranty.appl_card_type === 24001 ? 0 : 63\n    },\n    // 检查ID是否有效\n    IDValidate() {\n      const vm = this\n      const type = vm.warranty.appl_card_type\n      const id = vm.applicant.document_number\n      var toast_text = null\n\n      switch (type) {\n        case 15008: // 户口簿\n        case 57: // 身份证\n\n          const addr = this.$store.state.addr\n\n          if (Validator.isValid(id, 18)) {\n            const idInfo = Validator.getInfo(id)\n            const code = idInfo.addrCode.substr(0, 2)\n            const sex = { // 0为女，1为男\n              1: '11338',\n              0: '11339'\n            }\n            vm.applicant.birthday = idInfo.birth\n            vm.warranty.appl_sex = sex[idInfo.sex]\n\n            vm.applicant.register_select || (vm.applicant.register_select = addr[code].name)\n            vm.applicant.register || (vm.applicant.register = addr[code].if_id)\n\n            // return this.checkAge()\n          } else {\n            toast_text = '请输入正确的18位数证件号码'\n            vm.applicant.register_select = ''\n            vm.applicant.register = ''\n            vm.applicant.birthday = ''\n          }\n          break\n        case 58: // 护照\n          if (id.length <= 3) {\n            toast_text = '护照必须是大于3位'\n          }\n          break\n        case 59: // 军官证\n          if (id.length > 18 || id.length < 10) {\n            toast_text = '军官证必须是10-18位'\n          }\n          break\n        case 15009: //港澳\n          if (id.length <= 8) {\n            toast_text = '港澳居民来往内地通行证号码必须大于8位'\n          }\n          break\n        case 15010: //台湾\n          if (id.length < 8) {\n            toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'\n          }\n          break\n        case 24001: // 外国人身份证\n          if (id.length !== 15) {\n            toast_text = '外国人永久居留身份证位为15位'\n          } else if (!/^[a-z]{3}\\d{12}$/gi.test(id)) {\n            toast_text = '外国人永久居留身份证号码不正确'\n          }\n          break\n        default:\n          break\n      }\n      if (toast_text) {\n        vm.$toast.open(toast_text, '')\n        return false\n      }\n      vm.applicant.document_number = id.toUpperCase()\n      return true\n    },\n    // 检查ID是否存在\n    checkIDExist() {\n      const vm = this\n      const id = vm.applicant.document_number\n      Api.queryID(id, 'applicant', res => {\n        if (res.name && res.name.indexOf('Error') > -1) {\n          vm.$toast.open('服务器开小差了', 'error')\n          return\n        }\n\n        // 不存在 appl_id\n        if (!res.appl_id && vm.applicant.appl_id) {\n          vm.$delete(vm.applicant, 'appl_id')\n          vm.cardinfo = {}\n          return false\n        }\n        vm.cardinfo = res\n        vm.$set(vm.applicant, 'appl_id', res.appl_id)\n        vm.setInfo()\n      })\n    },\n    setInfo() {\n      var vm = this\n      var res = vm.cardinfo\n\n      // 是否同人\n      if (vm.applicant.name !== res.name || vm.applicant.document_number !== res.document_number || vm.applicant.birthday !== res.birthday) {\n        return\n      }\n      var applicant = {}\n\n      applicant.annual_earnings = Number(res.annual_earnings)\n      applicant.document_term = res.document_term\n      applicant.height = res.height\n      applicant.weight = res.weight\n      applicant.name = res.name\n      applicant.register = res.register\n      applicant.tel = res.tel\n      applicant.visit_tel = res.visit_tel\n      applicant.work_unit = res.work_unit\n      applicant.zipcode = res.zipcode\n      if (res.document_term === '9999-12-30') vm.longTerm = true\n      vm.applicant = Object.assign(vm.applicant, applicant)\n    },\n    // 年龄验证\n    checkAge() {\n      const age = this.getAge(this.applicant.birthday)\n      if (age <= 16) {\n        this.$toast.open('投保人年龄不符合规定，请更换投保人', 'error')\n        return false\n      }\n      if (age < 16) {\n        this.warranty.appl_tax_type = ''\n      }\n      return true\n    },\n    // 户籍选择\n    register_selected(selected) {\n      var toast_text = null\n      if (selected.length === 0 || !selected[0]) {\n        toast_text = '请先选择户籍'\n      }\n      this.local && console.info(selected)\n      if (this.warranty.appl_card_type === 15009 && ['3844', '3866'].indexOf(selected[0].if_id) === -1) {\n        toast_text = '证件类型为港澳居民来往内地通行证时，户籍必须是香港或澳门'\n      } else if (this.warranty.appl_card_type === 15010 && selected[0].if_id !== '3453') {\n        toast_text = '证件类型为台湾居民来往大陆通行证时，户籍必须是台湾'\n      } else if ([57, 59, 15008].indexOf(this.warranty.appl_card_type) > -1 && ['3453', '3844', '3866'].indexOf(selected[0].if_id) > -1) {\n        toast_text = '证件类型为身份证、户口簿或军官证时，户籍不能是香港、澳门或台湾'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, '', 3000)\n        this.$nextTick(() => {\n          this.$refs.register.clear()\n        })\n        return false\n      }\n      this.$set(this.applicant, 'register', selected[0].if_id)\n      this.$set(this.applicant, 'register_select', selected[0].explain)\n    },\n    // 清除户籍\n    clearRegister() {\n      this.applicant.register = ''\n      this.applicant.register_select = ''\n      this.$refs.register.clear()\n    },\n    // 通讯地址选择\n    address_selected(selected) {\n      if (selected.length === 0 || !selected[0]) {\n        this.$toast.open('请先选择通讯地址', 'warn')\n        return false\n      }\n      this.local && console.info(selected)\n      var vm = this\n      var select_show = ''\n      select_show += selected[0].explain\n      vm.$set(vm.applicant, 'province', selected[0].if_id)\n      if (selected[1]) {\n        select_show += selected[1].explain\n        vm.$set(vm.applicant, 'city', selected[1].if_id)\n      }\n      if (selected[2]) {\n        select_show += selected[2].explain\n        vm.$set(vm.applicant, 'district', selected[2].if_id)\n        Api.queryZipcode(selected[2].code, response => {\n          if (!response) {\n            Api.queryZipcode(selected[1].code, response => {\n              if (!response) return\n              vm.$set(vm.applicant, 'zipcode', response)\n            })\n            return\n          }\n          vm.applicant.zipcode = response\n        })\n      }\n      vm.$set(vm.applicant, 'address_select', select_show)\n    },\n    // 清除通讯地址\n    clearAddress() {\n      this.applicant.province = ''\n      this.applicant.city = ''\n      this.applicant.district = ''\n      this.applicant.address_select = ''\n      this.$refs.address.clear()\n    },\n    // 邮编校验\n    checkZipcode() {\n      var zipcode = this.applicant.zipcode\n      var toast_text = null\n      if (!zipcode) {\n        toast_text = '邮编不能为空'\n      } else if (!/^[0-9]{6}$/.test(zipcode)) {\n        toast_text = '请输入6位数字邮编'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, 'warn')\n        return false\n      }\n      return true\n    },\n    // 手机校验\n    checkPhone() {\n      const tel = this.applicant.tel\n      var toast_text = null\n      if (!tel) {\n        toast_text = '手机号不能为空'\n      } else if (this.warranty.appl_card_type === 15009) {\n        if (!/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {\n          toast_text = '请输入正确的11位或13位手机号'\n        }\n      } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {\n        toast_text = '请输入正确的11位手机号'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, 'warn')\n        return false\n      }\n      return true\n    },\n    // 电话校验\n    checkTel() {\n      if (!/^0\\d{10,11}$/.test(this.applicant.visit_tel)) {\n        this.$toast.open('电话以0开头,格式为区号+号码,如:01012345678', '')\n      }\n    },\n    // 设置职业\n    setOccupation(selected) {\n      this.warranty.appl_occupation_code = selected.if_id\n      this.applicant.occupation = selected.explain\n    },\n    // 清除职业\n    clearOccupation() {\n      this.warranty.appl_occupation_code = ''\n      this.applicant.occupation = ''\n      this.$refs.occupation.show = true\n    },\n    // 校验表单\n    checkForm() {\n      const vm = this\n      var toast_text = null\n      if (!vm.applicant.name) {\n        toast_text = '请填写投保人【姓名】'\n      } else if (!vm.IDValidate()) {\n        return false\n      } else if (vm.longTerm === false && (!vm.applicant.document_term || vm.applicant.document_term === '0000-00-00')) {\n        toast_text = '请填写投保人【证件有效期】'\n      } else if (!vm.applicant.birthday) {\n        toast_text = '请选择投保人【出生日期】'\n      } else if (!this.checkAge()) {\n        return false\n      } else if (!vm.warranty.appl_tax_type && vm.getAge(vm.applicant.birthday) >= 16) {\n        toast_text = '请选择投保人个人税收居民身份类型'\n      } else if (!vm.warranty.appl_nation) {\n        toast_text = '请选择投保人【国籍】'\n      } else if (!vm.applicant.register && vm.warranty.appl_card_type !== 58 && this.warranty.appl_card_type !== 24001) {\n        toast_text = '请选择投保人【户籍】'\n      } else if (!vm.applicant.province) {\n        toast_text = '请选择投保人【通讯地址省份】'\n      } else if (!vm.applicant.city && vm.applicant.province !== '3877') {\n        toast_text = '请选择投保人【通讯地址市区】'\n      } else if (!vm.applicant.district && vm.applicant.province !== '3877') {\n        toast_text = '请选择投保人【通讯地址县/区】'\n      } else if (!vm.applicant.address) {\n        toast_text = '请填写投保人【详细地址】'\n      } else if (!this.checkZipcode()) {\n        return false\n      } else if (!this.checkPhone()) {\n        return false\n      } else if (!vm.applicant.annual_earnings && vm.assured.annual_earnings !== 0) {\n        toast_text = '请填写投保人【年收入】'\n      } else if (!vm.warranty.appl_annual_source) {\n        toast_text = '请选择投保人【收入来源】'\n      } else if (vm.warranty.appl_annual_source === 15457 && !vm.applicant.annual_source_other) {\n        toast_text = '请填写投保人【收入来源】'\n      } else if (!vm.applicant.height) {\n        toast_text = '请填写投保人【身高】'\n      } else if (!vm.applicant.weight) {\n        toast_text = '请填写投保人【体重】'\n      } else if (!vm.warranty.is_assured) {\n        toast_text = '请选择投保人【是投保人的】'\n      } else if (!vm.warranty.appl_occupation_code) {\n        toast_text = '请选择投保人【职业】'\n      } else if (!vm.warranty.contract_handle) {\n        toast_text = '请选择【合同争议处理方式】'\n      } else if (vm.warranty.contract_handle === '109' && !vm.warranty.contract_handle_value) {\n        toast_text = '请填写【仲裁委员会】'\n      }\n      if (toast_text) {\n        console.info(toast_text)\n        this.$toast.open(toast_text, '')\n        return false\n      }\n      return true\n    },\n    next() {\n      if (!this.checkForm()) {\n        return false\n      }\n      this.$toast.close()\n\n      // 如果被保险人是本人\n      if (this.warranty.is_assured === 15000) {\n        var assured = Api.obj2json(this.applicant)\n        this.warranty.assu_card_type = this.warranty.appl_card_type\n        this.warranty.assu_nation = this.warranty.appl_nation\n        this.warranty.assu_annual_source = this.warranty.appl_annual_source\n        this.warranty.assu_occupation_code = this.warranty.appl_occupation_code\n        this.warranty.assu_tax_type = this.warranty.appl_tax_type\n        this.warranty.assu_sex = this.warranty.appl_sex\n        this.assured = Object.assign(this.assured, assured)\n        this.$store.dispatch('setApplicant', this.applicant)\n        this.$store.dispatch('setWarranty', this.warranty)\n\n        Api.queryID(this.applicant.document_number, 'assured', res => {\n          if (res && res.assu_id) {\n            this.assured.assu_id = res.assu_id\n          } else {\n            this.$delete(this.assured, 'assu_id')\n          }\n          this.$delete(this.assured, 'appl_id')\n          this.$store.dispatch('saveAssured', this.assured)\n          this.$router.push('/prospectus')\n        })\n      } else {\n        this.$store.commit('setApplicant', this.applicant)\n        this.$store.commit('setWarranty', this.warranty)\n        this.$router.push('/beinsured')\n      }\n    }\n  }\n}\n</script>\n<style>\ninput[type=\"date\"]:before,\ninput[type=\"month\"]:before {\n  color: #999;\n  content: attr(placeholder);\n}\n\ninput[type=\"date\"].has:before,\ninput[type=\"month\"].has:before {\n  content: \"\" !important;\n}\n\n.pd:before {\n  color: #999;\n  content: attr(placeholder);\n}\n\n.pd {\n  -webkit-user-select: none;\n}\n</style>\n",
 			"file": "src/components/Insured.vue",
+			"file_size": 27901,
+			"file_write_time": 131432986380564852,
 			"settings":
 			{
-				"buffer_size": 25614,
+				"buffer_size": 25775,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "330302200411237152",
-			"settings":
-			{
-				"buffer_size": 18,
 				"line_ending": "Unix"
 			}
 		},
@@ -639,7 +637,7 @@
 			"file": "src/api/index.js",
 			"settings":
 			{
-				"buffer_size": 6024,
+				"buffer_size": 6025,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -782,7 +780,6 @@
 	[
 		"/E/programs/vuejs/XT_ins",
 		"/E/programs/vuejs/XT_ins/dist",
-		"/E/programs/vuejs/XT_ins/dist/XT_ins",
 		"/E/programs/vuejs/XT_ins/src",
 		"/E/programs/vuejs/XT_ins/src/api",
 		"/E/programs/vuejs/XT_ins/src/assets",
@@ -986,6 +983,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"checkID",
+			"IDValidate",
+			"appl_tax_type",
+			"age",
+			"appl_tax_type",
+			"applicant",
 			"age",
 			"assu_occupation_code",
 			"age",
@@ -1107,13 +1110,7 @@
 			"social_security",
 			" = []",
 			"code",
-			"register",
-			"assu_id",
-			"getAge",
-			"document_type",
-			"annual_source",
-			"applicant.nationality",
-			"application.nationality"
+			"register"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1244,7 +1241,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1253,15 +1250,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 21902,
+						"buffer_size": 21962,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12394,
-								12394
+								19478,
+								19478
 							]
 						],
 						"settings":
@@ -1273,8 +1270,8 @@
 								{
 									"1":
 									[
-										14555,
-										14556
+										19511,
+										19512
 									]
 								},
 								"icon":
@@ -1289,8 +1286,8 @@
 								{
 									"1":
 									[
-										12393,
-										12394
+										19356,
+										19357
 									]
 								},
 								"unmatched":
@@ -1299,41 +1296,26 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -1344,6 +1326,16 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -1353,11 +1345,18 @@
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
-								"bh_tag_content"
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"history_list_is_closing": true,
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1365,10 +1364,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5070.0,
+						"translation.y": 10291.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1466,6 +1465,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1476,7 +1477,7 @@
 						"translation.y": 922.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1589,6 +1590,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1599,7 +1602,7 @@
 						"translation.y": 1201.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1697,6 +1700,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1707,7 +1712,7 @@
 						"translation.y": 4266.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1723,8 +1728,8 @@
 						"selection":
 						[
 							[
-								1203,
-								1203
+								1438,
+								1438
 							]
 						],
 						"settings":
@@ -1736,15 +1741,15 @@
 								{
 									"1":
 									[
-										1206,
-										1207
+										1433,
+										1437
 									]
 								},
 								"icon":
 								{
 									"1":
 									[
-										"Packages/BracketHighlighter/icons/double_quote.png",
+										"Packages/BracketHighlighter/icons/tag.png",
 										"brackethighlighter.default"
 									]
 								},
@@ -1752,8 +1757,8 @@
 								{
 									"1":
 									[
-										1145,
-										1146
+										16,
+										20
 									]
 								},
 								"unmatched":
@@ -1762,41 +1767,26 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -1807,6 +1797,16 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -1816,10 +1816,17 @@
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
-								"bh_tag_content"
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/HTML/HTML.sublime-syntax"
@@ -1828,7 +1835,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1926,6 +1933,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -1936,7 +1945,7 @@
 						"translation.y": 788.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -2049,6 +2058,7 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
 							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
@@ -2060,7 +2070,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -2158,6 +2168,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -2177,15 +2189,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20061,
+						"buffer_size": 20179,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11595,
-								11595
+								15449,
+								15449
 							]
 						],
 						"settings":
@@ -2197,8 +2209,8 @@
 								{
 									"1":
 									[
-										11699,
-										11700
+										15502,
+										15503
 									]
 								},
 								"icon":
@@ -2213,8 +2225,8 @@
 								{
 									"1":
 									[
-										11594,
-										11595
+										15448,
+										15449
 									]
 								},
 								"unmatched":
@@ -2223,41 +2235,26 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -2268,6 +2265,16 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -2277,10 +2284,17 @@
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
-								"bh_tag_content"
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -2288,7 +2302,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5062.0,
+						"translation.y": 7231.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
@@ -2306,15 +2320,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 25614,
+						"buffer_size": 25775,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2823,
-								2823
+								1193,
+								1193
 							]
 						],
 						"settings":
@@ -2337,41 +2351,26 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -2382,6 +2381,16 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -2391,10 +2400,17 @@
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
-								"bh_tag_content"
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Vue Syntax Highlight/vue.tmLanguage",
@@ -2402,118 +2418,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1080.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 10,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 18,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								18
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content"
-							],
-							"default_dir": null,
-							"default_extension": "js",
-							"incomplete_sync": null,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
 					"file": "src/main.js",
 					"semi_transient": false,
 					"settings":
@@ -2622,6 +2534,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
@@ -2636,7 +2550,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "src/assets/css/app.scss",
 					"semi_transient": false,
 					"settings":
@@ -2745,6 +2659,8 @@
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/Sass/Syntaxes/Sass.tmLanguage",
@@ -2759,20 +2675,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "src/api/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6024,
+						"buffer_size": 6025,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2981,
-								3001
+								114,
+								114
 							]
 						],
 						"settings":
@@ -2782,27 +2698,12 @@
 							{
 								"close":
 								{
-									"1":
-									[
-										3048,
-										3049
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"brackethighlighter.default"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										2741,
-										2742
-									]
 								},
 								"unmatched":
 								{
@@ -2810,11 +2711,46 @@
 							},
 							"bracket_highlighter.regions":
 							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -2825,49 +2761,16 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
 								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content"
+								"bh_regex_content"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"sftp_duplicate_views": 0,
 							"synced": false,
@@ -2876,10 +2779,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 860.0,
+						"translation.y": 68.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -3152,7 +3055,7 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 351.0,
 	"status_bar_visible": true,
 	"template_settings":

@@ -14,7 +14,7 @@
           </select>
         </app-select>
         <app-input label="证件号码">
-          <input slot="input" @change="checkID" v-model.lazy="applicant.document_number" type="text" placeholder="请填写投保人证件号码" class="uppercase">
+          <input slot="input" v-model.lazy="applicant.document_number" type="text" placeholder="请填写投保人证件号码" class="uppercase">
           <div slot="icon" v-show="applicant.document_number != ''" class="am-list-clear" @click="applicant.document_number = ''"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="证件有效期">
@@ -258,12 +258,15 @@ export default {
     }
   },
   created() {
-    if (this.applicant.document_term === '9999-12-30') {
+/*    if (this.applicant.document_term === '9999-12-30') {
       this.longTerm = true
     }
     if (this.applicant.document_number) {
       this.checkID()
-    }
+    }*/
+    this.$watch('applicant.document_number', val => {
+      this.IDValidate() && this.checkIDExist()
+    })
   },
   methods: {
     typeChange() {
@@ -271,9 +274,6 @@ export default {
       this.applicant.register_select = ''
       this.applicant.register = ''
       this.warranty.appl_nation = this.warranty.appl_card_type === 58 || this.warranty.appl_card_type === 24001 ? 0 : 63
-    },
-    checkID() { // 证件号码校验
-      this.IDValidate() && this.checkIDExist()
     },
     // 检查ID是否有效
     IDValidate() {
@@ -297,13 +297,15 @@ export default {
             }
             vm.applicant.birthday = idInfo.birth
             vm.warranty.appl_sex = sex[idInfo.sex]
-            vm.applicant.register_select = addr[code].name
-            vm.applicant.register = addr[code].if_id
 
-            return this.checkAge()
+            vm.applicant.register_select || (vm.applicant.register_select = addr[code].name)
+            vm.applicant.register || (vm.applicant.register = addr[code].if_id)
+
+            // return this.checkAge()
           } else {
             toast_text = '请输入正确的18位数证件号码'
             vm.applicant.register_select = ''
+            vm.applicant.register = ''
             vm.applicant.birthday = ''
           }
           break
@@ -338,7 +340,7 @@ export default {
           break
       }
       if (toast_text) {
-        vm.$toast.open(toast_text, '')
+        vm.$toast.open(toast_text)
         return false
       }
       vm.applicant.document_number = id.toUpperCase()
@@ -535,13 +537,13 @@ export default {
         toast_text = '请填写投保人【证件有效期】'
       } else if (!vm.applicant.birthday) {
         toast_text = '请选择投保人【出生日期】'
-      } else if (!this.checkAge()) {
+      } else if (!vm.checkAge()) {
         return false
       } else if (!vm.warranty.appl_tax_type && vm.getAge(vm.applicant.birthday) >= 16) {
         toast_text = '请选择投保人个人税收居民身份类型'
       } else if (!vm.warranty.appl_nation) {
         toast_text = '请选择投保人【国籍】'
-      } else if (!vm.applicant.register && vm.warranty.appl_card_type !== 58 && this.warranty.appl_card_type !== 24001) {
+      } else if (!vm.applicant.register && vm.warranty.appl_card_type !== 58 && vm.warranty.appl_card_type !== 24001) {
         toast_text = '请选择投保人【户籍】'
       } else if (!vm.applicant.province) {
         toast_text = '请选择投保人【通讯地址省份】'
@@ -551,9 +553,9 @@ export default {
         toast_text = '请选择投保人【通讯地址县/区】'
       } else if (!vm.applicant.address) {
         toast_text = '请填写投保人【详细地址】'
-      } else if (!this.checkZipcode()) {
+      } else if (!vm.checkZipcode()) {
         return false
-      } else if (!this.checkPhone()) {
+      } else if (!vm.checkPhone()) {
         return false
       } else if (!vm.applicant.annual_earnings && vm.assured.annual_earnings !== 0) {
         toast_text = '请填写投保人【年收入】'

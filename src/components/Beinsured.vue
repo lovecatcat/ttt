@@ -282,8 +282,8 @@ export default {
             }
             vm.assured.birthday = idInfo.birth
             vm.warranty.assu_sex = sex[idInfo.sex]
-            vm.assured.register_select = addr[code].name
-            vm.assured.register = addr[code].if_id
+            vm.assured.register_select || (vm.assured.register_select = addr[code].name)
+            vm.assured.register || (vm.assured.register = addr[code].if_id)
 
             const age = vm.getAge(vm.assured.birthday)
             vm.age = age
@@ -329,7 +329,7 @@ export default {
           break
       }
       if (toast_text) {
-        vm.$toast.open(toast_text, '')
+        vm.$toast.open(toast_text)
         return false
       }
       vm.assured.document_number = id.toUpperCase()
@@ -520,7 +520,7 @@ export default {
         toast_text = '请选择被保险人【通讯地址县/区】'
       } else if (!vm.assured.address) {
         toast_text = '请填写被保险人【详细地址】'
-      } else if (!this.checkZipcode()) {
+      } else if (!vm.checkZipcode()) {
         return false
       } else if (!vm.assured.annual_earnings && vm.assured.annual_earnings !== 0) {
         toast_text = '请填写被保险人【年收入】'
@@ -537,10 +537,10 @@ export default {
       }
       if (toast_text) {
         console.info(toast_text)
-        this.$toast.open(toast_text, '')
+        vm.$toast.open(toast_text, '')
         return false
       }
-      return this.IDValidate()
+      return vm.IDValidate()
     }
   },
   beforeRouteLeave(to, from, next) {

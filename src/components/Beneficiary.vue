@@ -29,7 +29,7 @@
           </select>
         </app-select>
         <app-input label="证件号码">
-          <input slot="input" @change="IDValidate" v-model.lazy="beneficiary.document_number" type="text" placeholder="请填写受益人证件号码">
+          <input slot="input" @change="IDValidate" v-model.lazy="beneficiary.document_number" type="text" placeholder="请填写受益人证件号码" class="uppercase">
           <div slot="icon" v-show="beneficiary.document_number != ''" class="am-list-clear" @click="beneficiary.document_number = ''"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="证件有效期">
@@ -360,6 +360,13 @@ export default {
             toast_text = '台湾居民来往大陆通行证号码必须大于等于8位'
           }
           break
+        case 24001: // 外国人身份证
+          if (id.length !== 15) {
+            toast_text = '外国人永久居留身份证位为15位'
+          } else if (!/^[a-z]{3}\d{12}$/gi.test(id)) {
+            toast_text = '外国人永久居留身份证号码不正确'
+          }
+          break
         default:
           break
       }
@@ -367,6 +374,7 @@ export default {
         vm.$toast.open(toast_text, '')
         return false
       }
+      vm.beneficiary.document_number = id.toUpperCase()
       return true
     },
     // 校验表单
