@@ -32,7 +32,7 @@
         <div class="am-list-item" v-show="!longTerm">
           <div class="am-list-label tar app-color-warn">有效日期</div>
           <div class="am-list-control">
-            <input :class="{'has': assured.document_term != ''}" :readonly="longTerm" v-model="assured.document_term" type="date" placeholder="请填写证件有效期">
+            <input :class="{'has': assured.document_term != ''}" :readonly="longTerm" v-model="assured.document_term" type="date" placeholder="请填写证件有效期" @change="checkTerm('被保险人',assured.document_term)">
           </div>
           <div v-show="assured.document_term" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.document_term = ''"></i></div>
         </div>
@@ -58,10 +58,10 @@
       <div class="am-list-body">
         <label class="am-list-item checkbox" v-for="item in init.beneficiary.tax_type">
           <div class="am-checkbox app-checkbox">
-            <input type="radio" :value="item.if_id" v-model="warranty.assu_tax_type">
+            <input type="radio" @change="checkTax('被保险人',warranty.assu_tax_type)" :value="item.if_id" v-model="warranty.assu_tax_type">
             <span class="icon-check"></span>
           </div>
-          <div class="am-list-content">{{item.explain}}</div>
+          <div class="am-list-contents">{{item.explain}}</div>
         </label>
       </div>
     </div>
@@ -502,12 +502,14 @@ export default {
         toast_text = '请填写被保险人【姓名】'
       } else if (!vm.assured.document_number) {
         toast_text = '请填写被保险人【证件号码】'
-      } else if (vm.longTerm === false && (!vm.assured.document_term || vm.assured.document_term === '0000-00-00')) {
-        toast_text = '请填写被保险人【证件有效期】'
+      } else if (vm.longTerm === false && !vm.checkTerm('被保险人', vm.assured.document_term)) {
+        return false
       } else if (!vm.assured.birthday) {
         toast_text = '请选择被保险人【出生日期】'
       } else if (!vm.warranty.assu_tax_type && vm.age >= 16) {
         toast_text = '请选择被保险人个人税收居民身份类型'
+      } else if (vm.age >= 16 && !vm.checkTax('被保险人', vm.warranty.assu_tax_type)) {
+        return false
       } else if (!vm.warranty.assu_nation) {
         toast_text = '请选择被保险人【国籍】'
       } else if (!vm.assured.register && vm.warranty.assu_card_type !== 58 && vm.warranty.assu_card_type !== 24001) {

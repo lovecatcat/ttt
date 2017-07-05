@@ -35,6 +35,17 @@ Vue.directive('focus', {
     el.focus()
   }
 })
+
+/**
+ * 加减天数
+ * @param  {int} days: +加, -减
+ * @return {date}
+ */
+Date.prototype.asDays = function (days) {
+  this.setDate(this.getDate() + parseInt(days))
+  return this
+}
+
 Vue.mixin({
   created() {
     // 禁止从中间页进入
@@ -74,6 +85,29 @@ Vue.mixin({
     }
   },
   methods: {
+    checkTax(owner, val) {
+      if (!owner || !val) return
+      if (val !== '28') {
+        this.$toast.open(owner + '个人税收居民身份类型不是【仅为中国税收居民】时，暂不能在线投保。')
+        return false
+      }
+      return true
+    },
+    checkTerm(owner, term) {
+      var toast_text = null
+      if (!term || term === '0000-00-00') {
+        toast_text = '证件有效期不能为空'
+      } else if (/\d{4}(-|\/)\d{2}(-|\/)\d{2}(-|\/)/.test(term)) {
+        toast_text = '有效日期格式不正确'
+      } else if (new Date(term) - new Date().asDays(-1) < 0) {
+        toast_text = '证件已过有效期'
+      }
+      if (toast_text) {
+        this.$toast.open(owner + toast_text, 'warn')
+        return false
+      }
+      return true
+    },
     getAge(str) {
       if (!str) return
       var now = new Date()

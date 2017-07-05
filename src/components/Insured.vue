@@ -32,7 +32,7 @@
         <div class="am-list-item" v-show="!longTerm">
           <div class="am-list-label tar app-color-warn">有效日期</div>
           <div class="am-list-control">
-            <input :class="{'has': applicant.document_term != ''}" :readonly="longTerm" v-model="applicant.document_term" type="date" placeholder="请填写证件有效期">
+            <input :class="{'has': applicant.document_term != ''}" :readonly="longTerm" v-model="applicant.document_term" type="date" placeholder="请填写证件有效期" @change="checkTerm('投保人',applicant.document_term)">
           </div>
           <div v-show="applicant.document_term" class="am-list-clear"><i class="am-icon-clear am-icon" @click="applicant.document_term = ''"></i></div>
         </div>
@@ -59,10 +59,10 @@
       <div class="am-list-body">
         <label class="am-list-item checkbox" v-for="item in init.beneficiary.tax_type">
           <div class="am-checkbox app-checkbox">
-            <input type="radio" :value="item.if_id" v-model="warranty.appl_tax_type">
+            <input type="radio" @change="checkTax('投保人',warranty.appl_tax_type)" :value="item.if_id" v-model="warranty.appl_tax_type">
             <span class="icon-check"></span>
           </div>
-          <div class="am-list-content">{{item.explain}}</div>
+          <div class="am-list-contents">{{item.explain}}</div>
         </label>
       </div>
     </div>
@@ -258,12 +258,12 @@ export default {
     }
   },
   created() {
-/*    if (this.applicant.document_term === '9999-12-30') {
-      this.longTerm = true
-    }
-    if (this.applicant.document_number) {
-      this.checkID()
-    }*/
+    /*    if (this.applicant.document_term === '9999-12-30') {
+          this.longTerm = true
+        }
+        if (this.applicant.document_number) {
+          this.checkID()
+        }*/
     this.$watch('applicant.document_number', val => {
       this.IDValidate() && this.checkIDExist()
     })
@@ -533,14 +533,16 @@ export default {
         toast_text = '请填写投保人【姓名】'
       } else if (!vm.IDValidate()) {
         return false
-      } else if (vm.longTerm === false && (!vm.applicant.document_term || vm.applicant.document_term === '0000-00-00')) {
-        toast_text = '请填写投保人【证件有效期】'
+      } else if (vm.longTerm === false && !vm.checkTerm('投保人', vm.applicant.document_term)) {
+        return false
       } else if (!vm.applicant.birthday) {
         toast_text = '请选择投保人【出生日期】'
       } else if (!vm.checkAge()) {
         return false
       } else if (!vm.warranty.appl_tax_type && vm.getAge(vm.applicant.birthday) >= 16) {
         toast_text = '请选择投保人个人税收居民身份类型'
+      } else if (vm.getAge(vm.applicant.birthday) >= 16 && !vm.checkTax('投保人', vm.warranty.appl_tax_type)) {
+        return false
       } else if (!vm.warranty.appl_nation) {
         toast_text = '请选择投保人【国籍】'
       } else if (!vm.applicant.register && vm.warranty.appl_card_type !== 58 && vm.warranty.appl_card_type !== 24001) {

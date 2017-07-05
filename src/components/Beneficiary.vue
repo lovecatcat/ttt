@@ -46,7 +46,7 @@
         </app-input>
         <div class="am-list-item" v-show="!longTerm">
           <div class="am-list-control">
-            <input :class="{'has':beneficiary.document_term != ''}" v-model="beneficiary.document_term" type="date" placeholder="请填写证件有效期">
+            <input :class="{'has':beneficiary.document_term != ''}" v-model="beneficiary.document_term" type="date" placeholder="请填写证件有效期" @change="checkTerm('受益人', beneficiary.document_term)">
           </div>
           <div v-show="beneficiary.document_term" class="am-list-clear"><i class="am-icon-clear am-icon" @click="beneficiary.document_term = ''"></i></div>
         </div>
@@ -92,10 +92,10 @@
       <div class="am-list-body" v-if="init.beneficiary">
         <label class="am-list-item checkbox" v-for="item in init.beneficiary.tax_type">
           <div class="am-checkbox app-checkbox">
-            <input type="radio" :value="item.if_id" v-model="beneficiary.tax_type">
+            <input type="radio" @change="checkTax('受益人',beneficiary.tax_type)" :value="item.if_id" v-model="beneficiary.tax_type">
             <span class="icon-check"></span>
           </div>
-          <div class="am-list-content">{{item.explain}}</div>
+          <div class="am-list-contents">{{item.explain}}</div>
         </label>
       </div>
     </div>
@@ -386,8 +386,8 @@ export default {
         toast_text = '请填写' + sb + '受益人【姓名】'
       } else if (!vm.beneficiary.document_number) {
         toast_text = '请填写' + sb + '受益人【证件号码】'
-      } else if (vm.longTerm === false && (!vm.beneficiary.document_term || vm.beneficiary.document_term === '0000-00-00')) {
-        toast_text = '请填写' + sb + '受益人【证件有效期】'
+      } else if (vm.longTerm === false && !vm.checkTerm(sb + '受益人', vm.beneficiary.document_term)) {
+        return false
       } else if (!vm.beneficiary.sex) {
         toast_text = '请选择' + sb + '受益人【性别】'
       } else if (!vm.beneficiary.birthday) {
@@ -399,7 +399,9 @@ export default {
       } else if (!vm.beneficiary.benefited_ratio) {
         toast_text = '请填写' + sb + '受益人【受益比例】'
       } else if (!vm.beneficiary.tax_type && vm.getAge(vm.beneficiary.birthday) >= 16) {
-        toast_text = '请选择' + sb + '个人税收居民身份类型'
+        toast_text = '请选择' + sb + '受益人个人税收居民身份类型'
+      } else if (!vm.checkTax(sb + ' 受益人', vm.beneficiary.tax_type) && vm.getAge(vm.beneficiary.birthday) >= 16) {
+        return false
       } else if (vm.anti_money) {
         if (!vm.beneficiary.nationality) {
           toast_text = '请选择' + sb + '受益人【国籍】'
