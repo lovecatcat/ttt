@@ -86,11 +86,11 @@ Vue.mixin({
   },
   methods: {
     checkTax(owner, val) {
-      if (!owner || !val) return
+/*      if (!owner || !val) return
       if (val !== '28') {
         this.$toast.open(owner + '个人税收居民身份类型不是【仅为中国税收居民】时，暂不能在线投保。')
         return false
-      }
+      }*/
       return true
     },
     checkTerm(owner, term) {
