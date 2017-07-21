@@ -256,7 +256,7 @@
         </div>
         <div class="am-list-extra">
           法定受益人
-          <router-link to="/healthinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+          <router-link to="/beneficiaries"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
         </div>
       </div>
     </div>
@@ -605,6 +605,7 @@ export default {
         pushData['beneficiary_document_number'] = []
         pushData['beneficiary_document_term'] = []
         pushData['beneficiary_relationship'] = []
+        pushData['beneficiary_tax_type'] = []
         if (vm.anti_money) {
           pushData['beneficiary_address'] = []
           pushData['beneficiary_province'] = []
@@ -629,6 +630,7 @@ export default {
           pushData['beneficiary_document_number'].push(beneficiary.document_number)
           pushData['beneficiary_document_term'].push(beneficiary.document_term)
           pushData['beneficiary_relationship'].push(beneficiary.relationship)
+          pushData['beneficiary_tax_type'].push(beneficiary.tax_type)
           if (vm.anti_money) {
             pushData['beneficiary_nationality'].push(beneficiary.nationality)
             pushData['beneficiary_address'].push(beneficiary.address)
