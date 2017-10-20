@@ -8,11 +8,8 @@ import axios from 'axios'
 // 保险公司ID
 const SCID = 19
 
-// http数据交互插件
-// axios.defaults.baseURL = 'http://cloud.ehuimeng.com/'
-
-const env = location.port === '80801' ? 'development' : 'production'
-axios.defaults.baseURL = env === 'development' ? 'http://172.16.2.70/hmhome/' : 'http://cloud.ehuimeng.com/'
+const env = location.port === '8080' ? 'development' : 'production'
+axios.defaults.baseURL = env === 'development' ? '/api' : '//' + location.host
 
 const initField = function (cb) {
   axios.get('Warranty/initWarField?sc_id=' + SCID).then(response => {
@@ -187,7 +184,7 @@ const getAge = function(str) {
 }
 
 const queryPersonInfo = function (id, cb) {
-  axios.get('http://cloud.ehuimeng.com/Home/Mycenter/index?user_id=' + id).then(response => {
+  axios.get('Home/Mycenter/index?user_id=' + id).then(response => {
     cb(response)
   }).catch(error => {
     cb(error)

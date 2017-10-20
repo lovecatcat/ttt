@@ -97,7 +97,7 @@ const router = new Router({
     name: 'Success',
     component: Success,
     meta: {
-      docTitle: '投保成功'
+      docTitle: '提交成功'
     }
   }, {
     path: '*',

@@ -15,6 +15,7 @@ export default {
   anti_money: false, //反洗钱标准
   init: {}, //初始化数据,
   main_insurance: '0', //主险数据
+  addonIns: {}, //附加险数据
   admin_id: admin_id || 1846,
   todo: false, //未完成订单
   ready: false, //首页加载

@@ -2,7 +2,7 @@
   <div id="Success">
     <div class="am-message result">
       <i class="am-icon result success"></i>
-      <div class="am-message-main">{{title}}</div>
+      <div class="am-message-main">{{status === 1 ? '投保成功' : '进入人工核保'}}</div>
       <div class="am-message-sub am-ft-left">
         <br>
         <template v-if="status == 1">
@@ -22,13 +22,10 @@ export default {
   name: 'success',
   computed: {
     status() {
-      return this.$store.state.status
+      return +this.$store.state.status
     },
     tid() {
       return this.$store.state.tid
-    },
-    title() {
-      return this.state === 1 ? '投保成功' : '进入人工核保'
     }
   }
 }

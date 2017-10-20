@@ -34,7 +34,9 @@
         <input slot="input" v-model="applicant.birthday" type="text" readonly>
       </app-input>
       <app-input label="个人税收居民身份类型" v-if="getAge(applicant.birthday) >= 16">
-        <div v-if="warranty.appl_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
+        <div v-if="warranty.appl_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">
+          {{item.explain}}
+        </div>
       </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="warranty.appl_nation" v-if="init.applicant" disabled>
@@ -127,7 +129,9 @@
         <input slot="input" v-model="assured.birthday" type="text" readonly>
       </app-input>
       <app-input label="个人税收居民身份类型" v-if="getAge(assured.birthday) >= 16">
-        <div v-if="warranty.assu_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
+        <div v-if="warranty.assu_tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">
+          {{item.explain}}
+        </div>
       </app-input>
       <app-select label="国籍" readonly="true">
         <select v-model="warranty.assu_nation" v-if="init.assured" disabled>
@@ -176,7 +180,8 @@
         <input slot="input" readonly :value="assured.occupation" type="text">
       </app-input>
     </app-dropdown>
-    <app-dropdown v-if="beneficiary" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type === '1'" :key="index">
+    <app-dropdown v-if="beneficiary" v-for="beneficiary,index in beneficiaries" v-show="warranty.benefited_type === '1'"
+                  :key="index">
       <template slot="header">
         <div class="am-list-label">身故受益人资料</div>
         <div class="am-list-content am-ft-right">
@@ -221,12 +226,16 @@
         <input slot="input" readonly type="number" v-model.number.lazy="beneficiary.benefited_ratio">
       </app-input>
       <app-input label="个人税收居民身份类型" v-if="getAge(beneficiary.birthday) >= 16">
-        <div v-if="beneficiary.tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">{{item.explain}}</div>
+        <div v-if="beneficiary.tax_type == item.if_id" v-for="item in init.beneficiary.tax_type" slot="input">
+          {{item.explain}}
+        </div>
       </app-input>
       <template v-if="anti_money">
         <app-select label="国籍" readonly="true">
           <select v-model="beneficiary.nationality" v-if="init.applicant">
-            <option :disabled="beneficiary.document_type === 57" v-for="type in init.applicant.nationality" :value="type.if_id">{{type.explain}}</option>
+            <option :disabled="beneficiary.document_type === 57" v-for="type in init.applicant.nationality"
+                    :value="type.if_id">{{type.explain}}
+            </option>
           </select>
         </app-select>
         <app-input label="通讯地址">
@@ -260,34 +269,75 @@
         </div>
       </div>
     </div>
-    <app-dropdown v-if="!warData && insurances" v-for="insurance,index in insurances" :key="index">
+    <app-dropdown v-if="!warData && insurances">
       <template slot="header">
-        <div class="am-list-label">{{'保险计划信息'+(insurances.length>1? (index == 0 ? '(主险)': ('(附加险'+(index>2?index-1:'')+')') ) :'')}}</div>
+        <div class="am-list-label">保险计划信息</div>
         <div class="am-list-content am-ft-right">
           <router-link to="/prospectus"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
         </div>
       </template>
-      <app-select label="险种" readonly="true">
-        <select v-model="main_insurance" disabled>
-          <option v-if="item.safe_id === '209' || item.safe_id === '210'" v-for="item in safegoods" :value="item">{{item.name}}</option>
-        </select>
-      </app-select>
-      <app-select label="交费期间" readonly="true">
-        <select disabled v-model="insurance.pay_year" disabled>
-          <option v-for="item in attr" :value="item.sv_id">{{item.pay_year == 1 ? '趸交' : item.pay_year + '年'}}</option>
-        </select>
-      </app-select>
-      <app-select label="保险期间" readonly="true">
-        <select disabled v-model="insurance.safe_year" disabled>
-          <option v-for="item in attr" :value="item.sv_id">{{item.safe_year==999?'终身':item.safe_year}}</option>
-        </select>
-      </app-select>
-      <app-input label="基本保险金额">
-        <input slot="input" readonly :value="insurance.money" type="text">
-      </app-input>
-      <app-input label="期交保费">
-        <input slot="input" readonly :value="insurance.period_money" type="text">
-      </app-input>
+      <template v-for="insurance,index in insurances">
+        <template v-if="index === 0">
+          <div class="am-list-item">
+            <template v-if="insurances.length > 1">
+              <span class="badge am-ft-left badge-main" >主</span>
+            </template>
+            <div class="am-list-label" style="width: .7rem">险种</div>
+            <div class="am-list-control">
+              <select v-model="main_insurance" disabled>
+                <option v-if="item.safe_id === '209' || item.safe_id === '210' || item.safe_id === '361'"
+                        v-for="item in safegoods" :value="item">{{item.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <app-select label="交费期间" readonly="true">
+            <select disabled v-model="insurance.pay_year" disabled>
+              <option v-for="item in attr" :value="item.sv_id">{{item.pay_year == 1 ? '趸交' : item.pay_year + '年'}}
+              </option>
+            </select>
+          </app-select>
+          <app-select label="保险期间" readonly="true">
+            <select disabled v-model="insurance.safe_year" disabled>
+              <option v-for="item in attr" :value="item.sv_id">{{item.safe_year == 999 ? '终身' : item.safe_year}}</option>
+            </select>
+          </app-select>
+          <app-input label="基本保险金额">
+            <input slot="input" readonly :value="insurance.money" type="text">
+          </app-input>
+          <app-input label="期交保费" style="border-bottom: 1px solid #eee">
+            <input slot="input" readonly :value="insurance.period_money" type="text">
+          </app-input>
+        </template>
+        <template v-else>
+          <div class="am-list-item">
+            <template v-if="insurances.length > 1">
+              <span class="badge am-ft-left badge-addon">附</span>
+            </template>
+            <div class="am-list-label" style="width: .7rem">险种</div>
+            <div class="am-list-control">
+              {{main_insurance.child[insurance.safe_id].name}}
+            </div>
+          </div>
+          <app-select label="交费期间" readonly="true">
+            <select disabled v-model="insurance.pay_year" disabled>
+              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">{{showPayYear(item.pay_year)}}
+              </option>
+            </select>
+          </app-select>
+          <app-select label="保险期间" readonly="true">
+            <select disabled v-model="insurance.safe_year" disabled>
+              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">{{showSafeYear(item.safe_year)}}</option>
+            </select>
+          </app-select>
+          <app-input label="基本保险金额">
+            <input slot="input" readonly :value="insurance.money" type="text">
+          </app-input>
+          <app-input label="期交保费" style="border-bottom: 1px solid #eee">
+            <input slot="input" readonly :value="insurance.period_money" type="text">
+          </app-input>
+        </template>
+      </template>
       <app-select label="保单选项" readonly="true">
         <select v-model="warranty.delivery_way" v-if="init.warranty" disabled>
           <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
@@ -299,7 +349,9 @@
       <div class="am-list-item">
         <div class="app-list-title">您是否已参加当地社会基本医疗保险（或公费医疗）？</div>
         <div class="am-switch" v-if="init.assured">
-          <input type="checkbox" disabled v-model="warranty.assu_social_security" :true-value="init.assured.social_security[0].if_id" :false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
+          <input type="checkbox" disabled v-model="warranty.assu_social_security"
+                 :true-value="init.assured.social_security[0].if_id"
+                 :false-value="init.assured.social_security[1].if_id" class="am-switch-checkbox">
           <label class="am-switch-label">
             <div class="am-switch-inner"></div>
             <div class="am-switch-switch"></div>
@@ -327,7 +379,8 @@
               <div class="app-list" :class="{'flex-right':!isExempted}">
                 <div class="app-list-title" v-if="isExempted">被保险人</div>
                 <div class="am-switch">
-                  <input type="checkbox" disabled v-model="clientvalue.ass_amswer[childitem.ci_id]" :value="childitem.ci_id" class="am-switch-checkbox" :id="'assmatter'+childitem.ci_id">
+                  <input type="checkbox" disabled v-model="clientvalue.ass_amswer[childitem.ci_id]"
+                         :value="childitem.ci_id" class="am-switch-checkbox" :id="'assmatter'+childitem.ci_id">
                   <label class="am-switch-label" :for="'assmatter'+childitem.ci_id">
                     <div class="am-switch-inner"></div>
                     <div class="am-switch-switch"></div>
@@ -337,7 +390,8 @@
               <div class="app-list" v-if="isExempted">
                 <div class="app-list-title">投保人</div>
                 <div class="am-switch">
-                  <input type="checkbox" disabled v-model="clientvalue.app_amswer[childitem.ci_id]" :value="childitem.ci_id" class="am-switch-checkbox" :id="'appmatter'+childitem.ci_id">
+                  <input type="checkbox" disabled v-model="clientvalue.app_amswer[childitem.ci_id]"
+                         :value="childitem.ci_id" class="am-switch-checkbox" :id="'appmatter'+childitem.ci_id">
                   <label class="am-switch-label" :for="'appmatter'+childitem.ci_id">
                     <div class="am-switch-inner"></div>
                     <div class="am-switch-switch"></div>
@@ -366,7 +420,8 @@
             <div class="app-list" :class="{'flex-right':!isExempted}">
               <div class="app-list-title" v-if="isExempted">被保险人</div>
               <div class="am-switch">
-                <input type="checkbox" disabled v-model="clientvalue.ass_amswer[item.ci_id]" :value="item.ci_id" class="am-switch-checkbox" :id="'assmatter'+item.ci_id">
+                <input type="checkbox" disabled v-model="clientvalue.ass_amswer[item.ci_id]" :value="item.ci_id"
+                       class="am-switch-checkbox" :id="'assmatter'+item.ci_id">
                 <label class="am-switch-label" :for="'assmatter'+item.ci_id">
                   <div class="am-switch-inner"></div>
                   <div class="am-switch-switch"></div>
@@ -376,7 +431,8 @@
             <div class="app-list" v-if="isExempted">
               <div class="app-list-title">投保人</div>
               <div class="am-switch">
-                <input type="checkbox" disabled v-model="clientvalue.app_amswer[item.ci_id]" :value="item.ci_id" class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
+                <input type="checkbox" disabled v-model="clientvalue.app_amswer[item.ci_id]" :value="item.ci_id"
+                       class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
                 <label class="am-switch-label" :for="'appmatter'+item.ci_id">
                   <div class="am-switch-inner"></div>
                   <div class="am-switch-switch"></div>
@@ -452,239 +508,274 @@
     <div v-if="warData" class="am-content am-ft-right am-ft-red">合计保费：{{countFee(warData)}}元</div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
       <router-link to="/billinfo" class="am-tab-item">上一步</router-link>
-      <a @click="push()" class="am-tab-item selected">{{warData ? '确认投保' :'提交投保'}}</a>
+      <a @click="push()" class="am-tab-item selected">{{warData ? '确认投保' : '提交投保'}}</a>
     </div>
   </div>
 </template>
 <script>
-const qs = require('qs')
-import Api from '../api'
-import {
-  mapState
-} from 'vuex'
+  const qs = require('qs')
+  import Api from '../api'
+  import {
+    mapState
+  } from 'vuex'
 
-export default {
-  name: 'preview',
-  data() {
-    return {
-      warData: null, //保单信息
-      // main_insurance: null, //主险
-      // attr: null, //保险属性
-      isExempted: false, // 是否豁免投保人
-      confirm: false, //确认信息
-      uploading: false //正在提交
-    }
-  },
-  computed: {
-    ...mapState([
-      'init',
-      'matters',
-      'safegoods',
-      'main_insurance'
-    ]),
-    applicant() {
-      return Api.obj2json(this.$store.state.applicant)
-    },
-    assured() {
-      return Api.obj2json(this.$store.state.assured)
-    },
-    warranty() {
-      return Api.obj2json(this.$store.state.warranty)
-    },
-    beneficiaries() {
-      return this.$store.state.beneficiaries
-    },
-    clientvalue() {
-      return Api.obj2json(this.$store.state.clientvalue)
-    },
-    insurances() {
-      return this.$store.state.insurances
-    },
-    anti_money() {
-      return this.$store.state.anti_money
-    },
-    attr() {
-      return this.$store.state.main_insurance.attr
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.warData = null
-    next()
-  },
-  activated() {
-    this.$forceUpdate()
-  },
-  methods: {
-    countFee(obj) {
-      var c = 0
-      for (var i in obj.data) {
-        c += parseInt(obj.data[i])
+  export default {
+    name: 'preview',
+    data() {
+      return {
+        warData: null, //保单信息
+        // main_insurance: null, //主险
+        // attr: null, //保险属性
+        isExempted: false, // 是否豁免投保人
+        confirm: false, //确认信息
+        uploading: false //正在提交
       }
-      return c
     },
-    push() {
-      const vm = this
-      if (!vm.confirm) {
-        vm.$toast.open('请先确认信息无误', 'warn')
-        return false
+    computed: {
+      ...mapState([
+        'init',
+        'matters',
+        'safegoods',
+        'main_insurance'
+      ]),
+      applicant() {
+        return Api.obj2json(this.$store.state.applicant)
+      },
+      assured() {
+        return Api.obj2json(this.$store.state.assured)
+      },
+      warranty() {
+        return Api.obj2json(this.$store.state.warranty)
+      },
+      beneficiaries() {
+        return this.$store.state.beneficiaries
+      },
+      clientvalue() {
+        return Api.obj2json(this.$store.state.clientvalue)
+      },
+      insurances() {
+        return this.$store.state.insurances
+      },
+      anti_money() {
+        return this.$store.state.anti_money
+      },
+      attr() {
+        return this.$store.state.main_insurance.attr
       }
-      if (vm.uploading) {
-        return false
-      }
-      vm.uploading = true
-      setTimeout(() => {
-        vm.uploading = false
-      }, 1500)
-      vm.$toast.open('正在提交', 'loading')
-      let pushData = {}
-      let filter = ['register_select', 'address_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
-      for (var j in vm.applicant) {
-        var index = 'applicant_' + j
-        if (filter.indexOf(j) > -1) {
-          continue
+    },
+    beforeRouteLeave(to, from, next) {
+      this.warData = null
+      next()
+    },
+    activated() {
+      this.$forceUpdate()
+    },
+    methods: {
+      showSafeYear(safe_year) {
+        if (safe_year === '999') {
+          return '终身'
+        } else if (Number(safe_year) > 50) {
+          return '至' + safe_year + '岁'
+        } else {
+          return safe_year + '年'
         }
-        pushData[index] = vm.applicant[j]
-      }
-      for (var k in vm.assured) {
-        var o = 'assured_' + k
-        if (filter.indexOf(k) > -1) {
-          continue
+      },
+      showPayYear(pay_year) {
+        if (pay_year === '1') {
+          return '趸交'
+        } else {
+          return pay_year + '年交'
         }
-        pushData[o] = vm.assured[k]
-      }
-      for (var m in vm.warranty) {
-        if (filter.indexOf(m) > -1) continue
-        var p = 'warranty_' + m
-        pushData[p] = vm.warranty[m]
-      }
-      pushData['warranty_admin_id'] = vm.$store.state.admin_id
-      pushData['warranty_sc_id'] = 19
-      pushData['warranty_card_holder'] = vm.applicant.name
+      },
+      countFee(obj) {
+        var c = 0
+        for (var i in obj.data) {
+          c += parseInt(obj.data[i])
+        }
+        return c
+      },
+      push() {
+        const vm = this
+        if (!vm.confirm) {
+          vm.$toast.open('请先确认信息无误', 'warn')
+          return false
+        }
+        if (vm.uploading) {
+          return false
+        }
+        vm.uploading = true
+        setTimeout(() => {
+          vm.uploading = false
+        }, 1500)
+        vm.$toast.open('正在提交', 'loading')
+        let pushData = {}
+        let filter = ['register_select', 'address_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
+        for (var j in vm.applicant) {
+          var index = 'applicant_' + j
+          if (filter.indexOf(j) > -1) {
+            continue
+          }
+          pushData[index] = vm.applicant[j]
+        }
+        for (var k in vm.assured) {
+          var o = 'assured_' + k
+          if (filter.indexOf(k) > -1) {
+            continue
+          }
+          pushData[o] = vm.assured[k]
+        }
+        for (var m in vm.warranty) {
+          if (filter.indexOf(m) > -1) continue
+          var p = 'warranty_' + m
+          pushData[p] = vm.warranty[m]
+        }
+        pushData['warranty_admin_id'] = vm.$store.state.admin_id
+        pushData['warranty_sc_id'] = 19
+        pushData['warranty_card_holder'] = vm.applicant.name
         // pushData['warranty_add_time'] = (Date.parse(new Date())).toString().substr(0, 10)
-      pushData['warranty_is_save'] = 1
-      pushData['warranty_source'] = 2
+        pushData['warranty_is_save'] = 1
+        pushData['warranty_source'] = 2
 
-      pushData['clientvalue_ci_id'] = []
-      pushData['clientvalue_app_amswer'] = []
-      pushData['clientvalue_ass_amswer'] = []
-      pushData['clientvalue_app_fields'] = []
-      pushData['clientvalue_fields'] = []
-      pushData['clientvalue_war_id'] = []
-      var warId = ''
-      vm.matters.forEach(i => {
-        var index = i.ci_id
-        pushData['clientvalue_ci_id'].push(i.ci_id)
-        pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
-        pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
+        pushData['clientvalue_ci_id'] = []
+        pushData['clientvalue_app_amswer'] = []
+        pushData['clientvalue_ass_amswer'] = []
+        pushData['clientvalue_app_fields'] = []
+        pushData['clientvalue_fields'] = []
+        pushData['clientvalue_war_id'] = []
+        var warId = ''
+        vm.matters.forEach(i => {
+          var index = i.ci_id
+          pushData['clientvalue_ci_id'].push(i.ci_id)
+          pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
+          pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
 
-        pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
-        pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
-        pushData['clientvalue_war_id'].push(warId)
-        if (i.child) {
-          i.child.forEach(child => {
-            var index = child.ci_id
+          pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
+          pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
+          pushData['clientvalue_war_id'].push(warId)
+          if (i.child) {
+            i.child.forEach(child => {
+              var index = child.ci_id
               // index = i.entry + child.entry
-            pushData['clientvalue_ci_id'].push(child.ci_id)
-            pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
-            pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
-            pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
-            pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
-            pushData['clientvalue_war_id'].push(warId)
+              pushData['clientvalue_ci_id'].push(child.ci_id)
+              pushData['clientvalue_app_amswer'].push(vm.clientvalue.app_amswer[index] ? 1 : 0)
+              pushData['clientvalue_ass_amswer'].push(vm.clientvalue.ass_amswer[index] ? 1 : 0)
+              pushData['clientvalue_app_fields'].push(vm.clientvalue.app_fields[index] || '')
+              pushData['clientvalue_fields'].push(vm.clientvalue.fields[index] || '')
+              pushData['clientvalue_war_id'].push(warId)
+            })
+          }
+        })
+        if (vm.warranty.benefited_type === '1') {
+          pushData['beneficiary_war_id'] = []
+          pushData['beneficiary_name'] = []
+          pushData['beneficiary_sex'] = []
+          pushData['beneficiary_birthday'] = []
+          pushData['beneficiary_benefited_ratio'] = []
+          pushData['beneficiary_benefited_level'] = []
+          pushData['beneficiary_document_type'] = []
+          pushData['beneficiary_document_type_val'] = []
+          pushData['beneficiary_document_number'] = []
+          pushData['beneficiary_document_term'] = []
+          pushData['beneficiary_relationship'] = []
+          pushData['beneficiary_tax_type'] = []
+          if (vm.anti_money) {
+            pushData['beneficiary_address'] = []
+            pushData['beneficiary_province'] = []
+            pushData['beneficiary_city'] = []
+            pushData['beneficiary_district'] = []
+            pushData['beneficiary_zipcode'] = []
+            pushData['beneficiary_visit_tel'] = []
+            pushData['beneficiary_tel'] = []
+            pushData['beneficiary_occupation'] = []
+            pushData['beneficiary_occupation_code'] = []
+            pushData['beneficiary_nationality'] = []
+          }
+          vm.beneficiaries.forEach(function (beneficiary) {
+            pushData['beneficiary_war_id'].push(warId)
+            pushData['beneficiary_name'].push(beneficiary.name)
+            pushData['beneficiary_sex'].push(beneficiary.sex)
+            pushData['beneficiary_birthday'].push(beneficiary.birthday)
+            pushData['beneficiary_benefited_ratio'].push(beneficiary.benefited_ratio)
+            pushData['beneficiary_benefited_level'].push(beneficiary.benefited_level)
+            pushData['beneficiary_document_type'].push(beneficiary.document_type)
+            pushData['beneficiary_document_type_val'].push(beneficiary.document_type_val)
+            pushData['beneficiary_document_number'].push(beneficiary.document_number)
+            pushData['beneficiary_document_term'].push(beneficiary.document_term)
+            pushData['beneficiary_relationship'].push(beneficiary.relationship)
+            pushData['beneficiary_tax_type'].push(beneficiary.tax_type)
+            if (vm.anti_money) {
+              pushData['beneficiary_nationality'].push(beneficiary.nationality)
+              pushData['beneficiary_address'].push(beneficiary.address)
+              pushData['beneficiary_province'].push(beneficiary.province)
+              pushData['beneficiary_city'].push(beneficiary.city)
+              pushData['beneficiary_district'].push(beneficiary.district)
+              pushData['beneficiary_zipcode'].push(beneficiary.zipcode)
+              pushData['beneficiary_visit_tel'].push(beneficiary.visit_tel)
+              pushData['beneficiary_tel'].push(beneficiary.tel)
+              pushData['beneficiary_occupation'].push(beneficiary.occupation)
+              pushData['beneficiary_occupation_code'].push(beneficiary.occupation_code)
+            }
           })
         }
-      })
-      if (vm.warranty.benefited_type === '1') {
-        pushData['beneficiary_war_id'] = []
-        pushData['beneficiary_name'] = []
-        pushData['beneficiary_sex'] = []
-        pushData['beneficiary_birthday'] = []
-        pushData['beneficiary_benefited_ratio'] = []
-        pushData['beneficiary_benefited_level'] = []
-        pushData['beneficiary_document_type'] = []
-        pushData['beneficiary_document_type_val'] = []
-        pushData['beneficiary_document_number'] = []
-        pushData['beneficiary_document_term'] = []
-        pushData['beneficiary_relationship'] = []
-        pushData['beneficiary_tax_type'] = []
-        if (vm.anti_money) {
-          pushData['beneficiary_address'] = []
-          pushData['beneficiary_province'] = []
-          pushData['beneficiary_city'] = []
-          pushData['beneficiary_district'] = []
-          pushData['beneficiary_zipcode'] = []
-          pushData['beneficiary_visit_tel'] = []
-          pushData['beneficiary_tel'] = []
-          pushData['beneficiary_occupation'] = []
-          pushData['beneficiary_occupation_code'] = []
-          pushData['beneficiary_nationality'] = []
-        }
-        vm.beneficiaries.forEach(function(beneficiary) {
-          pushData['beneficiary_war_id'].push(warId)
-          pushData['beneficiary_name'].push(beneficiary.name)
-          pushData['beneficiary_sex'].push(beneficiary.sex)
-          pushData['beneficiary_birthday'].push(beneficiary.birthday)
-          pushData['beneficiary_benefited_ratio'].push(beneficiary.benefited_ratio)
-          pushData['beneficiary_benefited_level'].push(beneficiary.benefited_level)
-          pushData['beneficiary_document_type'].push(beneficiary.document_type)
-          pushData['beneficiary_document_type_val'].push(beneficiary.document_type_val)
-          pushData['beneficiary_document_number'].push(beneficiary.document_number)
-          pushData['beneficiary_document_term'].push(beneficiary.document_term)
-          pushData['beneficiary_relationship'].push(beneficiary.relationship)
-          pushData['beneficiary_tax_type'].push(beneficiary.tax_type)
-          if (vm.anti_money) {
-            pushData['beneficiary_nationality'].push(beneficiary.nationality)
-            pushData['beneficiary_address'].push(beneficiary.address)
-            pushData['beneficiary_province'].push(beneficiary.province)
-            pushData['beneficiary_city'].push(beneficiary.city)
-            pushData['beneficiary_district'].push(beneficiary.district)
-            pushData['beneficiary_zipcode'].push(beneficiary.zipcode)
-            pushData['beneficiary_visit_tel'].push(beneficiary.visit_tel)
-            pushData['beneficiary_tel'].push(beneficiary.tel)
-            pushData['beneficiary_occupation'].push(beneficiary.occupation)
-            pushData['beneficiary_occupation_code'].push(beneficiary.occupation_code)
+        pushData['insurance_war_id'] = []
+        pushData['insurance_money'] = []
+        pushData['insurance_pay_year'] = []
+        pushData['insurance_safe_id'] = []
+        pushData['insurance_safe_year'] = []
+        pushData['insurance_period_money'] = []
+
+        vm.insurances.forEach(function (insurance) {
+          pushData['insurance_war_id'].push(warId)
+          pushData['insurance_money'].push(insurance.money)
+          pushData['insurance_pay_year'].push(insurance.pay_year)
+          pushData['insurance_safe_id'].push(insurance.safe_id)
+          pushData['insurance_safe_year'].push(insurance.safe_year)
+          pushData['insurance_period_money'].push(insurance.period_money)
+        })
+        this.local && console.log(pushData)
+        vm.$toast.open('正在投保中', 'loading')
+
+        // if (pushData) return false
+        Api.pushWarranty(qs.stringify(pushData), res => {
+          if (res.name && res.name.indexOf('Error') > -1) {
+            vm.$toast.open('服务器开小差了', 'error')
+            return
+          }
+          if (res.status === '0') {
+            vm.$toast.open('提交失败：' + res.message, '', 5000)
+            return false
+          } else {
+            vm.$toast.open(+res.status === 1 ? '投保成功' : '进入人工核保', 'success')
+            vm.$store.dispatch('setParam', {
+              status: res.status,
+              tid: res.data
+            })
+            this.clearStorage()
+            setTimeout(function () {
+              vm.$router.push('/success')
+            }, 2000)
           }
         })
       }
-      pushData['insurance_war_id'] = []
-      pushData['insurance_money'] = []
-      pushData['insurance_pay_year'] = []
-      pushData['insurance_safe_id'] = []
-      pushData['insurance_safe_year'] = []
-      pushData['insurance_period_money'] = []
-
-      vm.insurances.forEach(function(insurance) {
-        pushData['insurance_war_id'].push(warId)
-        pushData['insurance_money'].push(insurance.money)
-        pushData['insurance_pay_year'].push(insurance.pay_year)
-        pushData['insurance_safe_id'].push(insurance.safe_id)
-        pushData['insurance_safe_year'].push(insurance.safe_year)
-        pushData['insurance_period_money'].push(insurance.period_money)
-      })
-      this.local && console.log(pushData)
-      vm.$toast.open('正在投保中', 'loading')
-
-      // if (pushData) return false
-      Api.pushWarranty(qs.stringify(pushData), res => {
-        if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器开小差了', 'error')
-          return
-        }
-        if (res.status === '0') {
-          vm.$toast.open('提交失败：' + res.message, '', 5000)
-          return false
-        } else {
-          vm.$toast.open(res.status === 1 ? '投保成功' : res.message, 'success')
-          vm.$store.dispatch('setParam', {
-            status: res.status,
-            tid: res.data
-          })
-          this.clearStorage()
-          setTimeout(function() {
-            vm.$router.push('/success')
-          }, 2000)
-        }
-      })
     }
   }
-}
 </script>
+<style>
+  .badge {
+    border-radius: 50%;
+    height: .21rem;
+    width: .21rem;
+    text-align: center;
+    font-size: .12rem;
+    color: #fff;
+    margin-right: .1rem;
+  }
+
+  .badge-main {
+    background: #547ff4;
+  }
+
+  .badge-addon {
+    background-color: #ff1a1a;
+  }
+</style>

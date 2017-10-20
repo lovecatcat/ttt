@@ -10,8 +10,11 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'Select',
-  props: ['label', 'readonly']
-}
+  export default {
+    name: 'Select',
+    props: {
+      label: String,
+      readonly: [Boolean, String]
+    }
+  }
 </script>
