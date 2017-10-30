@@ -96,13 +96,15 @@ const initField = function (cb) {
 }
 
 const queryID = function (id, tb, cb) {
-  axios.get('Warranty/findApplOrAssu?table_name=' + tb + '&document_number=' + id).then(response => {
-    var res = response.data.data
-    cb(res)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
+  axios.get('Warranty/findApplOrAssu?table_name=' + tb + '&document_number=' + id + '&t=' + new Date().getTime())
+    .then(response => {
+      let res = response.data.data
+      cb(res)
+    })
+    .catch(error => {
+      cb(error)
+      console.log(error)
+    })
 }
 
 const queryRegion = function (mode, code, cb) {
@@ -196,6 +198,14 @@ const obj2json = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
+const share = function(data, cb) {
+  axios.post('wechat/share', data).then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
 export default {
   initField,
   queryID,
@@ -208,6 +218,7 @@ export default {
   queryZipcode,
   getAge,
   queryPersonInfo,
-  obj2json
+  obj2json,
+  share
 }
 

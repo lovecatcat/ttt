@@ -37,7 +37,7 @@
           </div>
         </app-input>
         <app-input label="期交保费">
-          <input slot="input" readonly v-model.number="insurance.period_money" type="number" placeholder="期交保费(元)">
+          <input slot="input" readonly v-model="insurance.period_money" type="text" placeholder="期交保费(元)">
           <div slot="button" class="am-list-button" @click="cal(false)">
             <button type="button">点击计算</button>
           </div>
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="app-list-header">附加险</div>
-    <app-dropdown v-if="addonIns[index] && index === '362'"
+    <app-dropdown v-if="addonIns[index] && ['370','362'].indexOf(index) > -1 "
                   :id="index" :ref="'applicant_'+index"
                   v-for="(item,index) in main_insurance.child"
                   :key="index" up="up" noToggle>
@@ -64,7 +64,7 @@
         </div>
       </template>
       <app-select label="交费期间" readonly>
-        <select v-model="addonIns[index].pay_year" disabled>
+        <select v-model="addonIns[index].pay_year" disabled @change="addonIns[index].period_money = '',$forceUpdate()">
           <option disabled value="">请选择</option>
           <option v-for="pitem in unique(item.attr,'pay_year')"
                   :value="pitem.sv_id" :key="pitem.sv_id"
@@ -72,7 +72,8 @@
         </select>
       </app-select>
       <app-select label="保险期间" :readonly="item.attr.length===1">
-        <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1">
+        <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1"
+                @change="addonIns[index].period_money = '',$forceUpdate()">
           <option disabled value="">请选择</option>
           <option v-for="sitem in unique(item.attr, 'safe_year')"
                   :value="sitem.sv_id" :key="sitem.sv_id"
@@ -80,12 +81,12 @@
         </select>
       </app-select>
       <app-input label="基本保险金额">
-        <input slot="input" readonly v-model.number="addonIns[index].money" type="number" placeholder="与主险保持一致">
+        <input slot="input" readonly v-model.number="addonIns[index].money" type="number" :placeholder="index === '362' ? '与主险保持一致' : '主险和附加长险的期交保费之和'">
       </app-input>
       <app-input label="期交保费">
         <input slot="input" readonly
-               v-model.number="addonIns[index].period_money"
-               type="number"
+               v-model="addonIns[index].period_money"
+               type="text"
                placeholder="请点击计算">
         <div slot="button" class="am-list-button" @click="cal(index)">
           <button type="button">点击计算</button>
@@ -250,12 +251,23 @@
         this.back = '/beinsured'
       }
     },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        if (from.path !== '/insured' && from.path !== '/beinsured') {
+          return
+        }
+        if (vm.insurance) {
+          vm.insurance.period_money = ''
+        }
+        for (let i in vm.addonIns) {
+          if (vm.addonIns[i] && vm.addonIns[i].period_money) {
+            vm.addonIns[i].period_money = ''
+          }
+        }
+      })
+    },
     beforeRouteLeave (to, from, next) {
       if (to.path === '/insured' || to.path === '/beinsured') {
-        this.insurance.period_money = ''
-        if (this.addonIns && this.addonIns[362]) {
-          this.addonIns[362].period_money = ''
-        }
         next()
         return
       }
@@ -310,12 +322,16 @@
           }
         })
         this.mainPayYear = mainPayYear
+        if (!this.main_insurance.child) return
         // 百万健康两全保险
-        if (!this.main_insurance.child || !this.main_insurance.child[362]) return
-        let attr = this.main_insurance.child[362].attr
-        this.unique(attr, 'pay_year').forEach(item => {
+        this.main_insurance.child[362] && this.unique(this.main_insurance.child[362].attr, 'pay_year').forEach(item => {
           if (Number(item.pay_year) === mainPayYear) {
             this.addonIns[362].pay_year = item.sv_id
+          }
+        })
+        this.main_insurance.child[370] && this.unique(this.main_insurance.child[370].attr, 'pay_year').forEach(item => {
+          if (Number(item.pay_year) === mainPayYear - 1) {
+            this.addonIns[370].pay_year = item.sv_id
           }
         })
       },
@@ -361,6 +377,12 @@
           case '362':
             tml.pay_year = this.insurance.pay_year
             tml.money = this.insurance.money
+            break
+          case '370':
+            let attr = this.unique(this.main_insurance.child[370].attr, 'safe_year')
+            if (attr.length === 1) {
+              tml.safe_year = attr[0].sv_id
+            }
             break
           default:
             break
@@ -443,21 +465,38 @@
             console.info(res.message)
             vm.$toast.open('计算失败：' + res.message)
           } else {
-            vm.$toast.close()
+            if (res.status === null) {
+              vm.$toast.open('网络忙，请稍后再试', 'warn')
+            } else {
+              vm.$toast.close()
+            }
+            res.id.appl_id && vm.$store.dispatch('setApplicant', {
+              'appl_id': res.id.appl_id
+            })
+            res.id.assu_id && vm.$store.dispatch('saveAssured', {
+              'assu_id': res.id.assu_id
+            })
+
+            if (typeof res.data[vm.insurance.safe_id] === 'undefined') {
+              return
+            }
+            let period_money = res.data[vm.insurance.safe_id]
             if (addonIndex) {
-              vm.addonIns[addonIndex].period_money = res.data[addonIndex]
+              let addoPm = res.data[addonIndex]
+              vm.addonIns[addonIndex].period_money = addoPm
+              if (vm.addonIns[370] && index !== '370') {
+                vm.addonIns[370].money = period_money + (this.addonsSelected[index] ? addoPm : 0)
+                vm.addonIns[370].period_money = ''
+              }
               vm.$forceUpdate()
             } else {
-              vm.insurance.period_money = res.data[vm.insurance.safe_id]
-              vm.$store.dispatch('setApplicant', {
-                'appl_id': res.id.appl_id
-              })
-              vm.$store.dispatch('saveAssured', {
-                'assu_id': res.id.assu_id
-              })
-
+              vm.insurance.period_money = period_money
               if (vm.addonIns[362]) {
                 vm.addonIns[362].money = this.insurance.money
+              }
+              if (vm.addonIns[370]) {
+                vm.addonIns[370].money = period_money
+                vm.addonIns[370].period_money = ''
               }
               // 是否达到反洗钱标准
               vm.$store.dispatch('setAntiMoney', (res.data[vm.insurance.safe_id] * this.mainPayYear >= 200000))
@@ -510,6 +549,10 @@
       },
       chAddonState (index) {
         if (!this.addonIns[index]) return
+        if (index !== '370') {
+          this.addonIns[370].money = this.insurance.period_money + this.addonIns[index].period_money
+          this.addonIns[370].period_money = ''
+        }
         this.$forceUpdate()
       },
       checkMoney (index) {
@@ -537,6 +580,9 @@
             break
           default:
             break
+        }
+        if (money > 9999999999) {
+          toast_text = '请输入合适的金额'
         }
         if (toast_text) {
           this.$toast.open(toast_text, 'warn')
@@ -578,7 +624,7 @@
       },
       checkForm () {
         const vm = this
-        var toast_text = null
+        let toast_text = null
         if (!vm.insurance.safe_id) {
           toast_text = '请选择险种'
         } else if (!vm.insurance.safe_year) {

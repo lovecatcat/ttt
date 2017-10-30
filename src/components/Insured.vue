@@ -199,6 +199,7 @@ export default {
       cardinfo: {}, //身份证信息
       // 投保人信息
       applicant: {
+        appl_id: '',
         register_select: '', //户籍展示
         address_select: '', //通信展示
         name: '', //姓名
@@ -250,11 +251,19 @@ export default {
   computed: {
     init() {
       return this.$store.state.init || {}
+    },
+    appl_id() {
+      return this.$store.state.applicant.appl_id || ''
     }
   },
   watch: {
     longTerm(val) {
       this.applicant.document_term = val ? '9999-12-30' : ''
+    },
+    appl_id(val) {
+      if (val) {
+        this.applicant.appl_id = val
+      }
     }
   },
   created() {
@@ -610,7 +619,6 @@ export default {
           } else {
             this.$delete(this.assured, 'assu_id')
           }
-          this.$delete(this.assured, 'appl_id')
           this.$store.dispatch('saveAssured', this.assured)
           this.$router.push('/prospectus')
         })

@@ -182,6 +182,7 @@ export default {
       age: '', //年龄
       // 被保险人信息
       assured: {
+        asu_id: '', //
         war_id: '', //
         register_select: '', //户籍展示
         address_select: '', //通信展示
@@ -222,6 +223,9 @@ export default {
   computed: {
     init() {
       return this.$store.state.init
+    },
+    asu_id() {
+      return this.$store.state.assured.asu_id || ''
     }
   },
   created() {
@@ -246,6 +250,11 @@ export default {
       }
       if (val < 16) {
         this.warranty.assu_tax_type = ''
+      }
+    },
+    asu_id(val) {
+      if (val) {
+        this.assured.asu_id = val
       }
     }
   },

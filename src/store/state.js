@@ -19,6 +19,7 @@ export default {
   admin_id: admin_id || 1846,
   todo: false, //未完成订单
   ready: false, //首页加载
+  war_id: null, //保单ID
   tmp: { //受益人
     people: [0],
     current: 0

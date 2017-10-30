@@ -280,7 +280,7 @@
         <template v-if="index === 0">
           <div class="am-list-item">
             <template v-if="insurances.length > 1">
-              <span class="badge am-ft-left badge-main" >主</span>
+              <span class="badge am-ft-left badge-main">主</span>
             </template>
             <div class="am-list-label" style="width: .7rem">险种</div>
             <div class="am-list-control">
@@ -299,7 +299,8 @@
           </app-select>
           <app-select label="保险期间" readonly="true">
             <select disabled v-model="insurance.safe_year" disabled>
-              <option v-for="item in attr" :value="item.sv_id">{{item.safe_year == 999 ? '终身' : item.safe_year}}</option>
+              <option v-for="item in attr" :value="item.sv_id">{{item.safe_year == 999 ? '终身' : item.safe_year}}
+              </option>
             </select>
           </app-select>
           <app-input label="基本保险金额">
@@ -321,13 +322,16 @@
           </div>
           <app-select label="交费期间" readonly="true">
             <select disabled v-model="insurance.pay_year" disabled>
-              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">{{showPayYear(item.pay_year)}}
+              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">
+                {{showPayYear(item.pay_year)}}
               </option>
             </select>
           </app-select>
           <app-select label="保险期间" readonly="true">
             <select disabled v-model="insurance.safe_year" disabled>
-              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">{{showSafeYear(item.safe_year)}}</option>
+              <option v-for="item in main_insurance.child[insurance.safe_id].attr" :value="item.sv_id">
+                {{showSafeYear(item.safe_year)}}
+              </option>
             </select>
           </app-select>
           <app-input label="基本保险金额">
@@ -521,11 +525,9 @@
 
   export default {
     name: 'preview',
-    data() {
+    data () {
       return {
         warData: null, //保单信息
-        // main_insurance: null, //主险
-        // attr: null, //保险属性
         isExempted: false, // 是否豁免投保人
         confirm: false, //确认信息
         uploading: false //正在提交
@@ -533,45 +535,46 @@
     },
     computed: {
       ...mapState([
+        'war_id',
         'init',
         'matters',
         'safegoods',
         'main_insurance'
       ]),
-      applicant() {
+      applicant () {
         return Api.obj2json(this.$store.state.applicant)
       },
-      assured() {
+      assured () {
         return Api.obj2json(this.$store.state.assured)
       },
-      warranty() {
+      warranty () {
         return Api.obj2json(this.$store.state.warranty)
       },
-      beneficiaries() {
+      beneficiaries () {
         return this.$store.state.beneficiaries
       },
-      clientvalue() {
+      clientvalue () {
         return Api.obj2json(this.$store.state.clientvalue)
       },
-      insurances() {
+      insurances () {
         return this.$store.state.insurances
       },
-      anti_money() {
+      anti_money () {
         return this.$store.state.anti_money
       },
-      attr() {
+      attr () {
         return this.$store.state.main_insurance.attr
       }
     },
-    beforeRouteLeave(to, from, next) {
+    beforeRouteLeave (to, from, next) {
       this.warData = null
       next()
     },
-    activated() {
+    activated () {
       this.$forceUpdate()
     },
     methods: {
-      showSafeYear(safe_year) {
+      showSafeYear (safe_year) {
         if (safe_year === '999') {
           return '终身'
         } else if (Number(safe_year) > 50) {
@@ -580,21 +583,21 @@
           return safe_year + '年'
         }
       },
-      showPayYear(pay_year) {
+      showPayYear (pay_year) {
         if (pay_year === '1') {
           return '趸交'
         } else {
           return pay_year + '年交'
         }
       },
-      countFee(obj) {
+      countFee (obj) {
         var c = 0
         for (var i in obj.data) {
           c += parseInt(obj.data[i])
         }
         return c
       },
-      push() {
+      push () {
         const vm = this
         if (!vm.confirm) {
           vm.$toast.open('请先确认信息无误', 'warn')
@@ -604,9 +607,6 @@
           return false
         }
         vm.uploading = true
-        setTimeout(() => {
-          vm.uploading = false
-        }, 1500)
         vm.$toast.open('正在提交', 'loading')
         let pushData = {}
         let filter = ['register_select', 'address_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
@@ -629,20 +629,22 @@
           var p = 'warranty_' + m
           pushData[p] = vm.warranty[m]
         }
+        var warId = vm.war_id || ''
         pushData['warranty_admin_id'] = vm.$store.state.admin_id
         pushData['warranty_sc_id'] = 19
         pushData['warranty_card_holder'] = vm.applicant.name
-        // pushData['warranty_add_time'] = (Date.parse(new Date())).toString().substr(0, 10)
         pushData['warranty_is_save'] = 1
-        pushData['warranty_source'] = 2
+        if (warId) {
+          pushData['warranty_war_id'] = warId
+        }
 
+        pushData['warranty_source'] = 2
         pushData['clientvalue_ci_id'] = []
         pushData['clientvalue_app_amswer'] = []
         pushData['clientvalue_ass_amswer'] = []
         pushData['clientvalue_app_fields'] = []
         pushData['clientvalue_fields'] = []
         pushData['clientvalue_war_id'] = []
-        var warId = ''
         vm.matters.forEach(i => {
           var index = i.ci_id
           pushData['clientvalue_ci_id'].push(i.ci_id)
@@ -737,10 +739,17 @@
 
         // if (pushData) return false
         Api.pushWarranty(qs.stringify(pushData), res => {
+          vm.uploading = false
           if (res.name && res.name.indexOf('Error') > -1) {
             vm.$toast.open('服务器开小差了', 'error')
             return
           }
+/*          if (res.id && res.id.war_id) {
+            this.$store.dispatch('setParam', {
+              war_id: res.id.war_id
+            })
+          }*/
+
           if (res.status === '0') {
             vm.$toast.open('提交失败：' + res.message, '', 5000)
             return false

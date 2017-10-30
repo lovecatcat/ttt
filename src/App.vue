@@ -18,6 +18,20 @@
 <script>
 import Api from './api'
 import $_GET from './widgets/Get'
+import qs from 'qs'
+
+var share = function (share) {
+  /* eslint-disable */
+  wx.ready(function () {
+    wx.onMenuShareTimeline(share)
+    wx.onMenuShareAppMessage(share)
+    wx.onMenuShareQQ(share)
+    wx.onMenuShareWeibo(share)
+    wx.onMenuShareQZone(share)
+  })
+  /* eslint-enable */
+}
+
 export default {
   name: 'app',
   data() {
@@ -45,6 +59,40 @@ export default {
         })
       }
     })
+    Api.share(qs.stringify({
+      url: location.href
+    }), res => {
+      vm.initShare(res.data)
+    })
+  },
+  methods: {
+    initShare(d) {
+      // eslint-disable-next-line
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: d.appId, // 必填，公众号的唯一标识
+        timestamp: d.timestamp, // 必填，生成签名的时间戳
+        nonceStr: d.noncestr, // 必填，生成签名的随机串
+        signature: d.signature, // 必填，签名，见附录1
+        jsApiList: [ // 授权接口列表
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
+          'onMenuShareQQ',
+          'onMenuShareWeibo',
+          'onMenuShareQZone'
+        ]
+      })
+      var params = {
+        admin_id: $_GET['admin_id'],
+        shared: true
+      }
+      share({
+        title: '信泰人寿在线投保',
+        desc: '\r\n【汇盟保险，更专业的保险管家】',
+        link: 'http://cloud.ehuimeng.com/Wechat/XT_ins2c?' + qs.stringify(params), // 分享链接
+        imgUrl: location.protocol + '//' + location.host + '/Theme/index/home/images/logo.png' // 分享图标
+      })
+    }
   }
 }
 </script>
