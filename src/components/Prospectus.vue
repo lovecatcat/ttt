@@ -484,8 +484,8 @@
             if (addonIndex) {
               let addoPm = res.data[addonIndex]
               vm.addonIns[addonIndex].period_money = addoPm
-              if (vm.addonIns[370] && index !== '370') {
-                vm.addonIns[370].money = period_money + (this.addonsSelected[index] ? addoPm : 0)
+              if (vm.addonIns[370] && addonIndex !== '370' && this.addonsSelected[addonIndex]) {
+                vm.addonIns[370].money = Number(period_money) + Number(addoPm)
                 vm.addonIns[370].period_money = ''
               }
               vm.$forceUpdate()
@@ -548,10 +548,25 @@
         return true
       },
       chAddonState (index) {
+        let toast_text = null
         if (!this.addonIns[index]) return
         if (index !== '370') {
-          this.addonIns[370].money = this.insurance.period_money + this.addonIns[index].period_money
+          let money = Number(this.insurance.period_money)
+          if (this.addonsSelected[index] === true) {
+            money += Number(this.addonIns[index].period_money)
+          }
+          this.addonIns[370].money = money
           this.addonIns[370].period_money = ''
+        } else { // 附加投保人豁免
+          if (this.mainPayYear < 5) {
+            toast_text = '主险交费年期≥5年，方可附加本附加险'
+          } else if (this.$store.state.warranty.is_assured === 15000) {
+            toast_text = '投、被保险人为同一人时，不可附加本附加险'
+          }
+        }
+        if (toast_text) {
+          this.addonsSelected[index] = false
+          this.$toast.open(toast_text, 'warn')
         }
         this.$forceUpdate()
       },

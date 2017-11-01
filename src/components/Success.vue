@@ -12,7 +12,7 @@
         <br>
         <p v-show="tid">投保单号：{{tid}}</p>
         <br>
-        <p class="am-ft-right"><a class="am-page-result-button" href="http://m.ehuimeng.com">返回首页</a> &nbsp;&nbsp;<a class="am-page-result-button app-color-warn" href="/wechat/PER_index">个人中心</a></p>
+        <p class="am-ft-right"><a class="am-page-result-button" href="https://ehuimeng.kuaizhan.com">返回首页</a> &nbsp;&nbsp;<a class="am-page-result-button app-color-warn" href="/wechat/PER_index">个人中心</a></p>
       </div>
     </div>
   </div>
