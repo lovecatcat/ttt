@@ -154,6 +154,8 @@ export default {
         toast_text = '银行账号不能为空'
       } else if (isNaN(number)) {
         toast_text = '银行卡号必须是数字'
+      } else if (number.length > 20) {
+        toast_text = '银行卡号最长为20位'
       }
       if (toast_text) {
         vm.$toast.open(toast_text, 'warn')

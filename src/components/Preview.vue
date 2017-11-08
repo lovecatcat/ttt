@@ -98,7 +98,7 @@
         <input slot="input" readonly :value="warranty.contract_handle_value" type="text">
       </app-input>
     </app-dropdown>
-    <app-dropdown v-if="!warData && assured">
+    <app-dropdown v-if="!warData && assured" v-show="warranty && warranty.is_assured !== 15000">
       <template slot="header">
         <div class="am-list-label">被保险人资料</div>
         <div class="am-list-content am-ft-right">
@@ -285,7 +285,7 @@
             <div class="am-list-label" style="width: .7rem">险种</div>
             <div class="am-list-control">
               <select v-model="main_insurance" disabled>
-                <option v-if="item.safe_id === '209' || item.safe_id === '210' || item.safe_id === '361'"
+                <option v-if="item.safe_id === '361'"
                         v-for="item in safegoods" :value="item">{{item.name}}
                 </option>
               </select>

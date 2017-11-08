@@ -3,10 +3,10 @@
     <div class="am-list am-list-6lb form">
       <div class="app-list-header"><span class="app-iconfont">&#xe631;</span>选择险种信息</div>
       <div class="am-list-body">
-        <app-select label="险种" :readonly="safe_id">
+        <app-select label="险种" :readonly="safe_id" v-if="safegoods">
           <select v-model="main_insurance" @change="insurance_changed" :disabled="safe_id">
             <option disabled value="0">请选择</option>
-            <option v-if="item.safe_id == 209 || item.safe_id == 210 || item.safe_id == 361"
+            <option v-if="item.safe_id == 361"
                     v-for="item in safegoods"
                     :value="item">{{item.name}}
             </option>
@@ -47,6 +47,7 @@
     <div class="app-list-header">附加险</div>
     <app-dropdown v-if="addonIns[index] && ['370','362'].indexOf(index) > -1 "
                   :id="index" :ref="'applicant_'+index"
+                  v-show="mainPayYear > 3 || index !== '370'"
                   v-for="(item,index) in main_insurance.child"
                   :key="index" up="up" noToggle>
       <template slot="header">
@@ -578,16 +579,6 @@
           this.addonIns[362].money = money
         }
         switch (id) {
-          case '209':
-            if (money < 50000 || money % 10000 !== 0) {
-              toast_text = '最低保额为5万元，且为1万元整数倍'
-            }
-            break
-          case '210':
-            if (money < 300000 || money % 10000 !== 0) {
-              toast_text = '最低保额为30万元，且为1万元整数倍'
-            }
-            break
           case '361':
             if (money < 50000 || money % 1000 !== 0) {
               toast_text = '最低保额为5万元，且为1千元整数倍'
@@ -609,11 +600,8 @@
         var vm = this
         var age = Api.getAge(vm.$store.state.assured.birthday)
         var id = index || this.insurance.safe_id
-        if (age > 60 && (id === '209' || id === '361')) {
+        if (age > 60 && id === '361') {
           vm.$toast.open('被保险人年龄不能大于60周岁', '')
-          return false
-        } else if (age > 50 && id === '210') {
-          vm.$toast.open('被保险人年龄不能大于50周岁', '')
           return false
         }
         return true
