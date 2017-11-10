@@ -303,6 +303,23 @@
               </option>
             </select>
           </app-select>
+          <app-input label="是否自动垫交保费" autoWidth>
+            <div class="am-ft-right" slot="input">
+              <div class="am-switch" v-if="init.warranty && init.warranty.mattress_sign">
+                <input type="checkbox"
+                       class="am-switch-checkbox"
+                       disabled
+                       id="mattress_sign"
+                       v-bind:true-value="init.warranty.mattress_sign[1].if_id"
+                       v-bind:false-value="init.warranty.mattress_sign[0].if_id"
+                       v-model="warranty.mattress_sign">
+                <label class="am-switch-label" for="mattress_sign">
+                  <div class="am-switch-inner"></div>
+                  <div class="am-switch-switch"></div>
+                </label>
+              </div>
+            </div>
+          </app-input>
           <app-input label="基本保险金额">
             <input slot="input" readonly :value="insurance.money" type="text">
           </app-input>
@@ -530,7 +547,8 @@
         warData: null, //保单信息
         isExempted: false, // 是否豁免投保人
         confirm: false, //确认信息
-        uploading: false //正在提交
+        uploading: false, //正在提交
+        done: false
       }
     },
     computed: {
@@ -599,6 +617,10 @@
       },
       push () {
         const vm = this
+        if (vm.done === true) {
+          vm.$toast.open('您已经提交过了', 'warn')
+          return false
+        }
         if (!vm.confirm) {
           vm.$toast.open('请先确认信息无误', 'warn')
           return false
@@ -761,6 +783,7 @@
             })
             this.clearStorage()
             setTimeout(function () {
+              vm.done = true
               vm.$router.push('/success')
             }, 2000)
           }

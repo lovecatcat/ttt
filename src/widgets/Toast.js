@@ -17,7 +17,7 @@ export default {
         </div>
       `,
       methods: {
-        open(text, type, time = 2000) {
+        open(text, type, time = 2500) {
           if (text || type) {
             this.text = text
             this.type = type

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Api from 'api'
 Vue.use(Vuex)
 
 import state from './state'
@@ -10,6 +11,12 @@ const getters = {
   // initOccupations(state) {
   //   state.init.applicant ? Object.assign({}, state.init.applicant.occupation_code) : {}
   // }
+  applAge(state) {
+    return Api.getAge(state.applicant.birthday)
+  },
+  assuAge(state) {
+    return Api.getAge(state.assured.birthday)
+  }
 }
 const debug = process.env.NODE_ENV !== 'production'
 

@@ -504,10 +504,10 @@ export default {
       if (!tel) {
         toast_text = '手机号不能为空'
       } else if (this.warranty.appl_card_type === 15009) {
-        if (!/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
+        if (!/^1[3-9][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
           toast_text = '请输入正确的11位或13位手机号'
         }
-      } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {
+      } else if (!/^1[3-9][0-9]{9}$/.test(tel)) {
         toast_text = '请输入正确的11位手机号'
       }
       if (toast_text) {

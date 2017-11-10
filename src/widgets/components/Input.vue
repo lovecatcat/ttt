@@ -1,6 +1,6 @@
 <template>
   <div class="am-list-item">
-    <div class="am-list-label">{{label}}</div>
+    <div :class="{'am-list-label': !autoWidth,'app-list-title': autoWidth}">{{label}}</div>
     <div class="am-list-control">
       <slot name="input"></slot>
     </div>
@@ -9,8 +9,11 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'Input',
-  props: ['label']
-}
+  export default {
+    name: 'Input',
+    props: {
+      label: String,
+      autoWidth: Boolean
+    }
+  }
 </script>

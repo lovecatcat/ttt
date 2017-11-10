@@ -39,7 +39,7 @@
         <app-input label="性别">
           <div class="am-ft-right" slot="input">
             <div class="am-switch am-sex">
-              <input type="checkbox" @change="setInfo" class="am-switch-checkbox" :disabled="[57 ,15008].indexOf(warranty.assu_card_type)>-1" id="sex2" v-model="warranty.assu_sex" :true-value="11338" :false-value="11339">
+              <input type="checkbox" @change="setInfo(), checkSex()" class="am-switch-checkbox" :disabled="[57 ,15008].indexOf(warranty.assu_card_type)>-1" id="sex2" v-model="warranty.assu_sex" :true-value="11338" :false-value="11339">
               <label class="am-switch-label" for="sex2">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -169,6 +169,11 @@ import Api from '../api'
 import Region from './Region'
 import Occupation from './Occupation'
 
+const sex = { // 0为女，1为男
+  1: 11338,
+  0: 11339
+}
+
 export default {
   name: 'beinsured',
   components: {
@@ -285,10 +290,6 @@ export default {
           if (Validator.isValid(id, 18)) {
             const idInfo = Validator.getInfo(id)
             const code = idInfo.addrCode.substr(0, 2)
-            const sex = { // 0为女，1为男
-              1: '11338',
-              0: '11339'
-            }
             vm.assured.birthday = idInfo.birth
             vm.warranty.assu_sex = sex[idInfo.sex]
             vm.assured.register_select || (vm.assured.register_select = addr[code].name)
@@ -301,6 +302,7 @@ export default {
               vm.warranty.assu_annual_source = 15457
               vm.assured.annual_source_other = '无'
             }
+            vm.checkSex()
           } else {
             toast_text = '请输入正确的18位数证件号码'
             vm.assured.register_select = ''
@@ -388,6 +390,16 @@ export default {
       assured.zipcode = res.zipcode
       if (res.document_term === '9999-12-30') vm.longTerm = true
       vm.assured = Object.assign(vm.assured, assured)
+    },
+    checkSex() {
+      console.log('更改被保人性别')
+      if (this.$store.state.warranty.is_assured === 15002 &&
+        sex[this.$store.state.applicant.document_number[16] % 2] === Number(this.warranty.assu_sex)) {
+        let toast_text = '当投被保人关系为配偶时，性别不能相同'
+        this.$toast.open(toast_text, '', 3000)
+        return false
+      }
+      return true
     },
     // 户籍选择
     register_selected(selected) {
@@ -482,7 +494,7 @@ export default {
       var toast_text = null
       if (this.warranty.assu_card_type === 15009 && !/^1[3|4|5|7|8][0-9]{9}$|^00852[0-9]{8}$/.test(tel)) {
         toast_text = '请输入正确的11位或13位手机号'
-      } else if (!/^1[3|4|5|7|8][0-9]{9}$/.test(tel)) {
+      } else if (!/^1[3-9][0-9]{9}$/.test(tel)) {
         toast_text = '请输入正确的11位手机号'
       }
       if (toast_text) {
@@ -518,6 +530,8 @@ export default {
       } else if (!vm.warranty.assu_tax_type && vm.age >= 16) {
         toast_text = '请选择被保险人个人税收居民身份类型'
       } else if (vm.age >= 16 && !vm.checkTax('被保险人', vm.warranty.assu_tax_type)) {
+        return false
+      } else if (!this.checkSex()) {
         return false
       } else if (!vm.warranty.assu_nation) {
         toast_text = '请选择被保险人【国籍】'

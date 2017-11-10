@@ -29,6 +29,22 @@
             <option v-for="item in attr2" :value="item.sv_id">{{showSafeYear(item.safe_year)}}</option>
           </select>
         </app-select>
+        <app-input label="是否自动垫交保费" autoWidth>
+          <div class="am-ft-right" slot="input">
+            <div class="am-switch" v-if="init.warranty && init.warranty.mattress_sign">
+              <input type="checkbox"
+                     class="am-switch-checkbox"
+                     id="mattress_sign"
+                     v-bind:true-value="init.warranty.mattress_sign[1].if_id"
+                     v-bind:false-value="init.warranty.mattress_sign[0].if_id"
+                     v-model="warranty.mattress_sign">
+              <label class="am-switch-label" for="mattress_sign">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
+        </app-input>
         <app-input label="基本保险金额">
           <input slot="input" @change="insurance.period_money = ''" v-model.number.lazy="insurance.money" type="number"
                  placeholder="请填写基本保险金额（元）" @blur="moneyChanged">
@@ -47,7 +63,7 @@
     <div class="app-list-header">附加险</div>
     <app-dropdown v-if="addonIns[index] && ['370','362'].indexOf(index) > -1 "
                   :id="index" :ref="'applicant_'+index"
-                  v-show="mainPayYear > 3 || index !== '370'"
+                  v-show="(mainPayYear > 3 && $store.state.warranty.is_assured !== 15000 && applAge < 61) || index !== '370'"
                   v-for="(item,index) in main_insurance.child"
                   :key="index" up="up" noToggle>
       <template slot="header">
@@ -82,7 +98,8 @@
         </select>
       </app-select>
       <app-input label="基本保险金额">
-        <input slot="input" readonly v-model.number="addonIns[index].money" type="number" :placeholder="index === '362' ? '与主险保持一致' : '主险和附加长险的期交保费之和'">
+        <input slot="input" readonly v-model.number="addonIns[index].money" type="number"
+               :placeholder="index === '362' ? '与主险保持一致' : '主险和附加长险的期交保费之和'">
       </app-input>
       <app-input label="期交保费">
         <input slot="input" readonly
@@ -144,6 +161,9 @@
   const qs = require('qs')
   import Api from '../api'
   import $_GET from '../widgets/Get'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'prospectus',
@@ -161,7 +181,8 @@
         },
         warranty: {
           delivery_way: '117',
-          assu_social_security: '15047'
+          assu_social_security: '15047',
+          mattress_sign: '77' //自动垫交
         },
         applicant: {
           email: '' //邮箱
@@ -178,6 +199,10 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'assuAge',
+        'applAge'
+      ]),
       main_insurance: {
         get () {
           return this.$store.state.main_insurance
@@ -234,7 +259,7 @@
           vm.$nextTick(function () {
             vm.attr = this.unique(vm.main_insurance.attr, 'pay_year')
             vm.attr2 = this.unique(vm.main_insurance.attr, 'safe_year')
-            var insurance = vm.$storage.fetch('insurance')
+            let insurance = vm.$storage.fetch('insurance')
             this.insurance.safe_id = insurance.safe_id
             this.insurance.money = insurance.money
             this.insurance.pay_year = insurance.pay_year
@@ -247,6 +272,7 @@
     },
     activated () {
       if (this.$store.state.warranty.is_assured === 15000) {
+        this.addonsSelected[370] = false
         this.back = '/insured'
       } else {
         this.back = '/beinsured'
@@ -335,6 +361,7 @@
             this.addonIns[370].pay_year = item.sv_id
           }
         })
+        this.resetAdddons()
       },
       syChanged () {
         this.insurance.period_money = ''
@@ -343,11 +370,10 @@
             this.mainSafeYear = Number(item.safe_year)
           }
         })
+        this.resetAdddons()
       },
       moneyChanged () {
-        if (this.addonIns && this.addonIns[362]) {
-          this.addonIns[362].period_money = ''
-        }
+        this.resetAdddons()
         this.checkMoney()
       },
       showSafeYear (safe_year) {
@@ -364,6 +390,11 @@
           return '趸交'
         } else {
           return pay_year + '年交'
+        }
+      },
+      resetAdddons () {
+        for (let i in this.addonIns) {
+          this.addonIns[i].period_money = ''
         }
       },
       setAddons (i) {
@@ -498,6 +529,9 @@
               if (vm.addonIns[370]) {
                 vm.addonIns[370].money = period_money
                 vm.addonIns[370].period_money = ''
+                if (vm.mainPayYear < 3 || vm.$store.state.warranty.is_assured !== 15000) {
+                  this.addonsSelected[370] = false
+                }
               }
               // 是否达到反洗钱标准
               vm.$store.dispatch('setAntiMoney', (res.data[vm.insurance.safe_id] * this.mainPayYear >= 200000))
@@ -598,7 +632,7 @@
       },
       checkAge (index) {
         var vm = this
-        var age = Api.getAge(vm.$store.state.assured.birthday)
+        var age = vm.assuAge
         var id = index || this.insurance.safe_id
         if (age > 60 && id === '361') {
           vm.$toast.open('被保险人年龄不能大于60周岁', '')

@@ -26,6 +26,8 @@ const initField = function (cb) {
             res.warranty.contract_handle = citem.children
           } else if (citem.a_id === '33') { //保单递送方式
             res.warranty.delivery_way = citem.children
+          } else if (citem.a_id === '20') { //垫交标志
+            res.warranty.mattress_sign = citem.children
           }
         })
       } else if (item.name === 'applicant') {
