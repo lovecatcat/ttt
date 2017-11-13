@@ -394,7 +394,7 @@ export default {
     checkSex() {
       console.log('更改被保人性别')
       if (this.$store.state.warranty.is_assured === 15002 &&
-        sex[this.$store.state.applicant.document_number[16] % 2] === Number(this.warranty.assu_sex)) {
+        Number(this.$store.state.warranty.appl_sex) === Number(this.warranty.assu_sex)) {
         let toast_text = '当投被保人关系为配偶时，性别不能相同'
         this.$toast.open(toast_text, '', 3000)
         return false
