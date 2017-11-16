@@ -360,14 +360,17 @@ export default {
         fields: {}, //被保人用户字段
         app_amswer: {}, //投保人勾选
         app_fields: {} //投保人填写字段
-      },
-      isExempted: false // 是否豁免投保人
+      }
     }
   },
   computed: {
     age() {
-      var birthday = this.$store.state.assured.birthday
+      let birthday = this.$store.state.assured.birthday
       return birthday ? (new Date().getFullYear() - birthday.substr(0, 4)) : 20
+    },
+    isExempted() { // 是否豁免投保人
+      let addonIns = this.$store.state.addonIns
+      return Boolean(addonIns && addonIns[370])
     }
   },
   watch: {
@@ -422,7 +425,7 @@ export default {
       console.log(val, id)
     },
     assChanged(val, id) {
-      this.local && console.log(val, id)
+      console.log(val, id)
       this.allNo = false
 
       // 如果为否
