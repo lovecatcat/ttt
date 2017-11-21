@@ -631,11 +631,17 @@
         return true
       },
       checkAge (index) {
-        var vm = this
-        var age = vm.assuAge
-        var id = index || this.insurance.safe_id
-        if (age > 60 && id === '361') {
-          vm.$toast.open('被保险人年龄不能大于60周岁', '')
+        let vm = this
+        let age = vm.assuAge
+//        let id = index || this.insurance.safe_id
+        let toastText = null
+        if (age > 60) {
+          toastText = '被保险人年龄不能大于60周岁'
+        } else if (age + this.mainPayYear > 70) {
+          toastText = '缴费期满时被保人年龄不能超过70周岁'
+        }
+        if (toastText) {
+          this.$toast.open(toastText, 'warn')
           return false
         }
         return true

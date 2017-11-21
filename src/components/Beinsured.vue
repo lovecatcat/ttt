@@ -515,6 +515,20 @@ export default {
       this.warranty.assu_occupation_code = ''
       this.$refs.occupation.show = true
     },
+    checkAge() {
+      let toastText = null
+      if (this.age > 60) {
+        toastText = '被保人年龄不能超过60周岁'
+      } else if ((new Date() - new Date(this.assured.birthday)) / 24 / 3600 / 1000 < 28) {
+        toastText = '被保人需出生满28天'
+      }
+      if (toastText) {
+        console.info(toastText)
+        this.$toast.open(toastText, '')
+        return false
+      }
+      return true
+    },
     // 校验表单
     checkForm() {
       const vm = this
@@ -527,6 +541,8 @@ export default {
         return false
       } else if (!vm.assured.birthday) {
         toast_text = '请选择被保险人【出生日期】'
+      } else if (!vm.checkAge()) {
+        return false
       } else if (!vm.warranty.assu_tax_type && vm.age >= 16) {
         toast_text = '请选择被保险人个人税收居民身份类型'
       } else if (vm.age >= 16 && !vm.checkTax('被保险人', vm.warranty.assu_tax_type)) {

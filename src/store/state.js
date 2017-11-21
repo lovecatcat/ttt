@@ -10,8 +10,8 @@ export default {
   warranty: {}, //保单信息
   applicant: {}, //投保人信息
   assured: {}, //被保人信息
-  status: 0, //保单状态
-  tid: '', //投保单号
+  insured: 0, //核保结果
+  uploadImg: '', //上传影像结果
   anti_money: false, //反洗钱标准
   init: {}, //初始化数据,
   main_insurance: '0', //主险数据

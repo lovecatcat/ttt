@@ -408,6 +408,11 @@
                   </label>
                 </div>
               </div>
+              <div v-if="clientvalue.fields[childitem.ci_id]" class="app-list qaline">
+                <div class="app-list-control app-color-error">
+                  {{clientvalue.fields[childitem.ci_id]}}
+                </div>
+              </div>
               <div class="app-list" v-if="isExempted">
                 <div class="app-list-title">投保人</div>
                 <div class="am-switch">
@@ -419,18 +424,9 @@
                   </label>
                 </div>
               </div>
-            </div>
-            <div class="am-list-body">
-              <div v-if="clientvalue.fields[childitem.ci_id]" class="app-list">
+              <div v-if="clientvalue.app_fields[childitem.ci_id] && isExempted" class="app-list">
                 <div class="app-list-control app-color-error">
-                  <div class="app-list-brief" v-if="isExempted">被保险人</div>
-                  {{clientvalue.fields[childitem.ci_id]}}
-                </div>
-              </div>
-              <div v-if="clientvalue.fields[childitem.ci_id] && isExempted" class="app-list">
-                <div class="app-list-control app-color-error">
-                  <div class="app-list-brief">投保人</div>
-                  {{clientvalue.fields[childitem.ci_id]}}
+                  {{clientvalue.app_fields[childitem.ci_id]}}
                 </div>
               </div>
             </div>
@@ -449,6 +445,11 @@
                 </label>
               </div>
             </div>
+            <div v-if="clientvalue.fields[item.ci_id]" class="app-list qaline">
+              <div class="app-list-control app-color-error">
+                {{clientvalue.fields[item.ci_id]}}
+              </div>
+            </div>
             <div class="app-list" v-if="isExempted">
               <div class="app-list-title">投保人</div>
               <div class="am-switch">
@@ -458,13 +459,6 @@
                   <div class="am-switch-inner"></div>
                   <div class="am-switch-switch"></div>
                 </label>
-              </div>
-            </div>
-          </div>
-          <div class="am-list-body">
-            <div v-if="clientvalue.fields[item.ci_id]" class="app-list">
-              <div class="app-list-control app-color-error">
-                {{clientvalue.fields[item.ci_id]}}
               </div>
             </div>
             <div v-if="clientvalue.fields[item.ci_id] && isExempted" class="app-list">
@@ -545,7 +539,7 @@
     data () {
       return {
         warData: null, //保单信息
-        isExempted: false, // 是否豁免投保人
+//        isExempted: false, // 是否豁免投保人
         confirm: false, //确认信息
         uploading: false, //正在提交
         done: false
@@ -579,6 +573,14 @@
       },
       anti_money () {
         return this.$store.state.anti_money
+      },
+      isExempted () { // 是否豁免投保人
+        for (let i in this.$store.state.insurances) {
+          if (this.$store.state.insurances[i].safe_id === '370') {
+            return true
+          }
+        }
+        return false
       },
       attr () {
         return this.$store.state.main_insurance.attr
@@ -772,14 +774,15 @@
             })
           }*/
 
-          if (res.status === '0') {
-            vm.$toast.open('提交失败：' + res.message, '', 5000)
-            return false
+          if (res.status !== true || !res.insured) {
+            vm.$toast.open('提交失败：' + (res.message || '数据有误'), 'error', 3500)
+          } else if (res.insured.status === '0') {
+            vm.$toast.open('提交失败：' + res.insured.message, '', 5000)
           } else {
-            vm.$toast.open(+res.status === 1 ? '投保成功' : '进入人工核保', 'success')
+            vm.$toast.open(res.insured.status === '1' ? '自核通过' : '进入人工核保', 'success')
             vm.$store.dispatch('setParam', {
-              status: res.status,
-              tid: res.data
+              insured: res.insured,
+              uploadImg: res.insuredImg
             })
             this.clearStorage()
             setTimeout(function () {
