@@ -4,8 +4,6 @@ Vue.use(Router)
 
 // 投保须知
 import Notice from '@/components/Notice'
-import Confirmation from '@/components/Confirmation'
-import Tips from '@/components/Tips'
 
 import Insured from '@/components/Insured' //投保人信息
 import Beinsured from '@/components/Beinsured' //被投保人信息
@@ -27,20 +25,6 @@ const router = new Router({
     component: Notice,
     meta: {
       docTitle: '投保须知'
-    }
-  }, {
-    path: '/confirmation',
-    name: 'Confirmation',
-    component: Confirmation,
-    meta: {
-      docTitle: '投保提示书'
-    }
-  }, {
-    path: '/tips',
-    name: 'Tips',
-    component: Tips,
-    meta: {
-      docTitle: '投保提示书'
     }
   }, {
     path: '/insured',

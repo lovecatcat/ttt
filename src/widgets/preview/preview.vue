@@ -47,22 +47,22 @@
   </div>
 </template>
 <script>
-import PhotoSwipe from 'photoswipe/dist/photoswipe'
-import UI from 'photoswipe/dist/photoswipe-ui-default'
-export default {
-  methods: {
-    open(index, list, params = {
-      captionEl: false,
-      fullscreenEl: false,
-      history: false,
-      shareEl: false,
-      tapToClose: false,
-      pinchToClose: false,
-      closeOnScroll: false,
-      closeOnVerticalDrag: false
-    }) {
-      let options = Object.assign({
-        index: index,
+  import PhotoSwipe from 'photoswipe/dist/photoswipe'
+  import UI from 'photoswipe/dist/photoswipe-ui-default'
+  export default {
+    methods: {
+      open(index, list, params = {
+        captionEl: false,
+        fullscreenEl: false,
+        history: false,
+        shareEl: false,
+        tapToClose: false,
+        pinchToClose: false,
+        closeOnScroll: false,
+        closeOnVerticalDrag: false
+      }) {
+        let options = Object.assign({
+          index: index/*,
         getThumbBoundsFn(index) {
           let thumbnail = document.querySelectorAll('.preview-img')[index]
           let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
@@ -72,18 +72,18 @@ export default {
             y: rect.top + pageYScroll,
             w: rect.width
           }
-        }
-      }, params)
-      this.photoswipe = new PhotoSwipe(this.$el, UI, list, options)
-      this.photoswipe.init()
-    },
-    close() {
-      this.photoswipe.close()
+        }*/
+        }, params)
+        this.photoswipe = new PhotoSwipe(this.$el, UI, list, options)
+        this.photoswipe.init()
+      },
+      close() {
+        this.photoswipe.close()
+      }
     }
   }
-}
 </script>
 <style>
-@import '~photoswipe/dist/photoswipe.css';
-@import '~photoswipe/dist/default-skin/default-skin.css';
+  @import '~photoswipe/dist/photoswipe.css';
+  @import '~photoswipe/dist/default-skin/default-skin.css';
 </style>

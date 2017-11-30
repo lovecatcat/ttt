@@ -21,8 +21,8 @@
       <div class="am-list-item">
         <div class="app-list-brief">
           请确认客户已认真阅读和理解《投保须知》、 保险产品条款，理解并签署
-          <router-link to="/tips">《投保提示书》</router-link>、
-          <router-link to="/confirmation">《电子投保申请确认书》</router-link>，同意上述声明与授权，同意本保险合同的生效日为签收日，并以此开始计算犹豫期。
+          <a @click="getTermImg('tips')">《投保提示书》</a>、
+          <a @click="getTermImg('confirmation')">《电子投保申请确认书》</a>，同意上述声明与授权，同意本保险合同的生效日为签收日，并以此开始计算犹豫期。
         </div>
       </div>
       <div class="app-agreement">
@@ -64,6 +64,25 @@ export default {
       }, () => {
         this.clearStorage()
       })
+    }
+  },
+  methods: {
+    getTermImg(id) {
+      let imgs = {
+        'tips': 2,
+        'confirmation': 2
+      }
+
+      let list = []
+      let basePath = this.local ? '/static' : '/Theme/index/home/XT_ins'
+      for (let i = 0; i < imgs[id]; i++) {
+        list.push({
+          src: basePath + '/images/' + id + '/' + (i + 1) + '.jpg',
+          w: 1024,
+          h: 1500
+        })
+      }
+      this.$preview.open(0, list)
     }
   }
 }

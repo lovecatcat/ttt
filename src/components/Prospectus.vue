@@ -115,7 +115,7 @@
       <div class="am-list-body">
         <app-select label="保单选项">
           <select v-model="warranty.delivery_way" v-if="init.warranty">
-            <option v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
+            <option v-if="item.if_id !== '116'" v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
         <app-input label="邮箱" v-show="warranty.delivery_way === '117'">
