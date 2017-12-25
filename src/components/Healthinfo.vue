@@ -19,7 +19,7 @@
             <div class="am-switch">
               <input type="checkbox"
                      v-model="clientvalue.ass_amswer[childitem.ci_id]"
-                     @change="assChanged(clientvalue.ass_amswer,childitem.ci_id)"
+                     @change="assChanged(clientvalue.ass_amswer,childitem.ci_id, childitem.entry)"
                      :value="childitem.ci_id"
                      class="am-switch-checkbox"
                      :id="'assmatter'+childitem.ci_id">
@@ -46,7 +46,7 @@
             <div class="am-switch">
               <input type="checkbox"
                      v-model="clientvalue.app_amswer[childitem.ci_id]"
-                     @change="appChanged(clientvalue.app_amswer,childitem.ci_id)"
+                     @change="appChanged(clientvalue.app_amswer,childitem.ci_id, childitem.entry)"
                      :value="childitem.ci_id"
                      class="am-switch-checkbox"
                      :id="'appmatter'+childitem.ci_id">
@@ -77,7 +77,7 @@
             <div class="am-switch">
               <input type="checkbox"
                      v-model="clientvalue.ass_amswer[item.ci_id]"
-                     @change="assChanged(clientvalue.ass_amswer,item.ci_id)"
+                     @change="assChanged(clientvalue.ass_amswer,item.ci_id, item.entry)"
                      :value="item.ci_id"
                      class="am-switch-checkbox"
                      :id="'assmatter'+item.ci_id">
@@ -102,7 +102,7 @@
             <div class="app-list-title">投保人</div>
             <div class="am-switch">
               <input type="checkbox" v-model="clientvalue.app_amswer[item.ci_id]"
-                     @change="appChanged(clientvalue.app_amswer,item.ci_id)" :value="item.ci_id"
+                     @change="appChanged(clientvalue.app_amswer,item.ci_id, item.entry)" :value="item.ci_id"
                      class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
               <label class="am-switch-label" :for="'appmatter'+item.ci_id">
                 <div class="am-switch-inner"></div>
@@ -159,6 +159,175 @@
 </template>
 <script>
   import Api from '../api'
+
+  const noNeedAnswer = ['1', '10', '11', '12', '13', '14']
+  const needAnswer = {
+    '2': [{
+      title: '检查原因',
+      input: '',
+      type: 'text'
+    }, {
+      title: '检查时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '检查地点',
+      input: '',
+      type: 'text'
+    }, {
+      title: '检查结果',
+      input: '',
+      type: 'text'
+    }],
+    '3': [{
+      title: '住院时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '原因',
+      input: '',
+      type: 'text'
+    }, {
+      title: '医院名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '4': [{
+      title: '是否住院',
+      input: '',
+      type: 'radio'
+    }, {
+      title: '发病时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '疾病名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '诊疗医院',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '5': [{
+      title: '智障等级',
+      input: '',
+      type: 'text'
+    }, {
+      title: '残疾部位',
+      input: '',
+      type: 'text'
+    }, {
+      title: '原因',
+      input: '',
+      type: 'text'
+    }, {
+      title: '程度',
+      input: '',
+      type: 'text'
+    }],
+    '6': [{
+      title: '药物名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '使用时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '7': [{
+      title: '是否住院',
+      input: '',
+      type: 'radio'
+    }, {
+      title: '发病时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '疾病名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '诊疗医院',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '8': [{
+      title: '是否住院',
+      input: '',
+      type: 'radio'
+    }, {
+      title: '发病时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '疾病名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '诊疗医院',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '9': [{
+      title: '是否住院',
+      input: '',
+      type: 'radio'
+    }, {
+      title: '发病时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '疾病名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '诊疗医院',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '15': [{
+      title: '保险公司名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '投保时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '投保险种',
+      input: '',
+      type: 'text'
+    }, {
+      title: '已投保身故保险金额总和',
+      input: '',
+      type: 'number'
+    }]
+  }
 
   export default {
     name: 'Healthinfo',
@@ -256,340 +425,8 @@
     },
     data () {
       return {
-        forms: {
-          '3': [{
-            title: '检查原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '检查时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '检查地点',
-            input: '',
-            type: 'text'
-          }, {
-            title: '检查结果',
-            input: '',
-            type: 'text'
-          }],
-          '4': [{
-            title: '住院时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '医院名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '5': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '6': [{
-            title: '智障等级',
-            input: '',
-            type: 'text'
-          }, {
-            title: '残疾部位',
-            input: '',
-            type: 'text'
-          }, {
-            title: '原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '程度',
-            input: '',
-            type: 'text'
-          }],
-          '7': [{
-            title: '药物名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '使用时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '8': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '9': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '10': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '16': [{
-            title: '保险公司名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '投保时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '投保险种',
-            input: '',
-            type: 'text'
-          }, {
-            title: '已投保身故保险金额总和',
-            input: '',
-            type: 'number'
-          }]
-        },
-        appForms: {
-          '3': [{
-            title: '检查原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '检查时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '检查地点',
-            input: '',
-            type: 'text'
-          }, {
-            title: '检查结果',
-            input: '',
-            type: 'text'
-          }],
-          '4': [{
-            title: '住院时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '医院名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '5': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '6': [{
-            title: '智障等级',
-            input: '',
-            type: 'text'
-          }, {
-            title: '残疾部位',
-            input: '',
-            type: 'text'
-          }, {
-            title: '原因',
-            input: '',
-            type: 'text'
-          }, {
-            title: '程度',
-            input: '',
-            type: 'text'
-          }],
-          '7': [{
-            title: '药物名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '使用时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '8': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '9': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '10': [{
-            title: '是否住院',
-            input: '',
-            type: 'radio'
-          }, {
-            title: '发病时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '疾病名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '诊疗医院',
-            input: '',
-            type: 'text'
-          }, {
-            title: '目前状况',
-            input: '',
-            type: 'text'
-          }],
-          '16': [{
-            title: '保险公司名称',
-            input: '',
-            type: 'text'
-          }, {
-            title: '投保时间',
-            input: '',
-            type: 'date'
-          }, {
-            title: '投保险种',
-            input: '',
-            type: 'text'
-          }, {
-            title: '已投保身故保险金额总和',
-            input: '',
-            type: 'number'
-          }]
-        },
+        forms: needAnswer,
+        appForms: Api.obj2json(needAnswer),
         assuAllNo: null,
         applAllNo: null,
         promise: false,
@@ -672,7 +509,7 @@
       next()
     },
     methods: {
-      appChanged (val, id) {
+      appChanged (val, id, entry) {
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.applAllNo = false
 
@@ -684,7 +521,7 @@
           }
           this.$set(this.clientvalue.app_amswer, id, false)
           this.$set(this.clientvalue.app_fields, id, '')
-        } else if (['10', '11', '39', '40', '41', '42', '43'].indexOf(id) === -1) {
+        } else if (noNeedAnswer.indexOf(entry) === -1) {
           // 为是且有必填项
           this.showPup0ver = true
           console.log(this.$refs['appform' + id])
@@ -695,7 +532,7 @@
         }
         this.$forceUpdate()
       },
-      assChanged (val, id) {
+      assChanged (val, id, entry) {
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.assuAllNo = false
 
@@ -707,7 +544,7 @@
           }
           this.$set(this.clientvalue.ass_amswer, id, false)
           this.$set(this.clientvalue.fields, id, '')
-        } else if (['10', '11', '39', '40', '41', '42', '43'].indexOf(id) === -1) {
+        } else if (noNeedAnswer.indexOf(entry) === -1) {
           // 为是且有必填项
           this.showPup0ver = true
           console.log(this.$refs['form' + id])

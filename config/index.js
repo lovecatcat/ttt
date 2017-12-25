@@ -4,7 +4,7 @@ var path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/XT_ins2c.html'),
+    index: path.resolve(__dirname, '../dist/XT_ins.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'XT_ins',
     assetsPublicPath: '/Theme/index/home/',
