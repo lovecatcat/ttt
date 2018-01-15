@@ -42,6 +42,7 @@ export default {
   created() {
     var vm = this
     vm.$toast.open('初始化数据', 'loading')
+    console.log($_GET['admin_id'])
     Api.initField(res => {
       vm.$toast.close()
       vm.$store.dispatch('saveInit', res)
@@ -89,7 +90,7 @@ export default {
       share({
         title: '信泰人寿在线投保',
         desc: '\r\n【汇盟保险，更专业的保险管家】',
-        link: 'http://cloud.ehuimeng.com/Wechat/XT_ins2c?' + qs.stringify(params), // 分享链接
+        link: location.protocol + '//cloud.ehuimeng.com/Wechat/XT_ins2c?' + qs.stringify(params), // 分享链接
         imgUrl: location.protocol + '//' + location.host + '/Theme/index/home/images/logo.png' // 分享图标
       })
     }

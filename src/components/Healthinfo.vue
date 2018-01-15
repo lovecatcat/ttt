@@ -160,9 +160,27 @@
 <script>
   import Api from '../api'
 
-  const noNeedAnswer = ['1', '10', '11', '12', '13', '14']
+  const noNeedAnswer = ['11', '12', '14']
   const needAnswer = {
+    '1': [{
+      title: '每天吸烟(支)',
+      input: '',
+      type: 'number'
+    }, {
+      title: '烟龄(年)',
+      input: '',
+      type: 'number'
+    }],
     '2': [{
+      title: '每天喝酒(两)',
+      input: '',
+      type: 'number'
+    }, {
+      title: '酒龄(年)',
+      input: '',
+      type: 'number'
+    }],
+    '3': [{
       title: '检查原因',
       input: '',
       type: 'text'
@@ -179,7 +197,7 @@
       input: '',
       type: 'text'
     }],
-    '3': [{
+    '4': [{
       title: '住院时间',
       input: '',
       type: 'date'
@@ -196,7 +214,7 @@
       input: '',
       type: 'text'
     }],
-    '4': [{
+    '5': [{
       title: '是否住院',
       input: '',
       type: 'radio'
@@ -217,7 +235,7 @@
       input: '',
       type: 'text'
     }],
-    '5': [{
+    '6': [{
       title: '智障等级',
       input: '',
       type: 'text'
@@ -234,7 +252,7 @@
       input: '',
       type: 'text'
     }],
-    '6': [{
+    '7': [{
       title: '药物名称',
       input: '',
       type: 'text'
@@ -242,27 +260,6 @@
       title: '使用时间',
       input: '',
       type: 'date'
-    }, {
-      title: '目前状况',
-      input: '',
-      type: 'text'
-    }],
-    '7': [{
-      title: '是否住院',
-      input: '',
-      type: 'radio'
-    }, {
-      title: '发病时间',
-      input: '',
-      type: 'date'
-    }, {
-      title: '疾病名称',
-      input: '',
-      type: 'text'
-    }, {
-      title: '诊疗医院',
-      input: '',
-      type: 'text'
     }, {
       title: '目前状况',
       input: '',
@@ -310,7 +307,48 @@
       input: '',
       type: 'text'
     }],
+    '10': [{
+      title: '是否住院',
+      input: '',
+      type: 'radio'
+    }, {
+      title: '发病时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '疾病名称',
+      input: '',
+      type: 'text'
+    }, {
+      title: '诊疗医院',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'text'
+    }],
+    '13': [{
+      title: '事故发生时间',
+      input: '',
+      type: 'date'
+    }, {
+      title: '受伤情况',
+      input: '',
+      type: 'text'
+    }, {
+      title: '目前状况',
+      input: '',
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
+    }],
     '15': [{
+      title: '特殊人群类型',
+      input: '',
+      type: 'select',
+      options: ['高龄人员', '残疾', '低保']
+    }],
+    '16': [{
       title: '保险公司名称',
       input: '',
       type: 'text'
@@ -359,6 +397,12 @@
                 <input slot="input" v-model="item.input" type="text" placeholder="必填">
                 <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
               </app-input>
+              <app-select :label="item.title" v-else-if="item.type=='select'">
+                <select v-model="item.input" >
+                  <option disabled value="">请选择</option>
+                  <option v-for="(ite,ind) in item.options" :value="ite" :key="ind">{{ite}}</option>
+                </select>
+              </app-select>
             </template>
             <div class="am-button-group">
               <button type="button" class="am-button tiny" @click="cancel">取消</button>
@@ -509,10 +553,34 @@
       next()
     },
     methods: {
+      noNeedChoose(owner, id) {
+        let toast_text = null
+        let age = null
+        let sex = null
+        if (owner === '投保人') {
+          age = this.getAge(this.$store.state.applicant.birthday)
+          sex = this.$store.state.warranty.appl_sex
+        } else if (owner === '被保人') {
+          age = this.getAge(this.$store.state.assured.birthday)
+          sex = this.$store.state.warranty.assu_sex
+        }
+        if (age >= 2 && (['36', '37'].indexOf(id) !== -1)) {
+          toast_text = owner + '小于2周岁才需填写此项'
+        } else if ((['32', '33', '34'].indexOf(id) !== -1) && (age <= 12 || Number(sex) === 11338)) {
+          toast_text = '大于12周岁女性才需填写此项'
+        } else if (age >= 18 && id === '44') {
+          toast_text = '小于18周岁才需填写此项'
+        }
+        if (toast_text) {
+          this.$toast.open(toast_text)
+          return false
+        }
+        return true
+      },
       appChanged (val, id, entry) {
+        console.log(id + ';appl' + entry)
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.applAllNo = false
-
         // 如果为否
         if (val[id] === false) {
           var forms = this.appForms[id]
@@ -521,6 +589,10 @@
           }
           this.$set(this.clientvalue.app_amswer, id, false)
           this.$set(this.clientvalue.app_fields, id, '')
+        } else if (!this.noNeedChoose('投保人', id)) {
+          val[id] = false
+          this.appChanged(val, id, entry)
+          return false
         } else if (noNeedAnswer.indexOf(entry) === -1) {
           // 为是且有必填项
           this.showPup0ver = true
@@ -533,6 +605,7 @@
         this.$forceUpdate()
       },
       assChanged (val, id, entry) {
+        console.log(id + ';ass' + entry)
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.assuAllNo = false
 
@@ -544,6 +617,10 @@
           }
           this.$set(this.clientvalue.ass_amswer, id, false)
           this.$set(this.clientvalue.fields, id, '')
+        } else if (!this.noNeedChoose('被保人', id)) {
+          val[id] = false
+          this.assChanged(val, id, entry)
+          return false
         } else if (noNeedAnswer.indexOf(entry) === -1) {
           // 为是且有必填项
           this.showPup0ver = true
@@ -620,6 +697,7 @@
       .am-list:not([am-version]) {
         padding-bottom: 0;
         position: relative;
+        width: 96%;
       }
     }
   }

@@ -9,7 +9,8 @@ import axios from 'axios'
 const SCID = 19
 
 const env = location.port === '8080' ? 'development' : 'production'
-axios.defaults.baseURL = env === 'development' ? '/api' : '//' + location.host
+// axios.defaults.baseURL = env === 'development' ? '/api' : '//' + location.host
+axios.defaults.baseURL = env === 'development' ? '//ts-cloud.ehuimeng.com' : '//' + location.host
 
 const initField = function (cb) {
   axios.get('Warranty/initWarField?sc_id=' + SCID).then(response => {
