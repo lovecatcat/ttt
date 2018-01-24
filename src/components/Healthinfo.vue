@@ -212,7 +212,8 @@
     }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '5': [{
       title: '是否住院',
@@ -233,7 +234,8 @@
     }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '6': [{
       title: '智障等级',
@@ -263,9 +265,15 @@
     }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '8': [{
+      title: '怀孕(周)',
+      input: '',
+      type: 'number',
+      ci_id: '32'
+    }, {
       title: '是否住院',
       input: '',
       type: 'radio'
@@ -284,7 +292,8 @@
     }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '9': [{
       title: '是否住院',
@@ -305,14 +314,15 @@
     }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '10': [{
-      title: '是否住院',
+      title: '与被保人关系',
       input: '',
-      type: 'radio'
+      type: 'text'
     }, {
-      title: '发病时间',
+      title: '患病时间',
       input: '',
       type: 'date'
     }, {
@@ -320,13 +330,10 @@
       input: '',
       type: 'text'
     }, {
-      title: '诊疗医院',
-      input: '',
-      type: 'text'
-    }, {
       title: '目前状况',
       input: '',
-      type: 'text'
+      type: 'select',
+      options: ['治愈', '好转', '未愈']
     }],
     '13': [{
       title: '事故发生时间',
@@ -375,38 +382,46 @@
         <div class="app-pupover" v-show="show">
           <div class="am-list form">
             <template v-for="item in forms">
-              <div class="am-list-item" v-if="item.type=='radio'">
-                <div class="am-list-content">{{item.title}}</div>
-                <div class="am-switch">
-                  <input type="checkbox" v-model="item.input" class="am-switch-checkbox" :id="'item'+index">
-                  <label class="am-switch-label" :for="'item'+index">
-                    <div class="am-switch-inner"></div>
-                    <div class="am-switch-switch"></div>
-                  </label>
+              <template v-show="index=='32'&&item.ci_id=='32'" v-if="index=='32'&&item.ci_id=='32'">
+                <app-input :label="item.title">
+                  <input slot="input" v-model="item.input" type="number" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                </app-input>
+              </template>
+              <template v-show="index!='32'" v-if="index!='32'&&item.ci_id!='32'">
+                <div class="am-list-item" v-if="item.type=='radio'">
+                  <div class="am-list-content">{{item.title}}</div>
+                  <div class="am-switch">
+                    <input type="checkbox" v-model="item.input" class="am-switch-checkbox" :id="'item'+index">
+                    <label class="am-switch-label" :for="'item'+index">
+                      <div class="am-switch-inner"></div>
+                      <div class="am-switch-switch"></div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <app-input :label="item.title" v-else-if="item.type=='date'">
-                <input slot="input" :class="{'has':item.input != ''}" v-model="item.input" type="month" placeholder="请选择时间">
-                <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
-              </app-input>
-              <app-input :label="item.title" v-else-if="item.type=='number'">
-                <input slot="input" v-model="item.input" type="number" placeholder="必填">
-                <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
-              </app-input>
-              <app-input :label="item.title" v-else-if="item.type=='text'">
-                <input slot="input" v-model="item.input" type="text" placeholder="必填">
-                <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
-              </app-input>
-              <app-select :label="item.title" v-else-if="item.type=='select'">
-                <select v-model="item.input" >
-                  <option disabled value="">请选择</option>
-                  <option v-for="(ite,ind) in item.options" :value="ite" :key="ind">{{ite}}</option>
-                </select>
-              </app-select>
+                <app-input :label="item.title" v-else-if="item.type=='date'">
+                  <input slot="input" :class="{'has':item.input != ''}" v-model="item.input" type="month" placeholder="请选择时间">
+                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                </app-input>
+                <app-input :label="item.title" v-else-if="item.type=='number'">
+                  <input slot="input" v-model="item.input" type="number" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                </app-input>
+                <app-input :label="item.title" v-else-if="item.type=='text'">
+                  <input slot="input" v-model="item.input" type="text" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                </app-input>
+                <app-select :label="item.title" v-else-if="item.type=='select'">
+                  <select v-model="item.input" >
+                    <option disabled value="">请选择</option>
+                    <option v-for="(ite,ind) in item.options" :value="ite" :key="ind">{{ite}}</option>
+                  </select>
+                </app-select>
+              </template>
             </template>
             <div class="am-button-group">
               <button type="button" class="am-button tiny" @click="cancel">取消</button>
-              <button type="button" class="am-button tiny" @click="comfirm">确定</button>
+              <button type="button" class="am-button tiny" @click="confirm">确定</button>
             </div>
           </div>
         </div>
@@ -429,7 +444,7 @@
               this.$parent.clientvalue.fields[this.index] = ''
             }
           },
-          comfirm () {
+          confirm () {
             if (!this.checkForm()) {
               return false
             }
@@ -437,11 +452,20 @@
             this.$parent.showPup0ver = false
           },
           checkForm () {
+            console.log(typeof this.index)
             let bool = true
             let field = ''
             for (let i in this.forms) {
               let j = this.forms[i]
-              if (!j.input && j.type !== 'radio') {
+              if (this.index === '32' && !this.forms[0].input) {
+                this.$toast.open('请填写' + j.title, '')
+                bool = false
+                break
+              } else if ((this.index === '33' || this.index === '34') && i > 0 && !j.input) {
+                this.$toast.open('请填写' + j.title, '')
+                bool = false
+                break
+              } else if (['32', '33', '34'].indexOf(this.index) === -1 && !j.input && j.type !== 'radio') {
                 this.$toast.open('请填写' + j.title, '')
                 bool = false
                 break
@@ -454,7 +478,16 @@
                 text = j.input
 //                j.input = ''
               }
-              field += j.title + '：' + text + '\t'
+              if (this.index === '33' || this.index === '34') {
+                if (i > 0) {
+                  field += j.title + '：' + text + '\t'
+                }
+              } else if (this.index !== '32') {
+                field += j.title + '：' + text + '\t'
+              }
+            }
+            if (this.index === '32') {
+              field += this.forms[0].title + '：' + this.forms[0].input + '\t'
             }
             // 合并输入内容
             if (this.who === 'appl') {
@@ -578,7 +611,7 @@
         return true
       },
       appChanged (val, id, entry) {
-        console.log(id + ';appl' + entry)
+        console.log(id + ';appl' + entry + ';' + this.index)
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.applAllNo = false
         // 如果为否
@@ -605,7 +638,7 @@
         this.$forceUpdate()
       },
       assChanged (val, id, entry) {
-        console.log(id + ';ass' + entry)
+        console.log(id + ';appl' + entry + ';' + this.index)
         console.log(JSON.parse(JSON.stringify(val)), id)
         this.assuAllNo = false
 
