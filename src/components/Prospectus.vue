@@ -6,7 +6,7 @@
         <app-select label="险种" :readonly="safe_id" v-if="safegoods">
           <select v-model="main_insurance" @change="insurance_changed" :disabled="safe_id">
             <option disabled value="0">请选择</option>
-            <option v-if="item.safe_id == 361"
+            <option v-if="item.safe_id == 361 || item.safe_id == 377"
                     v-for="item in safegoods"
                     :value="item">{{item.name}}
             </option>
@@ -45,25 +45,44 @@
             </div>
           </div>
         </app-input>
-        <app-input label="基本保险金额">
-          <input slot="input" @change="insurance.period_money = ''" v-model.number.lazy="insurance.money" type="number"
-                 placeholder="请填写基本保险金额（元）" @blur="moneyChanged">
-          <div slot="icon" v-show="insurance.money != ''" class="am-list-clear">
-            <i class="am-icon-clear am-icon" @click="insurance.money = ''"></i>
-          </div>
-        </app-input>
-        <app-input label="期交保费">
-          <input slot="input" readonly v-model="insurance.period_money" type="text" placeholder="期交保费(元)">
-          <div slot="button" class="am-list-button" @click="cal(false)">
-            <button type="button">点击计算</button>
-          </div>
-        </app-input>
+        <template v-if="insurance.safe_id==='377'">
+          <app-input label="期交保费">
+            <input slot="input" v-model="insurance.period_money" type="number" placeholder="请填写期交保费(元)"
+                   @blur="moneyChanged">
+            <div slot="icon" v-show="insurance.period_money != ''" class="am-list-clear">
+              <i class="am-icon-clear am-icon" @click="insurance.period_money = ''"></i>
+            </div>
+          </app-input>
+          <app-input label="基本保险金额">
+            <input slot="input" readonly @change="insurance.period_money = ''" v-model.number.lazy="insurance.money"
+                   type="number" placeholder="请填写基本保险金额（元）">
+            <div slot="button" class="am-list-button" @click="cal(false)">
+              <button type="button">点击计算</button>
+            </div>
+          </app-input>
+        </template>
+        <template v-else>
+          <app-input label="基本保险金额">
+            <input slot="input" @change="insurance.period_money = ''" v-model.number.lazy="insurance.money"
+                   type="number"
+                   placeholder="请填写基本保险金额（元）" @blur="moneyChanged">
+            <div slot="icon" v-show="insurance.money != ''" class="am-list-clear">
+              <i class="am-icon-clear am-icon" @click="insurance.money = ''"></i>
+            </div>
+          </app-input>
+          <app-input label="期交保费">
+            <input slot="input" readonly v-model="insurance.period_money" type="text" placeholder="期交保费(元)">
+            <div slot="button" class="am-list-button" @click="cal(false)">
+              <button type="button">点击计算</button>
+            </div>
+          </app-input>
+        </template>
       </div>
     </div>
     <div class="app-list-header">附加险</div>
-    <app-dropdown v-if="addonIns[index] && ['370','362'].indexOf(index) > -1 "
+    <app-dropdown v-if="addonIns[index] && ['370','362','398'].indexOf(index) > -1 "
                   :id="index" :ref="'applicant_'+index"
-                  v-show="(mainPayYear > 3 && $store.state.warranty.is_assured !== 15000 && applAge < 61) || index !== '370'"
+                  v-show="(mainPayYear > 3 && $store.state.warranty.is_assured !== 15000 && applAge < 61 && index === '370') || index !=='370'"
                   v-for="(item,index) in main_insurance.child"
                   :key="index" up="up" noToggle>
       <template slot="header">
@@ -80,42 +99,64 @@
           </label>
         </div>
       </template>
-      <app-select label="交费期间" readonly>
-        <select v-model="addonIns[index].pay_year" disabled @change="addonIns[index].period_money = '',$forceUpdate()">
-          <option disabled value="">请选择</option>
-          <option v-for="pitem in unique(item.attr,'pay_year')"
-                  :value="pitem.sv_id" :key="pitem.sv_id"
-                  v-text="showPayYear(pitem.pay_year)"></option>
-        </select>
-      </app-select>
-      <app-select label="保险期间" :readonly="item.attr.length===1">
-        <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1"
-                @change="addonIns[index].period_money = '',$forceUpdate()">
-          <option disabled value="">请选择</option>
-          <option v-for="sitem in unique(item.attr, 'safe_year')"
-                  :value="sitem.sv_id" :key="sitem.sv_id"
-                  v-text="showSafeYear(sitem.safe_year)"></option>
-        </select>
-      </app-select>
-      <app-input label="基本保险金额">
-        <input slot="input" readonly v-model.number="addonIns[index].money" type="number"
-               :placeholder="index === '362' ? '与主险保持一致' : '主险和附加长险的期交保费之和'">
-      </app-input>
-      <app-input label="期交保费">
-        <input slot="input" readonly
-               v-model="addonIns[index].period_money"
-               type="text"
-               placeholder="请点击计算">
-        <div slot="button" class="am-list-button" @click="cal(index)">
-          <button type="button">点击计算</button>
-        </div>
-      </app-input>
+      <template v-if="index==='398'">
+        <app-select label="保险期间" :readonly="item.attr.length===1">
+          <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1">
+            <option disabled value="">请选择</option>
+            <option v-for="sitem in unique(item.attr, 'safe_year')"
+                    :value="sitem.sv_id" :key="sitem.sv_id"
+                    v-text="showSafeYear(sitem.safe_year)"></option>
+          </select>
+        </app-select>
+        <app-input label="保费">
+          <input slot="input"
+                 v-model="addonIns[index].period_money"
+                 type="text"
+                 placeholder="请输入">
+        </app-input>
+      </template>
+      <template v-else>
+        <app-select label="交费期间" readonly>
+          <select v-model="addonIns[index].pay_year" disabled
+                  @change="addonIns[index].period_money = '',$forceUpdate()">
+            <option disabled value="">请选择</option>
+            <option v-for="pitem in unique(item.attr,'pay_year')"
+                    :value="pitem.sv_id" :key="pitem.sv_id"
+                    v-text="showPayYear(pitem.pay_year)"></option>
+          </select>
+        </app-select>
+        <app-select label="保险期间" :readonly="item.attr.length===1">
+          <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1"
+                  @change="addonIns[index].period_money = '',$forceUpdate()">
+            <option disabled value="">请选择</option>
+            <option v-for="sitem in unique(item.attr, 'safe_year')"
+                    :value="sitem.sv_id" :key="sitem.sv_id"
+                    v-text="showSafeYear(sitem.safe_year)"></option>
+          </select>
+        </app-select>
+        <app-input label="基本保险金额">
+          <input slot="input" readonly v-model.number="addonIns[index].money" type="number"
+                 :placeholder="index === '362' ? '与主险保持一致' : '主险和附加长险的期交保费之和'">
+        </app-input>
+        <app-input label="期交保费">
+          <input slot="input" readonly
+                 v-model="addonIns[index].period_money"
+                 type="text"
+                 placeholder="请点击计算">
+          <div slot="button" class="am-list-button" @click="cal(index)">
+            <button type="button">点击计算</button>
+          </div>
+        </app-input>
+      </template>
+
     </app-dropdown>
     <div class="am-list am-list-6lb form">
       <div class="am-list-body">
         <app-select label="保单选项">
           <select v-model="warranty.delivery_way" v-if="init.warranty">
-            <option v-if="item.if_id !== '116'" v-for="item in init.warranty.delivery_way" :value="item.if_id">{{item.explain}}</option>
+            <option v-if="item.if_id !== '116'" v-for="item in init.warranty.delivery_way" :value="item.if_id">
+              {{item.explain}}
+            </option>
           </select>
         </app-select>
         <app-input label="邮箱" v-show="warranty.delivery_way === '117'">
@@ -167,7 +208,7 @@
 
   export default {
     name: 'prospectus',
-    data () {
+    data() {
       return {
         back: '/beinsured',
         uploading: false,
@@ -204,44 +245,44 @@
         'applAge'
       ]),
       main_insurance: {
-        get () {
+        get() {
           return this.$store.state.main_insurance
         },
-        set (val) {
+        set(val) {
           this.$store.commit('setParam', {
             main_insurance: val
           })
         }
       },
       addonIns: { //附加险信息
-        get () {
+        get() {
           return this.$store.state.addonIns
         },
-        set (val) {
+        set(val) {
           this.$store.commit('setParam', {
             addonIns: val
           })
         }
       },
-      init () {
+      init() {
         return this.$store.state.init || {}
       }
     },
     watch: {
       insurance: {
-        handler (val) {
+        handler(val) {
           this.save2local('insurance', val)
         },
         deep: true
       },
       main_insurance: {
-        handler (val) {
+        handler(val) {
           this.save2local('main_insurance', val)
         },
         deep: true
       }
     },
-    created () {
+    created() {
       var vm = this
       Api.querySafegoods(res => {
         if (res.name && res.name.indexOf('Error') > -1) {
@@ -270,7 +311,7 @@
         }
       })
     },
-    activated () {
+    activated() {
       if (this.$store.state.warranty.is_assured === 15000) {
         this.addonsSelected[370] = false
         this.back = '/insured'
@@ -278,7 +319,7 @@
         this.back = '/beinsured'
       }
     },
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
       next(vm => {
         if (from.path !== '/insured' && from.path !== '/beinsured') {
           return
@@ -293,7 +334,7 @@
         }
       })
     },
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
       if (to.path === '/insured' || to.path === '/beinsured') {
         next()
         return
@@ -326,7 +367,7 @@
       next()
     },
     methods: {
-      unique (a, key) {
+      unique(a, key) {
         var res = []
         for (var i = 0, len = a.length; i < len; i++) {
           for (var j = 0, jLen = res.length; j < jLen; j++) {
@@ -340,7 +381,7 @@
         }
         return res
       },
-      pyChanged () {
+      pyChanged() {
         this.insurance.period_money = ''
         let mainPayYear = null
         this.attr.forEach(item => {
@@ -361,9 +402,12 @@
             this.addonIns[370].pay_year = item.sv_id
           }
         })
+        this.main_insurance.child[398] && this.unique(this.main_insurance.child[398].attr, 'pay_year').forEach(item => {
+          this.addonIns[398].safe_year = item.sv_id
+        })
         this.resetAdddons()
       },
-      syChanged () {
+      syChanged() {
         this.insurance.period_money = ''
         this.attr2.forEach(item => {
           if (item.sv_id === this.insurance.safe_year) {
@@ -372,11 +416,11 @@
         })
         this.resetAdddons()
       },
-      moneyChanged () {
+      moneyChanged() {
         this.resetAdddons()
         this.checkMoney()
       },
-      showSafeYear (safe_year) {
+      showSafeYear(safe_year) {
         if (safe_year === '999') {
           return '终身'
         } else if (Number(safe_year) > 50) {
@@ -385,19 +429,19 @@
           return safe_year + '年'
         }
       },
-      showPayYear (pay_year) {
+      showPayYear(pay_year) {
         if (pay_year === '1') {
           return '趸交'
         } else {
           return pay_year + '年交'
         }
       },
-      resetAdddons () {
+      resetAdddons() {
         for (let i in this.addonIns) {
           this.addonIns[i].period_money = ''
         }
       },
-      setAddons (i) {
+      setAddons(i) {
         var tml = {
           safe_id: i, //险种
           safe_year: '', //保险期间
@@ -421,7 +465,7 @@
         }
         this.addonIns[i] = tml
       },
-      cal (addonIndex) {
+      cal(addonIndex) {
         var vm = this
         if (!vm.checkForm() || vm.uploading) {
           return
@@ -464,20 +508,23 @@
         pushData['warranty_sc_id'] = 19
         pushData['warranty_is_save'] = 2
         pushData['warranty_source'] = 2
-
+        pushData['warranty_double_main_risk'] = vm.addonsSelected['398'] ? 'NB_05' : ''
         pushData['insurance_war_id'] = []
-        pushData['insurance_money'] = []
         pushData['insurance_pay_year'] = []
         pushData['insurance_safe_id'] = []
         pushData['insurance_safe_year'] = []
-
         let insurance = vm.insurance
         pushData['insurance_war_id'].push('')
-        pushData['insurance_money'].push(insurance.money)
+        if (vm.insurance.safe_id === '377') { //千万人生
+          pushData['insurance_period_money'] = []
+          pushData['insurance_period_money'].push(insurance.period_money)
+        } else {
+          pushData['insurance_money'] = []
+          pushData['insurance_money'].push(insurance.money)
+        }
         pushData['insurance_pay_year'].push(insurance.pay_year)
         pushData['insurance_safe_id'].push(insurance.safe_id)
         pushData['insurance_safe_year'].push(insurance.safe_year)
-
         if (addonIndex) {  // 附加险
           insurance = vm.addonIns[addonIndex]
           pushData['insurance_war_id'].push('')
@@ -485,6 +532,15 @@
           pushData['insurance_pay_year'].push(insurance.pay_year)
           pushData['insurance_safe_id'].push(insurance.safe_id)
           pushData['insurance_safe_year'].push(insurance.safe_year)
+        } else {
+          if (vm.addonsSelected['398']) {
+            let addinsurance = vm.addonIns['398']
+            pushData['insurance_war_id'].push('')
+            pushData['insurance_period_money'].push(addinsurance.period_money)
+            pushData['insurance_pay_year'].push(addinsurance.safe_year)
+            pushData['insurance_safe_id'].push(addinsurance.safe_id)
+            pushData['insurance_safe_year'].push(addinsurance.safe_year)
+          }
         }
 
         // console.log(pushData)
@@ -512,9 +568,9 @@
             if (typeof res.data[vm.insurance.safe_id] === 'undefined') {
               return
             }
-            let period_money = res.data[vm.insurance.safe_id]
+            let period_money = res.data[vm.insurance.safe_id].period_money
             if (addonIndex) {
-              let addoPm = res.data[addonIndex]
+              let addoPm = res.data[addonIndex].period_money
               vm.addonIns[addonIndex].period_money = addoPm
               if (vm.addonIns[370] && addonIndex !== '370' && this.addonsSelected[addonIndex]) {
                 vm.addonIns[370].money = Number(period_money) + Number(addoPm)
@@ -522,7 +578,11 @@
               }
               vm.$forceUpdate()
             } else {
-              vm.insurance.period_money = period_money
+              if (vm.insurance.safe_id === '377') {
+                vm.insurance.money = res.data[vm.insurance.safe_id].money
+              } else {
+                vm.insurance.period_money = period_money
+              }
               if (vm.addonIns[362]) {
                 vm.addonIns[362].money = this.insurance.money
               }
@@ -539,7 +599,7 @@
           }
         })
       },
-      insurance_changed () {
+      insurance_changed() {
         this.insurance.safe_id = this.main_insurance.safe_id
         this.attr = this.unique(this.main_insurance.attr, 'pay_year')
         this.attr2 = this.unique(this.main_insurance.attr, 'safe_year')
@@ -548,6 +608,7 @@
         this.addonIns = {}
         this.addonsSelected = {}
         this.insurance.period_money = ''
+        this.insurance.money = ''
         if (this.attr.length === 1) {
           this.insurance.pay_year = this.attr[0].sv_id
           this.mainPayYear = Number(this.attr[0].pay_year)
@@ -567,7 +628,7 @@
           this.setAddons(i)
         }
       },
-      checkEmail () {
+      checkEmail() {
         const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
         const vm = this
         var toast_text = null
@@ -582,7 +643,7 @@
         }
         return true
       },
-      chAddonState (index) {
+      chAddonState(index) {
         let toast_text = null
         if (!this.addonIns[index]) return
         if (index !== '370') {
@@ -592,22 +653,31 @@
           }
           this.addonIns[370].money = money
           this.addonIns[370].period_money = ''
+          if (index === '398') { //金掌柜年金保险（万能型）
+            if (this.addonIns[index].period_money < 1000 || this.addonIns[index].period_money % 1000 !== 0) {
+              toast_text = '【金掌柜年金保险】保费最低为1000元，且为千元整数倍'
+            }
+            this.insurance.money = ''
+          }
         } else { // 附加投保人豁免
           if (this.mainPayYear < 5) {
-            toast_text = '主险交费年期≥5年，方可附加本附加险'
+            toast_text = '主险交费年期≥5年，方可附加本险种'
           } else if (this.$store.state.warranty.is_assured === 15000) {
-            toast_text = '投、被保险人为同一人时，不可附加本附加险'
+            toast_text = '投、被保险人为同一人时，不可附加本险种'
+          } else if (this.applAge > 60 || this.applAge < 18) {
+            toast_text = '附加本险种时，投保人年龄应为18至60周岁'
           }
         }
         if (toast_text) {
           this.addonsSelected[index] = false
-          this.$toast.open(toast_text, 'warn')
+          this.$toast.open(toast_text)
         }
         this.$forceUpdate()
       },
-      checkMoney (index) {
+      checkMoney(index) {
         var id = index || this.main_insurance.safe_id
         var money = index ? this.addonIns[index].money : +this.insurance.money
+        var period_money = index ? this.addonIns[index].period_money : +this.insurance.period_money
         var toast_text = null
         if (index === '362') {
           this.addonIns[362].money = money
@@ -616,6 +686,13 @@
           case '361':
             if (money < 50000 || money % 1000 !== 0) {
               toast_text = '最低保额为5万元，且为1千元整数倍'
+            }
+            break
+          case '377':
+            if (this.mainPayYear === 1 && (period_money < 50000 || period_money % 1000 !== 0)) {
+              toast_text = '趸交最低保费为5万元，且为1千元整数倍'
+            } else if (this.mainPayYear !== 1 && (period_money < 10000 || period_money % 1000 !== 0)) {
+              toast_text = '最低保费为1万元，且为1千元整数倍'
             }
             break
           default:
@@ -630,23 +707,25 @@
         }
         return true
       },
-      checkAge (index) {
+      checkAge(index) {
         let vm = this
         let age = vm.assuAge
-//        let id = index || this.insurance.safe_id
         let toastText = null
-        if (age > 60) {
+        let id = index || vm.main_insurance.safe_id
+        if (id === '377' && age > 55) {
+          toastText = '主险【千万人生养老年金保险】被保人不能大于55周岁'
+        } else if (age > 60) {
           toastText = '被保险人年龄不能大于60周岁'
         } else if (age + this.mainPayYear > 70) {
           toastText = '缴费期满时被保人年龄不能超过70周岁'
         }
         if (toastText) {
-          this.$toast.open(toastText, 'warn')
+          this.$toast.open(toastText)
           return false
         }
         return true
       },
-      checkAddonForm (index) {
+      checkAddonForm(index) {
         const insurance = this.addonIns[index]
         if (!insurance) return false
         var toast_text = null
@@ -663,9 +742,9 @@
           this.$toast.open(toast_text, 'warn')
           return false
         }
-        return this.checkMoney(index) && this.checkAge()
+        return this.checkMoney(index) && this.checkAge(index)
       },
-      checkForm () {
+      checkForm() {
         const vm = this
         let toast_text = null
         if (!vm.insurance.safe_id) {
@@ -674,8 +753,10 @@
           toast_text = '请选择保险期间'
         } else if (!vm.insurance.pay_year) {
           toast_text = '请选择交费年期'
-        } else if (!vm.insurance.money) {
+        } else if (vm.insurance.safe_id === '361' && !vm.insurance.money) {
           toast_text = '请填写基本保险金额'
+        } else if (vm.insurance.safe_id === '377' && !vm.insurance.period_money) {
+          toast_text = '请填写年交保费'
         }
         if (toast_text) {
           this.$toast.open(toast_text, 'warn')
