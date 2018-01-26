@@ -658,6 +658,7 @@
         pushData['warranty_sc_id'] = 19
         pushData['warranty_card_holder'] = vm.applicant.name
         pushData['warranty_is_save'] = 1
+        pushData[' warranty_double_main_risk'] = vm.warranty.proposal_cont_no ? 'NB_05' : ''
         if (warId) {
           pushData['warranty_war_id'] = warId
         }
@@ -752,7 +753,7 @@
 
         vm.insurances.forEach(function (insurance) {
           pushData['insurance_war_id'].push(warId)
-          pushData['insurance_money'].push(insurance.money)
+          pushData['insurance_money'].push(insurance.money ? insurance.money : 0)
           pushData['insurance_pay_year'].push(insurance.pay_year)
           pushData['insurance_safe_id'].push(insurance.safe_id)
           pushData['insurance_safe_year'].push(insurance.safe_year)
@@ -763,6 +764,7 @@
 
         // if (pushData) return false
         Api.pushWarranty(qs.stringify(pushData), res => {
+          console.log(res)
           vm.uploading = false
           if (res.name && res.name.indexOf('Error') > -1) {
             vm.$toast.open('服务器开小差了', 'error')

@@ -128,6 +128,15 @@ const searchOccupation = function (key, cb) {
   })
 }
 
+const getDoubleOrderid = function (cb) {
+  axios.get('UploadWarranty/index?code=ST000051&war_id=0').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
 const queryOccupation = function (if_id, cb) {
   axios.get('Warranty/getSubFieldList?if_id=' + if_id).then(response => {
     cb(response.data)
@@ -218,6 +227,7 @@ export default {
   queryMatters,
   querySafegoods,
   pushWarranty,
+  getDoubleOrderid,
   queryZipcode,
   getAge,
   queryPersonInfo,

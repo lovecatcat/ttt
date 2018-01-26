@@ -221,6 +221,7 @@
           period_money: '' //期交保费
         },
         warranty: {
+          proposal_cont_no: '', //双主险投保单号
           delivery_way: '117',
           assu_social_security: '15047',
           mattress_sign: '77' //自动垫交
@@ -358,6 +359,9 @@
           insurances.push(this.addonIns[i])
         }
       }
+      if (!this.addonsSelected['398']) { //非双主险
+        this.warranty.proposal_cont_no = ''
+      }
       if (this.warranty.delivery_way === '117' && !this.checkEmail()) {
         return false
       }
@@ -404,6 +408,7 @@
         })
         this.main_insurance.child[398] && this.unique(this.main_insurance.child[398].attr, 'pay_year').forEach(item => {
           this.addonIns[398].safe_year = item.sv_id
+          this.addonIns[398].pay_year = item.sv_id
         })
         this.resetAdddons()
       },
@@ -508,7 +513,6 @@
         pushData['warranty_sc_id'] = 19
         pushData['warranty_is_save'] = 2
         pushData['warranty_source'] = 2
-        pushData['warranty_double_main_risk'] = vm.addonsSelected['398'] ? 'NB_05' : ''
         pushData['insurance_war_id'] = []
         pushData['insurance_pay_year'] = []
         pushData['insurance_safe_id'] = []
@@ -532,17 +536,7 @@
           pushData['insurance_pay_year'].push(insurance.pay_year)
           pushData['insurance_safe_id'].push(insurance.safe_id)
           pushData['insurance_safe_year'].push(insurance.safe_year)
-        } else {
-          if (vm.addonsSelected['398']) {
-            let addinsurance = vm.addonIns['398']
-            pushData['insurance_war_id'].push('')
-            pushData['insurance_period_money'].push(addinsurance.period_money)
-            pushData['insurance_pay_year'].push(addinsurance.safe_year)
-            pushData['insurance_safe_id'].push(addinsurance.safe_id)
-            pushData['insurance_safe_year'].push(addinsurance.safe_year)
-          }
         }
-
         // console.log(pushData)
         Api.pushWarranty(qs.stringify(pushData), res => {
           if (res.name && res.name.indexOf('Error') > -1) {
@@ -645,6 +639,7 @@
       },
       chAddonState(index) {
         let toast_text = null
+        console.log(this.addonIns[index])
         if (!this.addonIns[index]) return
         if (index !== '370') {
           let money = Number(this.insurance.period_money)
@@ -657,7 +652,17 @@
             if (this.addonIns[index].period_money < 1000 || this.addonIns[index].period_money % 1000 !== 0) {
               toast_text = '【金掌柜年金保险】保费最低为1000元，且为千元整数倍'
             }
-            this.insurance.money = ''
+            if (this.addonsSelected[index] === true && !this.warranty.proposal_cont_no) {
+              //获取投保单号
+              Api.getDoubleOrderid(res => {
+                console.log(res.data)
+                if (res.name && res.name.indexOf('Error') > -1) {
+                  this.$toast.open('服务器开小差了', 'error')
+                  return
+                }
+                this.warranty.proposal_cont_no = res.data
+              })
+            }
           }
         } else { // 附加投保人豁免
           if (this.mainPayYear < 5) {
@@ -726,6 +731,7 @@
         return true
       },
       checkAddonForm(index) {
+        console.log(typeof index)
         const insurance = this.addonIns[index]
         if (!insurance) return false
         var toast_text = null
@@ -733,9 +739,9 @@
           toast_text = '请选择险种'
         } else if (!insurance.safe_year) {
           toast_text = '请选择保险期间'
-        } else if (!insurance.pay_year) {
+        } else if (!insurance.pay_year && index !== '398') {
           toast_text = '请选择交费年期'
-        } else if (!insurance.money) {
+        } else if (!insurance.money && index !== '398') {
           toast_text = '请填写基本保险金额'
         }
         if (toast_text) {
