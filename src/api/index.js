@@ -218,6 +218,40 @@ const share = function(data, cb) {
     console.log(error)
   })
 }
+
+// 保存临时数据
+const keepData = function (data, cb) {
+  axios.post('/Home/Warranty/tmpSave', data)
+    .then(response => {
+      cb(response.data)
+    })
+    .catch(error => {
+      cb(error)
+    })
+}
+
+//获取临时数据列表
+const getData = function (admin_id, cb) {
+  axios.get('/Home/Warranty/tmpSaveList?admin_id=' + admin_id)
+    .then(response => {
+      cb(response.data)
+    })
+    .catch(error => {
+      cb(error)
+    })
+}
+
+//删除临时数据
+const deleteData = function (admin_id, cb) {
+  axios.get('/Home/Warranty/tmpSaveDelete?admin_id=' + admin_id)
+    .then(response => {
+      cb(response.data)
+    })
+    .catch(error => {
+      cb(error)
+    })
+}
+
 export default {
   initField,
   queryID,
@@ -232,6 +266,9 @@ export default {
   getAge,
   queryPersonInfo,
   obj2json,
-  share
+  share,
+  getData,
+  deleteData,
+  keepData
 }
 

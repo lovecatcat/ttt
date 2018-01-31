@@ -55,7 +55,7 @@
     </div>
     <div class="am-list" v-if="age >= 16">
       <div class="am-list-header">请选择个人税收居民身份类型</div>
-      <div class="am-list-body">
+      <div class="am-list-body" v-if="init&&init.beneficiary">
         <label class="am-list-item checkbox" v-for="item in init.beneficiary.tax_type">
           <div class="am-checkbox app-checkbox">
             <input type="radio" @change="checkTax('被保险人',warranty.assu_tax_type)" :value="item.if_id" v-model="warranty.assu_tax_type">
@@ -168,6 +168,8 @@ import Api from '../api'
 // 区域选择器
 import Region from './Region'
 import Occupation from './Occupation'
+import $_GET from '../widgets/Get'
+const qs = require('qs')
 
 const sex = { // 0为女，1为男
   1: 11338,
@@ -225,6 +227,12 @@ export default {
       }
     }
   },
+  mounted() {
+    var vm = this
+    vm.$nextTick(function () {
+      vm.Interval = setInterval(vm.keepData, 60000)
+    })
+  },
   computed: {
     init() {
       return this.$store.state.init
@@ -237,6 +245,28 @@ export default {
     if (this.assured.document_term === '9999-12-30') {
       this.longTerm = true
     }
+    Api.getData($_GET['admin_id'], res => {
+      if (res.status) {
+        let data = JSON.parse(res.data.json)
+        console.log(data)
+        if (data.company === '信泰') {
+          if (data.assured) {
+            this.assured = data.assured
+          }
+          if (data.warranty) {
+            this.warranty.assu_tax_type = data.warranty.assu_tax_type ? data.warranty.assu_tax_type : '' //居民类型
+            this.warranty.assu_card_type = data.warranty.assu_card_type ? data.warranty.assu_card_type : 57 //证件类型
+            this.warranty.assu_nation = data.warranty.assu_nation ? data.warranty.assu_nation : 63 //国籍
+            this.warranty.assu_annual_source = data.warranty.assu_annual_source ? data.warranty.assu_annual_source : 0 //收入来源
+            if (data.warranty.assu_occupation_code) {
+              this.warranty.assu_occupation_code = data.warranty.assu_occupation_code
+            } else {
+              this.assured.occupation = ''
+            }
+          }
+        }
+      }
+    })
   },
   watch: {
     longTerm(val) {
@@ -264,6 +294,23 @@ export default {
     }
   },
   methods: {
+    keepData() {
+      let keepData = {
+        company: '信泰',
+        applicant: this.$store.state.applicant,
+        assured: this.assured,
+        warranty: this.warranty,
+        insurance: this.$store.state.insurance,
+        beneficiary: {}
+      }
+      keepData = Api.obj2json(keepData)
+      let params = {}
+      params['admin_id'] = $_GET['admin_id']
+      params['json'] = JSON.stringify(keepData)
+      Api.keepData(qs.stringify(params), res => {
+        console.log('保存成功', res)
+      })
+    },
     typeChange() {
       this.assured.document_number = ''
       this.assured.register = ''
@@ -463,6 +510,7 @@ export default {
         })
       }
       vm.$set(vm.assured, 'address_select', select_show)
+      vm.$forceUpdate()
     },
     // 清除通讯地址
     clearAddress() {
@@ -508,6 +556,7 @@ export default {
       this.local && console.log(selected)
       this.assured.occupation = selected.explain
       this.warranty.assu_occupation_code = selected.if_id
+      this.$forceUpdate()
     },
     // 清除职业
     clearOccupation() {

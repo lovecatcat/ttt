@@ -52,7 +52,7 @@ Vue.mixin({
     let path = this.$route.fullPath
     let whiteList = ['/', '/confirmation', '/tips', '/insured']
     if (!this.local && !this.$store.state.ready && whiteList.indexOf(path) === -1) {
-      window.location.href = '/Wechat/XT_ins'
+      window.location.href = '/Wechat/toLogin?gourl=XT_ins'
     }
     // 完成未完成订单
     if (this.$store.state.todo) {

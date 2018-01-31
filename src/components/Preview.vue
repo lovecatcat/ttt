@@ -786,6 +786,9 @@
               insured: res.insured,
               uploadImg: res.insuredImg
             })
+            Api.deleteData(vm.$store.state.admin_id, res => {
+              console.log('删除临时数据成功', res)
+            })
             this.clearStorage()
             setTimeout(function () {
               vm.done = true

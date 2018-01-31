@@ -42,7 +42,6 @@ export default {
   created() {
     var vm = this
     vm.$toast.open('初始化数据', 'loading')
-    console.log($_GET['admin_id'])
     Api.initField(res => {
       vm.$toast.close()
       vm.$store.dispatch('saveInit', res)

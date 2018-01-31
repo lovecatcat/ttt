@@ -502,6 +502,7 @@
     },
     data () {
       return {
+        isExempted: false,
         forms: needAnswer,
         appForms: Api.obj2json(needAnswer),
         assuAllNo: null,
@@ -517,18 +518,19 @@
         }
       }
     },
+    activated () {
+      this.isExempted = false
+      for (let i in this.$store.state.insurances) {
+        console.log(this.$store.state.insurances[i].safe_id)
+        if (this.$store.state.insurances[i].safe_id === '370') {
+          this.isExempted = true
+        }
+      }
+    },
     computed: {
       age () {
         let birthday = this.$store.state.assured.birthday
         return birthday ? (new Date().getFullYear() - birthday.substr(0, 4)) : 20
-      },
-      isExempted () { // 是否豁免投保人
-        for (let i in this.$store.state.insurances) {
-          if (this.$store.state.insurances[i].safe_id === '370') {
-            return true
-          }
-        }
-        return false
       }
     },
     watch: {
@@ -611,8 +613,6 @@
         return true
       },
       appChanged (val, id, entry) {
-        console.log(id + ';appl' + entry + ';' + this.index)
-        console.log(JSON.parse(JSON.stringify(val)), id)
         this.applAllNo = false
         // 如果为否
         if (val[id] === false) {
@@ -638,8 +638,6 @@
         this.$forceUpdate()
       },
       assChanged (val, id, entry) {
-        console.log(id + ';appl' + entry + ';' + this.index)
-        console.log(JSON.parse(JSON.stringify(val)), id)
         this.assuAllNo = false
 
         // 如果为否

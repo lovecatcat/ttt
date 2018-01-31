@@ -269,20 +269,6 @@
         return this.$store.state.init || {}
       }
     },
-    watch: {
-      insurance: {
-        handler(val) {
-          this.save2local('insurance', val)
-        },
-        deep: true
-      },
-      main_insurance: {
-        handler(val) {
-          this.save2local('main_insurance', val)
-        },
-        deep: true
-      }
-    },
     created() {
       var vm = this
       Api.querySafegoods(res => {
@@ -296,20 +282,20 @@
           vm.main_insurance = res[this.safe_id]
           vm.insurance_changed()
         }
-        if (vm.$store.state.todo && vm.$storage.fetch('main_insurance').safe_id) {
-          vm.setData('main_insurance', vm.$storage.fetch('main_insurance'))
-          vm.$nextTick(function () {
-            vm.attr = this.unique(vm.main_insurance.attr, 'pay_year')
-            vm.attr2 = this.unique(vm.main_insurance.attr, 'safe_year')
-            let insurance = vm.$storage.fetch('insurance')
-            this.insurance.safe_id = insurance.safe_id
-            this.insurance.money = insurance.money
-            this.insurance.pay_year = insurance.pay_year
-            if (vm.attr2.length === 1) {
-              this.insurance.safe_year = vm.attr2[0].sv_id
-            }
-          })
-        }
+//        if (vm.$store.state.todo && vm.$storage.fetch('main_insurance').safe_id) {
+//          vm.setData('main_insurance', vm.$storage.fetch('main_insurance'))
+//          vm.$nextTick(function () {
+//            vm.attr = this.unique(vm.main_insurance.attr, 'pay_year')
+//            vm.attr2 = this.unique(vm.main_insurance.attr, 'safe_year')
+//            let insurance = vm.$storage.fetch('insurance')
+//            this.insurance.safe_id = insurance.safe_id
+//            this.insurance.money = insurance.money
+//            this.insurance.pay_year = insurance.pay_year
+//            if (vm.attr2.length === 1) {
+//              this.insurance.safe_year = vm.attr2[0].sv_id
+//            }
+//          })
+//        }
       })
     },
     activated() {
@@ -327,6 +313,7 @@
         }
         if (vm.insurance) {
           vm.insurance.period_money = ''
+          vm.insurance.money = ''
         }
         for (let i in vm.addonIns) {
           if (vm.addonIns[i] && vm.addonIns[i].period_money) {
@@ -385,8 +372,15 @@
         }
         return res
       },
+      resetMain() {
+        if (this.insurance.safe_id === '377') {
+          this.insurance.money = ''
+        } else {
+          this.insurance.period_money = ''
+        }
+      },
       pyChanged() {
-        this.insurance.period_money = ''
+        this.resetMain()
         let mainPayYear = null
         this.attr.forEach(item => {
           if (item.sv_id === this.insurance.pay_year) {
@@ -401,11 +395,13 @@
             this.addonIns[362].pay_year = item.sv_id
           }
         })
+        //投保人豁免
         this.main_insurance.child[370] && this.unique(this.main_insurance.child[370].attr, 'pay_year').forEach(item => {
           if (Number(item.pay_year) === mainPayYear - 1) {
             this.addonIns[370].pay_year = item.sv_id
           }
         })
+        //金掌柜
         this.main_insurance.child[398] && this.unique(this.main_insurance.child[398].attr, 'pay_year').forEach(item => {
           this.addonIns[398].safe_year = item.sv_id
           this.addonIns[398].pay_year = item.sv_id
@@ -413,7 +409,7 @@
         this.resetAdddons()
       },
       syChanged() {
-        this.insurance.period_money = ''
+        this.resetMain()
         this.attr2.forEach(item => {
           if (item.sv_id === this.insurance.safe_year) {
             this.mainSafeYear = Number(item.safe_year)
@@ -471,6 +467,8 @@
         this.addonIns[i] = tml
       },
       cal(addonIndex) {
+        console.log('计算【' + addonIndex + '】')
+        console.log(typeof addonIndex)
         var vm = this
         if (!vm.checkForm() || vm.uploading) {
           return
@@ -483,7 +481,6 @@
           vm.uploading = false
         }, 1500)
         vm.$toast.open('正在计算', 'loading')
-
         let pushData = {}
         let filter = ['register_select', 'address_select', 'occupation_select', 'contains', 'getArrayIndex', 'bank_label', 'ChCity', 'ChDistrict', 'ChPro', 'oid', 'pid', 'bank_address']
         let applicant = Object.assign({}, vm.applicant, vm.$store.state.applicant)
@@ -517,22 +514,28 @@
         pushData['insurance_pay_year'] = []
         pushData['insurance_safe_id'] = []
         pushData['insurance_safe_year'] = []
-        let insurance = vm.insurance
         pushData['insurance_war_id'].push('')
-        if (vm.insurance.safe_id === '377') { //千万人生
-          pushData['insurance_period_money'] = []
-          pushData['insurance_period_money'].push(insurance.period_money)
-        } else {
+        let insurance = {}
+        if (addonIndex) {
+          // 附加险
           pushData['insurance_money'] = []
-          pushData['insurance_money'].push(insurance.money)
-        }
-        pushData['insurance_pay_year'].push(insurance.pay_year)
-        pushData['insurance_safe_id'].push(insurance.safe_id)
-        pushData['insurance_safe_year'].push(insurance.safe_year)
-        if (addonIndex) {  // 附加险
           insurance = vm.addonIns[addonIndex]
+          console.log(insurance)
           pushData['insurance_war_id'].push('')
           pushData['insurance_money'].push(insurance.money)
+          pushData['insurance_pay_year'].push(insurance.pay_year)
+          pushData['insurance_safe_id'].push(insurance.safe_id)
+          pushData['insurance_safe_year'].push(insurance.safe_year)
+        } else {
+          insurance = vm.insurance
+          console.log(insurance)
+          if (vm.insurance.safe_id === '377') { //千万人生
+            pushData['insurance_period_money'] = []
+            pushData['insurance_period_money'].push(insurance.period_money)
+          } else {
+            pushData['insurance_money'] = []
+            pushData['insurance_money'].push(insurance.money)
+          }
           pushData['insurance_pay_year'].push(insurance.pay_year)
           pushData['insurance_safe_id'].push(insurance.safe_id)
           pushData['insurance_safe_year'].push(insurance.safe_year)
@@ -558,20 +561,20 @@
             res.id.assu_id && vm.$store.dispatch('saveAssured', {
               'assu_id': res.id.assu_id
             })
-
-            if (typeof res.data[vm.insurance.safe_id] === 'undefined') {
-              return
-            }
-            let period_money = res.data[vm.insurance.safe_id].period_money
+            console.log('res.data[vm.insurance.safe_id]' + res.data[vm.insurance.safe_id])
             if (addonIndex) {
+              console.log('cal_addon')
               let addoPm = res.data[addonIndex].period_money
               vm.addonIns[addonIndex].period_money = addoPm
-              if (vm.addonIns[370] && addonIndex !== '370' && this.addonsSelected[addonIndex]) {
-                vm.addonIns[370].money = Number(period_money) + Number(addoPm)
-                vm.addonIns[370].period_money = ''
+              if (vm.addonIns[370] && this.addonsSelected[addonIndex]) {
+                if (addonIndex !== '370') { //非豁免附加险
+                  vm.addonIns[370].money = Number(vm.insurance.period_money) + Number(addoPm)
+                  vm.addonIns[370].period_money = ''
+                }
               }
               vm.$forceUpdate()
             } else {
+              let period_money = res.data[vm.insurance.safe_id].period_money
               if (vm.insurance.safe_id === '377') {
                 vm.insurance.money = res.data[vm.insurance.safe_id].money
               } else {
@@ -718,11 +721,13 @@
         let toastText = null
         let id = index || vm.main_insurance.safe_id
         if (id === '377' && age > 55) {
-          toastText = '主险【千万人生养老年金保险】被保人不能大于55周岁'
+          toastText = '【千万人生养老年金保险】被保人不能大于55周岁'
+        } else if (id === '377' && this.mainPayYear === 10 && age > 50) {
+          toastText = '【千万人生养老年金保险】10年交被保人不能大于50周岁'
         } else if (age > 60) {
-          toastText = '被保险人年龄不能大于60周岁'
+          toastText = '被保险人不能大于60周岁'
         } else if (age + this.mainPayYear > 70) {
-          toastText = '缴费期满时被保人年龄不能超过70周岁'
+          toastText = '缴费期满时被保人不能超过70周岁'
         }
         if (toastText) {
           this.$toast.open(toastText)
