@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 Vue.use(Router)
 
 // 投保须知
@@ -9,6 +10,7 @@ import Insured from '@/components/Insured' //投保人信息
 import Beinsured from '@/components/Beinsured' //被投保人信息
 import Beneficiaries from '@/components/Beneficiaries' //身故受益人信息
 import Healthinfo from '@/components/Healthinfo' //健康告知
+import HealthinfoV1 from '@/components/HealthinfoV1' //健康告知版本一
 import Billinfo from '@/components/Billinfo' //填写收费信息
 
 import Prospectus from '@/components/Prospectus' //保险计划
@@ -58,6 +60,13 @@ const router = new Router({
     path: '/healthinfo',
     name: 'Healthinfo',
     component: Healthinfo,
+    meta: {
+      docTitle: '健康告知'
+    }
+  }, {
+    path: '/healthinfov1',
+    name: 'HealthinfoV1',
+    component: HealthinfoV1,
     meta: {
       docTitle: '健康告知'
     }

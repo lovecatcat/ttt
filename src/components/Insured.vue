@@ -145,7 +145,7 @@
         </app-input>
         <app-select label="是被保险人的">
           <select v-model.number="warranty.is_assured" v-if="init.warranty">
-            <option disabled>请选择</option>
+            <option disabled value="">请选择</option>
             <option v-for="item in init.warranty.is_assured" :value="item.if_id">{{item.explain}}</option>
           </select>
         </app-select>
@@ -261,7 +261,7 @@ export default {
   mounted() {
     var vm = this
     vm.$nextTick(function () {
-      vm.Interval = setInterval(vm.keepData, 60000)
+      vm.Interval = setInterval(vm.keepData, 5000)
     })
   },
   watch: {
@@ -284,10 +284,34 @@ export default {
     Api.getData($_GET['admin_id'], res => {
       if (res.status) {
         let data = JSON.parse(res.data.json)
-        console.log(data)
         if (data.company === '信泰') {
           if (data.applicant) {
-            this.applicant = data.applicant
+            let applicant = data.applicant
+            this.applicant.appl_id = applicant.appl_id ? applicant.appl_id : ''
+            this.applicant.register_select = applicant.register_select ? applicant.register_select : '' //户籍展示
+            this.applicant.address_select = applicant.address_select ? applicant.address_select : '' //通信展示
+            this.applicant.name = applicant.name ? applicant.name : '' //姓名
+            this.applicant.height = applicant.height ? Number(applicant.height) : '' //身高(厘米)
+            this.applicant.weight = applicant.weight ? Number(applicant.weight) : ''//体重(kg)
+            this.applicant.register = applicant.register ? applicant.register : '' //户籍
+            this.applicant.annual_earnings = applicant.annual_earnings ? Number(applicant.annual_earnings) : '' //年收入
+            this.applicant.annual_source_other = applicant.annual_source_other ? applicant.annual_source_other : '' //其他收入来源
+            this.applicant.birthday = applicant.birthday ? applicant.birthday : '' //出生日期
+            this.applicant.document_type_val = applicant.document_type_val ? applicant.document_type_val : '' //证件描述
+            this.applicant.document_number = applicant.document_number ? applicant.document_number : '' //证件号码
+            if (applicant.document_number) {
+              this.IDValidate()
+            }
+            this.applicant.document_term = applicant.document_term ? applicant.document_term : ''//证件有效期
+            this.applicant.address = applicant.address ? applicant.address : '' //通信地址
+            this.applicant.province = applicant.province ? applicant.province : '' //省
+            this.applicant.city = applicant.city ? applicant.city : '' //市
+            this.applicant.district = applicant.district ? Number(applicant.district) : '' //区
+            this.applicant.zipcode = applicant.zipcode ? applicant.zipcode : '' //通信邮编
+            this.applicant.occupation = applicant.occupation ? applicant.occupation : '' //职业
+            this.applicant.work_unit = applicant.work_unit ? applicant.work_unit : '' //工作单位
+            this.applicant.visit_tel = applicant.visit_tel ? applicant.visit_tel : '' //回访电话
+            this.applicant.tel = applicant.tel ? applicant.tel : ''//联系电话
           }
           if (data.warranty) {
             this.warranty.appl_card_type = data.warranty.appl_card_type ? data.warranty.appl_card_type : 57 //证件类型
@@ -299,10 +323,11 @@ export default {
             } else {
               this.applicant.occupation = ''
             }
-            this.warranty.is_assured = data.warranty.is_assured ? data.warranty.is_assured : 15000 //是被保险人的
+            this.warranty.is_assured = data.warranty.is_assured ? data.warranty.is_assured : '' //是被保险人的
             this.warranty.contract_handle = data.warranty.contract_handle ? data.warranty.contract_handle : '108' //合同争议处理方式
             this.warranty.contract_handle_value = data.warranty.contract_handle_value ? data.warranty.contract_handle_value : '' //填写仲裁委员会名称
           }
+          this.$forceUpdate()
         }
       }
     })
@@ -317,16 +342,15 @@ export default {
         applicant: this.applicant,
         assured: this.$store.state.assured,
         warranty: this.warranty,
-        insurance: this.$store.state.insurance,
+        insurance: {},
         beneficiary: {}
       }
       keepData = Api.obj2json(keepData)
       let params = {}
       params['admin_id'] = $_GET['admin_id']
       params['json'] = JSON.stringify(keepData)
-      console.log(params)
       Api.keepData(qs.stringify(params), res => {
-        console.log('保存成功', res)
+        console.log(res)
       })
     },
     typeChange() {
@@ -519,7 +543,7 @@ export default {
             })
             return
           }
-          vm.applicant.zipcode = response
+          vm.$set(vm.applicant, 'zipcode', response)
         })
       }
       vm.$set(vm.applicant, 'address_select', select_show)
@@ -651,7 +675,7 @@ export default {
         return false
       }
       this.$toast.close()
-
+      clearInterval(this.Interval)
       // 如果被保险人是本人
       if (this.warranty.is_assured === 15000) {
         var assured = Api.obj2json(this.applicant)

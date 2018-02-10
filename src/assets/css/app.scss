@@ -50,6 +50,8 @@ $mainColor:#FFBA00;
 .am-toast:not([am-version]) .am-toast-text {
   overflow: auto;
   white-space: normal;
+  position: relative;
+  z-index: 1000;
 }
 
 @media screen and (max-width: 360px) and (min-width: 360px),

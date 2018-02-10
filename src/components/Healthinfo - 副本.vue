@@ -153,8 +153,7 @@
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
       <router-link to="/beneficiaries" class="am-tab-item">上一步</router-link>
-      <router-link to="/healthinfov1" class="am-tab-item selected" v-if="diffHealth">下一步</router-link>
-      <router-link to="/billinfo" class="am-tab-item selected" v-else>下一步</router-link>
+      <router-link to="/billinfo" class="am-tab-item selected">下一步</router-link>
     </div>
   </div>
 </template>
@@ -428,13 +427,13 @@
         </div>
         `,
         props: ['forms', 'index', 'who'],
-        data() {
+        data () {
           return {
             show: false
           }
         },
         methods: {
-          cancel() {
+          cancel () {
             this.show = false
             this.$parent.showPup0ver = false
             if (this.who === 'appl') {
@@ -445,14 +444,14 @@
               this.$parent.clientvalue.fields[this.index] = ''
             }
           },
-          confirm() {
+          confirm () {
             if (!this.checkForm()) {
               return false
             }
             this.show = false
             this.$parent.showPup0ver = false
           },
-          checkForm() {
+          checkForm () {
             console.log(typeof this.index)
             let bool = true
             let field = ''
@@ -501,9 +500,8 @@
         }
       }
     },
-    data() {
+    data () {
       return {
-        diffHealth: false,
         isExempted: false,
         forms: needAnswer,
         appForms: Api.obj2json(needAnswer),
@@ -520,28 +518,23 @@
         }
       }
     },
-    activated() {
+    activated () {
       this.isExempted = false
-      this.diffHealth = false
       for (let i in this.$store.state.insurances) {
         console.log(this.$store.state.insurances[i].safe_id)
         if (this.$store.state.insurances[i].safe_id === '370') {
-          if (this.$store.state.main_insurance.safe_id === '377') {
-            this.diffHealth = true
-          } else {
-            this.isExempted = true
-          }
+          this.isExempted = true
         }
       }
     },
     computed: {
-      age() {
+      age () {
         let birthday = this.$store.state.assured.birthday
         return birthday ? (new Date().getFullYear() - birthday.substr(0, 4)) : 20
       }
     },
     watch: {
-      assuAllNo(val) {
+      assuAllNo (val) {
         if (val === true) {
           this.clientvalue.ass_amswer = {}
           this.clientvalue.fields = {}
@@ -551,20 +544,20 @@
           }
         }
       },
-      applAllNo(val) {
+      applAllNo (val) {
         if (val === true) {
           this.clientvalue.app_amswer = {}
           this.clientvalue.app_fields = {}
         }
       },
       clientvalue: {
-        handler(val) {
+        handler (val) {
           this.save2local('clientvalue', val)
         },
         deep: true
       }
     },
-    created() {
+    created () {
       const vm = this
       Api.queryMatters(res => {
         if (res.name && res.name.indexOf('Error') > -1) {
@@ -580,7 +573,7 @@
         this.setData('clientvalue', this.$storage.fetch('clientvalue'))
       }
     },
-    beforeRouteLeave(to, from, next) {
+    beforeRouteLeave (to, from, next) {
       if (to.path === '/beneficiaries') {
         next()
         return false
@@ -619,7 +612,7 @@
         }
         return true
       },
-      appChanged(val, id, entry) {
+      appChanged (val, id, entry) {
         this.applAllNo = false
         // 如果为否
         if (val[id] === false) {
@@ -644,7 +637,7 @@
         }
         this.$forceUpdate()
       },
-      assChanged(val, id, entry) {
+      assChanged (val, id, entry) {
         this.assuAllNo = false
 
         // 如果为否
@@ -670,7 +663,7 @@
         }
         this.$forceUpdate()
       },
-      checkForm() {
+      checkForm () {
         let assuBools = this.clientvalue.ass_amswer
         let assuAllFalse = true
         for (let i in assuBools) {

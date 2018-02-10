@@ -11,16 +11,18 @@ export default {
       },
       template: `
         <div class="am-toast" v-if='show'>
+          <div class="app-mask" v-if="mask"></div>
           <div class="am-toast-text">
             <span v-if="type" class="am-icon toast" :class="type"></span> {{text}}
           </div>
         </div>
       `,
       methods: {
-        open(text, type, time = 2500) {
+        open(text, type, time = 2500, mask = false) {
           if (text || type) {
             this.text = text
             this.type = type
+            this.mask = mask
             this.show = true
             if (type !== 'loading') {
               setTimeout(() => {
@@ -28,6 +30,8 @@ export default {
                 this.type = ''
                 this.show = false
               }, time)
+            } else {
+              this.mask = true
             }
           } else {
             this.show = false

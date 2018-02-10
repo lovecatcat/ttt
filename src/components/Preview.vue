@@ -750,6 +750,7 @@
         pushData['insurance_safe_id'] = []
         pushData['insurance_safe_year'] = []
         pushData['insurance_period_money'] = []
+        pushData['insurance_auto_pay'] = []
 
         vm.insurances.forEach(function (insurance) {
           pushData['insurance_war_id'].push(warId)
@@ -758,6 +759,7 @@
           pushData['insurance_safe_id'].push(insurance.safe_id)
           pushData['insurance_safe_year'].push(insurance.safe_year)
           pushData['insurance_period_money'].push(insurance.period_money)
+          pushData['insurance_auto_pay'].push(insurance.auto_pay === '78' ? 1 : 0)
         })
         this.local && console.log(pushData)
         vm.$toast.open('正在投保中', 'loading')
@@ -782,12 +784,12 @@
             vm.$toast.open('提交失败：' + res.insured.message, '', 5000)
           } else {
             vm.$toast.open(res.insured.status === '1' ? '自核通过' : '进入人工核保', 'success')
+            Api.deleteData(vm.$store.state.admin_id, res => {
+              console.log('删除临时数据成功', res)
+            })
             vm.$store.dispatch('setParam', {
               insured: res.insured,
               uploadImg: res.insuredImg
-            })
-            Api.deleteData(vm.$store.state.admin_id, res => {
-              console.log('删除临时数据成功', res)
             })
             this.clearStorage()
             setTimeout(function () {

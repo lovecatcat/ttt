@@ -37,7 +37,7 @@
                      id="mattress_sign"
                      v-bind:true-value="init.warranty.mattress_sign[1].if_id"
                      v-bind:false-value="init.warranty.mattress_sign[0].if_id"
-                     v-model="warranty.mattress_sign">
+                     v-model="insurance.auto_pay">
               <label class="am-switch-label" for="mattress_sign">
                 <div class="am-switch-inner"></div>
                 <div class="am-switch-switch"></div>
@@ -99,6 +99,7 @@
           </label>
         </div>
       </template>
+      <!--金掌柜-->
       <template v-if="index==='398'">
         <app-select label="保险期间" :readonly="item.attr.length===1">
           <select v-model="addonIns[index].safe_year" :disabled="item.attr.length===1">
@@ -113,6 +114,21 @@
                  v-model="addonIns[index].period_money"
                  type="text"
                  placeholder="请输入">
+        </app-input>
+        <app-input label="是否自动垫交保费" autoWidth>
+          <div class="am-ft-right" slot="input">
+            <div class="am-switch" v-if="init.warranty && init.warranty.mattress_sign">
+              <input type="checkbox"
+                     class="am-switch-checkbox"
+                     v-bind:true-value="init.warranty.mattress_sign[1].if_id"
+                     v-bind:false-value="init.warranty.mattress_sign[0].if_id"
+                     v-model="addonIns[index].auto_pay">
+              <label class="am-switch-label" for="mattress_sign">
+                <div class="am-switch-inner"></div>
+                <div class="am-switch-switch"></div>
+              </label>
+            </div>
+          </div>
         </app-input>
       </template>
       <template v-else>
@@ -218,13 +234,13 @@
           safe_year: '', //保险期间
           pay_year: '', //交费年期
           money: '', //基本保险金额
-          period_money: '' //期交保费
+          period_money: '', //期交保费
+          auto_pay: '77' //自动垫交
         },
         warranty: {
           proposal_cont_no: '', //双主险投保单号
           delivery_way: '117',
-          assu_social_security: '15047',
-          mattress_sign: '77' //自动垫交
+          assu_social_security: '15047'
         },
         applicant: {
           email: '' //邮箱
@@ -590,6 +606,7 @@
                   this.addonsSelected[370] = false
                 }
               }
+              this.addonsSelected[398] = false
               // 是否达到反洗钱标准
               vm.$store.dispatch('setAntiMoney', (res.data[vm.insurance.safe_id] * this.mainPayYear >= 200000))
             }

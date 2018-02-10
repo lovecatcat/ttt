@@ -49,7 +49,8 @@
       本人以真实姓名开立结算账户（银行卡/存折/贷记卡），且账户所有人为投保人本人。本人不可撤销地授权贵公司和经办银行（或第三方支付公司）从上述账户中扣划本投保申请所需交付的各期保险费用及接收贵公司的各种退费。扣款数据以贵公司向经办银行（或第三方支付公司）提供的电子数据或单证为准，扣款时间为贵公司收到投保申请之日起三个工作日内。本授权条款为本人对贵公司和经办银行（或第三方支付公司）从其账户中扣划本投保申请所需交付各期保险费用及接收贵公司各种退费的授权证明。
     </div>
     <div class="am-tab am-fixed am-fixed-bottom app-navi">
-      <router-link to="/healthinfo" class="am-tab-item">上一步</router-link>
+      <router-link to="/healthinfov1" class="am-tab-item" v-if="diffHealth">上一步</router-link>
+      <router-link to="/healthinfo" class="am-tab-item" v-else>上一步</router-link>
       <router-link to="/preview" class="am-tab-item selected">下一步</router-link>
     </div>
     <!-- 开户行所在地 -->
@@ -68,6 +69,7 @@ export default {
   },
   data() {
     return {
+      diffHealth: false,
       agreement: false, //协议
       warranty: {
         bank_card: '51', //卡折标志
@@ -89,8 +91,18 @@ export default {
       return this.$store.state.init || {}
     }
   },
+  activated() {
+    this.diffHealth = false
+    for (let i in this.$store.state.insurances) {
+      if (this.$store.state.insurances[i].safe_id === '370') {
+        if (this.$store.state.main_insurance.safe_id === '377') {
+          this.diffHealth = true
+        }
+      }
+    }
+  },
   beforeRouteLeave(to, from, next) {
-    if (to.path === '/healthinfo') {
+    if (to.path === '/healthinfo' || to.path === '/healthinfov1') {
       next()
       return false
     }

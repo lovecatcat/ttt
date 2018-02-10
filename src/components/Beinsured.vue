@@ -15,7 +15,7 @@
         </app-select>
         <app-input label="证件号码">
           <input slot="input" class="uppercase" @change="checkID" v-model.lazy="assured.document_number" type="text" placeholder="请填写被保险人证件号码">
-          <div slot="icon" v-show="assured.document_number != ''" class="am-list-clear" @click="assured.document_number = ''"><i class="am-icon-clear am-icon"></i></div>
+          <div slot="icon" v-show="assured.document_number != ''" class="am-list-clear" @click="assured.document_number=''"><i class="am-icon-clear am-icon"></i></div>
         </app-input>
         <app-input label="证件有效期">
           <div class="am-ft-right" slot="input">
@@ -141,11 +141,11 @@
           <div slot="icon" v-show="assured.weight != ''" class="am-list-clear"><i class="am-icon-clear am-icon" @click="assured.weight = ''"></i></div>
         </app-input>
         <!-- 职业 -->
-        <app-input label="职业" v-if="age > 15">
+        <app-input label="职业" v-if="!assured.birthday || age > 15">
           <div slot="input" @click="$refs.occupation.show = true" placeholder="请点击选择职业" :class="{pd:!assured.occupation}">
             {{assured.occupation}}
           </div>
-          <div slot="icon" class="am-list-clear"><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
+          <div slot="icon" class="am-list-clear" v-show="assured.occupation" ><i class="am-icon-clear am-icon" @click="clearOccupation"></i></div>
         </app-input>
         <app-input label="职业" v-else>
           <div slot="input" :class="{pd:!assured.occupation}">
@@ -230,7 +230,7 @@ export default {
   mounted() {
     var vm = this
     vm.$nextTick(function () {
-      vm.Interval = setInterval(vm.keepData, 60000)
+      vm.Interval = setInterval(vm.keepData, 5000)
     })
   },
   computed: {
@@ -251,19 +251,48 @@ export default {
         console.log(data)
         if (data.company === '信泰') {
           if (data.assured) {
-            this.assured = data.assured
+            let assured = data.assured
+            this.assured.assu_id = assured.assu_id ? assured.assu_id : ''
+            this.assured.register_select = assured.register_select ? assured.register_select : '' //户籍展示
+            this.assured.address_select = assured.address_select ? assured.address_select : '' //通信展示
+            this.assured.name = assured.name ? assured.name : '' //姓名
+            this.assured.height = assured.height ? Number(assured.height) : '' //身高(厘米)
+            this.assured.weight = assured.weight ? Number(assured.weight) : ''//体重(kg)
+            this.assured.register = assured.register ? assured.register : '' //户籍
+            this.assured.annual_earnings = assured.annual_earnings ? Number(assured.annual_earnings) : '' //年收入
+            this.assured.annual_source_other = assured.annual_source_other ? assured.annual_source_other : '' //其他收入来源
+            this.assured.birthday = assured.birthday ? assured.birthday : '' //出生日期
+            this.assured.document_type_val = assured.document_type_val ? assured.document_type_val : '' //证件描述
+            this.assured.document_number = assured.document_number ? assured.document_number : '' //证件号码
+            if (assured.document_number) {
+              this.IDValidate()
+            }
+            this.assured.document_term = assured.document_term ? assured.document_term : ''//证件有效期
+            this.assured.address = assured.address ? assured.address : '' //通信地址
+            this.assured.province = assured.province ? assured.province : '' //省
+            this.assured.city = assured.city ? assured.city : '' //市
+            this.assured.district = assured.district ? Number(assured.district) : '' //区
+            this.assured.zipcode = assured.zipcode ? assured.zipcode : '' //通信邮编
+            this.assured.occupation = assured.occupation ? assured.occupation : '' //职业
+            this.assured.work_unit = assured.work_unit ? assured.work_unit : '' //工作单位
+            this.assured.tel = assured.tel ? assured.tel : ''//联系电话
           }
           if (data.warranty) {
-            this.warranty.assu_tax_type = data.warranty.assu_tax_type ? data.warranty.assu_tax_type : '' //居民类型
-            this.warranty.assu_card_type = data.warranty.assu_card_type ? data.warranty.assu_card_type : 57 //证件类型
-            this.warranty.assu_nation = data.warranty.assu_nation ? data.warranty.assu_nation : 63 //国籍
-            this.warranty.assu_annual_source = data.warranty.assu_annual_source ? data.warranty.assu_annual_source : 0 //收入来源
-            if (data.warranty.assu_occupation_code) {
-              this.warranty.assu_occupation_code = data.warranty.assu_occupation_code
+            let warranty = data.warranty
+            this.warranty.assu_tax_type = warranty.assu_tax_type ? warranty.assu_tax_type : '' //居民类型
+            this.warranty.assu_card_type = warranty.assu_card_type ? warranty.assu_card_type : 57 //证件类型
+            this.warranty.assu_nation = warranty.assu_nation ? warranty.assu_nation : 63 //国籍
+            this.warranty.assu_annual_source = warranty.assu_annual_source ? warranty.assu_annual_source : 0 //收入来源
+            console.log(warranty.assu_occupation_code)
+            if (warranty.assu_occupation_code) {
+              console.log(true)
+              this.warranty.assu_occupation_code = warranty.assu_occupation_code
+              console.log('this.warranty.assu_occupation_code' + this.warranty.assu_occupation_code)
             } else {
               this.assured.occupation = ''
             }
           }
+          this.$forceUpdate()
         }
       }
     })
@@ -273,7 +302,7 @@ export default {
       this.assured.document_term = val ? '9999-12-30' : ''
     },
     age(val) {
-      if (val >= 0 && val <= 6) {
+      if (this.assured.birthday && val <= 6) {
         this.assured.occupation = '学龄前儿童'
         this.warranty.assu_occupation_code = 9602
       } else if (val > 6 && val <= 15) {
@@ -295,20 +324,28 @@ export default {
   },
   methods: {
     keepData() {
+      let warranty = Api.obj2json(this.$store.state.warranty)
+      warranty.assu_sex = this.warranty.assu_sex//性别
+      warranty.assu_card_type = this.warranty.assu_card_type//证件类型
+      warranty.assu_nation = this.warranty.assu_nation//国籍
+      warranty.assu_annual_source = this.warranty.assu_annual_source//收入来源
+      warranty.assu_tax_type = this.warranty.assu_tax_type//税收类型
+      warranty.assu_occupation_code = this.warranty.assu_occupation_code //职业代码
       let keepData = {
         company: '信泰',
         applicant: this.$store.state.applicant,
         assured: this.assured,
-        warranty: this.warranty,
-        insurance: this.$store.state.insurance,
+        warranty: warranty,
+        insurance: {},
         beneficiary: {}
       }
       keepData = Api.obj2json(keepData)
       let params = {}
       params['admin_id'] = $_GET['admin_id']
       params['json'] = JSON.stringify(keepData)
+      console.log(warranty)
       Api.keepData(qs.stringify(params), res => {
-        console.log('保存成功', res)
+        console.log(res)
       })
     },
     typeChange() {
@@ -506,7 +543,7 @@ export default {
             })
             return
           }
-          vm.assured.zipcode = response
+          vm.$set(vm.assured, 'zipcode', response)
         })
       }
       vm.$set(vm.assured, 'address_select', select_show)
@@ -641,6 +678,7 @@ export default {
     if (!this.checkForm()) {
       return false
     }
+    clearInterval(this.Interval)
     this.$store.commit('saveAssured', this.assured)
     this.$store.commit('setWarranty', this.warranty)
     next()
