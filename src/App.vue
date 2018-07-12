@@ -55,7 +55,7 @@ export default {
         vm.IDNumber = response.data.message.code
       } else {
         vm.$toast.open('不存在该业务员，请重新获取链接', '', 2000, () => {
-          location.href = '/Wechat/XT_ins'
+          location.href = '/Wechat/toLogin?gourl=XT_ins'
         })
       }
     })
@@ -89,7 +89,7 @@ export default {
       share({
         title: '信泰人寿在线投保',
         desc: '\r\n【汇盟保险，更专业的保险管家】',
-        link: location.protocol + '//cloud.ehuimeng.com/Wechat/XT_ins2c?' + qs.stringify(params), // 分享链接
+        link: location.protocol + '//' + location.host + '/Wechat/XT_ins?' + qs.stringify(params), // 分享链接
         imgUrl: location.protocol + '//' + location.host + '/Theme/index/home/images/logo.png' // 分享图标
       })
     }

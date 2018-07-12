@@ -285,9 +285,7 @@
             <div class="am-list-label" style="width: .7rem">险种</div>
             <div class="am-list-control">
               <select v-model="main_insurance" disabled>
-                <option v-if="item.safe_id === '361'"
-                        v-for="item in safegoods" :value="item">{{item.name}}
-                </option>
+                <option v-for="item in safegoods" :value="item">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -312,7 +310,7 @@
                        id="mattress_sign"
                        v-bind:true-value="init.warranty.mattress_sign[1].if_id"
                        v-bind:false-value="init.warranty.mattress_sign[0].if_id"
-                       v-model="warranty.mattress_sign">
+                       v-model="insurance.auto_pay">
                 <label class="am-switch-label" for="mattress_sign">
                   <div class="am-switch-inner"></div>
                   <div class="am-switch-switch"></div>
@@ -351,8 +349,25 @@
               </option>
             </select>
           </app-select>
-          <app-input label="基本保险金额">
+          <app-input label="基本保险金额" v-if="insurance.safe_id!=='398'">
             <input slot="input" readonly :value="insurance.money" type="text">
+          </app-input>
+          <app-input label="是否自动垫交保费" autoWidth v-if="insurance.safe_id==='398'">
+            <div class="am-ft-right" slot="input">
+              <div class="am-switch" v-if="init.warranty && init.warranty.mattress_sign">
+                <input type="checkbox"
+                       class="am-switch-checkbox"
+                       disabled
+                       id="auto_pay"
+                       v-bind:true-value="init.warranty.mattress_sign[1].if_id"
+                       v-bind:false-value="init.warranty.mattress_sign[0].if_id"
+                       v-model="insurance.auto_pay">
+                <label class="am-switch-label" for="auto_pay">
+                  <div class="am-switch-inner"></div>
+                  <div class="am-switch-switch"></div>
+                </label>
+              </div>
+            </div>
           </app-input>
           <app-input label="期交保费" style="border-bottom: 1px solid #eee">
             <input slot="input" readonly :value="insurance.period_money" type="text">
@@ -380,96 +395,16 @@
         </div>
       </div>
     </app-dropdown>
-    <app-dropdown v-if="!warData && matters">
-      <template slot="header">
-        <div class="am-list-label">健康告知</div>
-        <div class="am-list-content am-ft-right">
-          <router-link to="/healthinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
-        </div>
-      </template>
-      <div class="am-list am-list-6lb form" v-for="item,index in matters">
-        <div class="am-list-item">
-          <div class="app-list-title">{{item.entry}}. {{item.content}}</div>
-        </div>
-        <template v-if="item.child">
-          <div class="am-list-body" v-for="childitem in item.child">
-            <div class="am-list-item">
-              <div class="app-list-title">{{childitem.entry}}. {{childitem.content}}</div>
-            </div>
-            <div class="am-list-body">
-              <div class="app-list" :class="{'flex-right':!isExempted}">
-                <div class="app-list-title" v-if="isExempted">被保险人</div>
-                <div class="am-switch">
-                  <input type="checkbox" disabled v-model="clientvalue.ass_amswer[childitem.ci_id]"
-                         :value="childitem.ci_id" class="am-switch-checkbox" :id="'assmatter'+childitem.ci_id">
-                  <label class="am-switch-label" :for="'assmatter'+childitem.ci_id">
-                    <div class="am-switch-inner"></div>
-                    <div class="am-switch-switch"></div>
-                  </label>
-                </div>
-              </div>
-              <div v-if="clientvalue.fields[childitem.ci_id]" class="app-list qaline">
-                <div class="app-list-control app-color-error">
-                  {{clientvalue.fields[childitem.ci_id]}}
-                </div>
-              </div>
-              <div class="app-list" v-if="isExempted">
-                <div class="app-list-title">投保人</div>
-                <div class="am-switch">
-                  <input type="checkbox" disabled v-model="clientvalue.app_amswer[childitem.ci_id]"
-                         :value="childitem.ci_id" class="am-switch-checkbox" :id="'appmatter'+childitem.ci_id">
-                  <label class="am-switch-label" :for="'appmatter'+childitem.ci_id">
-                    <div class="am-switch-inner"></div>
-                    <div class="am-switch-switch"></div>
-                  </label>
-                </div>
-              </div>
-              <div v-if="clientvalue.app_fields[childitem.ci_id] && isExempted" class="app-list">
-                <div class="app-list-control app-color-error">
-                  {{clientvalue.app_fields[childitem.ci_id]}}
-                </div>
-              </div>
-            </div>
+    <div class="am-list am-list-6lb form">
+      <div class="am-list-item dropdown">
+        <div class="am-list-dropdown-main">
+          <div class="am-list-label">健康告知</div>
+          <div class="am-list-content am-ft-right"><a href="#/healthinfo" class=""><span class="app-iconfont"></span>修改&nbsp;&nbsp;</a>
           </div>
-        </template>
-        <template v-else>
-          <div class="am-list-body">
-            <div class="app-list" :class="{'flex-right':!isExempted}">
-              <div class="app-list-title" v-if="isExempted">被保险人</div>
-              <div class="am-switch">
-                <input type="checkbox" disabled v-model="clientvalue.ass_amswer[item.ci_id]" :value="item.ci_id"
-                       class="am-switch-checkbox" :id="'assmatter'+item.ci_id">
-                <label class="am-switch-label" :for="'assmatter'+item.ci_id">
-                  <div class="am-switch-inner"></div>
-                  <div class="am-switch-switch"></div>
-                </label>
-              </div>
-            </div>
-            <div v-if="clientvalue.fields[item.ci_id]" class="app-list qaline">
-              <div class="app-list-control app-color-error">
-                {{clientvalue.fields[item.ci_id]}}
-              </div>
-            </div>
-            <div class="app-list" v-if="isExempted">
-              <div class="app-list-title">投保人</div>
-              <div class="am-switch">
-                <input type="checkbox" disabled v-model="clientvalue.app_amswer[item.ci_id]" :value="item.ci_id"
-                       class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
-                <label class="am-switch-label" :for="'appmatter'+item.ci_id">
-                  <div class="am-switch-inner"></div>
-                  <div class="am-switch-switch"></div>
-                </label>
-              </div>
-            </div>
-            <div v-if="clientvalue.fields[item.ci_id] && isExempted" class="app-list">
-              <div class="app-list-control app-color-error">
-                {{clientvalue.fields[item.ci_id]}}
-              </div>
-            </div>
-          </div>
-        </template>
+        </div>
+        <div class="am-list-dropdown-list"></div>
       </div>
-    </app-dropdown>
+    </div>
     <app-dropdown v-if="!warData && warranty">
       <template slot="header">
         <div class="am-list-label">收费信息</div>

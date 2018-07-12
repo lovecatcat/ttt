@@ -464,7 +464,8 @@
           safe_year: '', //保险期间
           pay_year: '', //交费年期
           money: '', //基本保险金额
-          period_money: '' //年缴保费
+          period_money: '', //年缴保费
+          auto_pay: '77' //是否自动垫交
         }
         switch (i) {
           case '362':
@@ -577,7 +578,6 @@
             res.id.assu_id && vm.$store.dispatch('saveAssured', {
               'assu_id': res.id.assu_id
             })
-            console.log('res.data[vm.insurance.safe_id]' + res.data[vm.insurance.safe_id])
             if (addonIndex) {
               console.log('cal_addon')
               let addoPm = res.data[addonIndex].period_money

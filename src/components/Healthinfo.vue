@@ -562,6 +562,13 @@
           this.save2local('clientvalue', val)
         },
         deep: true
+      },
+      showPup0ver(val) {
+        if (val) {
+          document.body.style.position = 'fixed'
+        } else {
+          document.body.style.position = 'static'
+        }
       }
     },
     created() {
@@ -707,6 +714,7 @@
   }
 </script>
 <style lang="scss">
+  .overflowhide{overflow: hidden;}
   .qaline {
     border-bottom: 1px solid #eee;
     padding-bottom: .12rem;

@@ -425,6 +425,13 @@
           this.save2local('clientvalue', val)
         },
         deep: true
+      },
+      showPup0ver(val) {
+        if (val) {
+          document.body.style.position = 'fixed'
+        } else {
+          document.body.style.position = 'static'
+        }
       }
     },
     created () {
