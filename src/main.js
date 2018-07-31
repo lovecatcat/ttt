@@ -2,7 +2,9 @@
 /*const FastClick = require('fastclick')
 FastClick.attach(document.body)*/
 
+import './assets/css/antui-all.css'
 import './assets/css/app.scss'
+import './assets/fonts/iconfont.css'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -49,11 +51,11 @@ Date.prototype.asDays = function (days) {
 Vue.mixin({
   created() {
     // 禁止从中间页进入
-    let path = this.$route.fullPath
-    let whiteList = ['/', '/confirmation', '/tips', '/insured']
-    if (!this.local && !this.$store.state.ready && whiteList.indexOf(path) === -1) {
-      window.location.href = '/Wechat/toLogin?gourl=XT_ins'
-    }
+    // let path = this.$route.fullPath
+    // let whiteList = ['/', '/confirmation', '/tips', '/insured']
+    // if (!this.local && !this.$store.state.ready && whiteList.indexOf(path) === -1) {
+    //   window.location.href = '/Wechat/toLogin?gourl=XT_ins'
+    // }
     // 完成未完成订单
     if (this.$store.state.todo) {
       this.setData('applicant', this.$storage.fetch('applicant'))

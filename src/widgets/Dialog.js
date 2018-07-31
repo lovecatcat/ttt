@@ -11,9 +11,9 @@ export default {
       <div class="app-dialog" v-if="title">
         <div class="am-dialog-mask show"></div>
         <div class="am-dialog show" role="dialog">
-          <div class="am-dialog-wrap" role="document">
+          <div class="am-dialog-wrap am-dialog-warp-config" role="document">
             <div class="am-dialog-header">
-              <h3>{{title}}</h3>
+              {{title}}
             </div>
             <div class="am-dialog-body" v-if="brief">
               <p class="am-dialog-brief">{{brief}}</p>

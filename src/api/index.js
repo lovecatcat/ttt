@@ -6,92 +6,225 @@ import axios from 'axios'
  * @type {String}
  */
 // 保险公司ID
-const SCID = 19
+const SCID = 12
 
-const env = location.port === '8080' ? 'development' : 'production'
+let env = 'prod'
+let url = 'https://www.luckyins.com/api/api/invoke'
+if (location.port === '8080') {
+  env = 'local'
+  url = '/api/api/api/invoke'
+} else if (/^ts-/.test(location.host)) {
+  env = 'test'
+  url = '//ts-www.luckyins.com/api/api/invoke'
+}
+let urlData = '?device=mobile&view=true&'
+axios.defaults.baseURL = env.url
+// let getUrl = env.url
+// const env = location.port === '8080' ? 'development' : 'production'
 // axios.defaults.baseURL = env === 'development' ? '/api' : '//' + location.host
-axios.defaults.baseURL = env === 'development' ? '//ts-cloud.ehuimeng.com' : '//' + location.host
+// axios.defaults.baseURL = env === 'development' ? '//ts-cloud.ehuimeng.com' : '//' + location.host
 
+//登录
+// const login = function (cb) {
+//   axios.get('/api/api/login?channel_id=2&type=account&data={"keyword":"15768397348","password":"Zjj871026"}').then(res => {
+//     console.log('登录成功')
+//   }).catch(error => {
+//     cb(error)
+//     console.log(error)
+//   })
+// }
+
+//整理下拉框需要的数据
+function dataToselect(data, type) {
+  var arr = []
+  if (!data) {
+    return false
+  }
+  data.forEach(function (ite, ind) {
+    arr.push({
+      text: type ? ite.name : ite.enum_name,
+      value: ite.id
+    })
+  })
+  return arr
+}
+//获取初始化信泰数据
 const initField = function (cb) {
-  axios.get('Warranty/initWarField?sc_id=' + SCID).then(response => {
+  axios.get(url + urlData + 'server=PolicyIns.initPolicyField&data={"supplier_id":' + SCID + '}').then(response => {
     var res = {}
-    const data = response.data
+    const data = response.data.data
     data.forEach(function (item, index) {
-      if (item.name === 'warranty') {
-        // 保单信息
-        res.warranty = {}
-        item.list.forEach(function (citem) {
-          if (citem.a_id === '53') { //与投保人关系
-            res.warranty.is_assured = citem.children
-          } else if (citem.a_id === '30') { //合同争议处理方式
-            res.warranty.contract_handle = citem.children
-          } else if (citem.a_id === '33') { //保单递送方式
-            res.warranty.delivery_way = citem.children
-          } else if (citem.a_id === '20') { //垫交标志
-            res.warranty.mattress_sign = citem.children
-          }
-        })
-      } else if (item.name === 'applicant') {
-        // 投保人信息
-        res.applicant = {}
-        item.list.forEach(function (citem) {
-          if (citem.a_id === '6') { //省
-            res.applicant.province = citem.children
-          } else if (citem.a_id === '16') { //国籍
-            res.applicant.nationality = citem.children
-          } else if (citem.a_id === '14') { //证件类型
-            res.applicant.document_type = citem.children
-          } else if (citem.a_id === '13') { //性别
-            res.applicant.sex = citem.children
-          } else if (citem.a_id === '10') { //职业代码
-            res.applicant.occupation_code = citem.children
-          } else if (citem.a_id === '111') { //收入来源
-            res.applicant.annual_source = citem.children
-          }
-        })
-      } else if (item.name === 'assured') {
-        // 被保险人信息
-        res.assured = {}
-        item.list.forEach(function (citem) {
-          if (citem.a_id === '6') { //省
-            res.assured.province = citem.children
-          } else if (citem.a_id === '16') { //国籍
-            res.assured.nationality = citem.children
-          } else if (citem.a_id === '14') { //证件类型
-            res.assured.document_type = citem.children
-          } else if (citem.a_id === '13') { //性别
-            res.assured.sex = citem.children
-          } else if (citem.a_id === '10') { //职业代码
-            res.assured.occupation_code = citem.children
-          } else if (citem.a_id === '46') { //社保（含新农合）
-            res.assured.social_security = citem.children
-          } else if (citem.a_id === '111') { //收入来源
-            res.assured.annual_source = citem.children
-          }
-        })
-      } else if (item.name === 'beneficiary') {
-        // 受益人信息
-        res.beneficiary = {}
-        item.list.forEach(citem => {
-          if (citem.a_id === '66') {
-            res.beneficiary.relationship = citem.children
-          } else if (citem.a_id === '52') {
-            res.beneficiary.tax_type = citem.children
-          }
-        })
-      } else if (item.name === 'transferstate') {
-        // 银行信息
-        res.transferstate = {}
-        item.list.forEach(citem => {
-          if (citem.a_id === '5') {
-            res.transferstate.bank_name = citem.children
-          } else if (citem.a_id === '9') {
-            res.transferstate.bank_card = citem.children
-          }
-        })
+      var itemdata = item.child
+      if (item.cate === 'AA') {
+        res.ID_type = dataToselect(itemdata) //证件类型
+      } else if (item.cate === 'AB') {
+        res.gender = dataToselect(item.child) //性别
+      } else if (item.cate === 'BK') {
+        res.is_assured = dataToselect(item.child) //与投保人关系
+      } else if (item.cate === 'AD') {
+        res.marriage = dataToselect(item.child) //婚姻状况
+      } else if (item.cate === 'AE') {
+        res.occupation = dataToselect(item.child) //职业
+      } else if (item.cate === 'AF') {
+        res.annual_source = dataToselect(item.child)//收入来源
+      } else if (item.cate === 'AG') {
+        res.social_security = dataToselect(item.child) //是否有社保
+      } else if (item.cate === 'AH') {
+        res.tax_type = dataToselect(item.child) //税收类型
+      } else if (item.cate === 'AI') {
+        res.nation = dataToselect(item.child) //国籍
+      } else if (item.cate === 'AJ') {
+        res.drving_type = dataToselect(item.child) //驾照类型
+      } else if (item.cate === 'AL') {
+        res.resident_type = dataToselect(item.child) //居民类型
+      } else if (item.cate === 'AN') {
+        res.relation_beneficiary = dataToselect(item.child) //受益人与被保人关系
+      } else if (item.cate === 'AO') {
+        res.beneficiary_type = dataToselect(item.child) //受益人类型 法定 指定
+      } else if (item.cate === 'AP') {
+        res.benefit_type = dataToselect(item.child) //受益类型 身故
+      } else if (item.cate === 'AV') {
+        res.bank_code = dataToselect(item.child) //银行代码
+      } else if (item.cate === 'AU') {
+        res.bank_type = dataToselect(item.child) //银行卡类型
+      } else if (item.cate === 'AS') {
+        res.GetPolMode = dataToselect(item.child) //保单递送方式
+      } else if (item.cate === 'area') {
+        res.province = dataToselect(item.child, true) //省
+      } else if (item.cate === 'BB') {
+        res.nj_safe_year = dataToselect(item.child) //年金保障年限
+      } else if (item.cate === 'BC') {
+        res.nj_get_way = dataToselect(item.child) //年金领取方式
+      } else if (item.cate === 'BD') {
+        res.nj_get_type = dataToselect(item.child) //年金领取类型
+      } else if (item.cate === 'BH') {
+        res.DisputedFlag = dataToselect(item.child) //合同处理方式
+      } else if (item.cate === 'AT') {
+        res.PayMode = dataToselect(item.child) //首期缴费方式
+      } else if (item.cate === 'BJ') {
+        res.ExPayMode = dataToselect(item.child) //续期缴费方式
       }
     })
     cb(res)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//获取市区
+const GetArea = function (id, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getArea&data={"id":' + id + '}')
+    .then(response => {
+      var citys_data = []
+      const data = response.data.data
+      if (!data) {
+        return false
+      }
+      data.forEach(function (item, index) {
+        citys_data.push({
+          text: item.name,
+          value: item.id,
+          zipCode: item.zip_code
+        })
+      })
+      cb(citys_data)
+    })
+    .catch(error => {
+      cb(error)
+      console.log(error)
+    })
+}
+
+//获取职业
+const queryOccupation = function (value, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getBasicEnumCode&data={"id":"' + value + '"}').then(response => {
+    cb(response.data.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//搜索职业
+const searchOccupation = function (key, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.searchJob&data={"supplier_id":' + SCID + ',"name":"' + key + '"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//获取职业代码
+const getJobPid = function (key, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getJobPid&data={"id":"' + key + '"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//获取险种
+const querySafegoods = function (cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getProductList&data={"supplier_id":"' + SCID + '"}').then(response => {
+    cb(response.data.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//计算保费
+const calMoney = function (data, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.onlineInsured&data=' + data).then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//健康告知
+const queryMatters = function (cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getMatterList&data={"supplier_id":"12","version":"2"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//双主险
+const getDoubleOrderid = function (cb) {
+  axios.get(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":""},"company_code":"XinTai","method":"getPolicyNo"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//保存保单
+const saveWarranty = function (data, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.save&data=' + data).then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+// 核保
+const pushWarranty = function (data, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":"' + data + '"},"company_code":"XinTai","method":"insure"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//删除数据
+const deleteItem = function (war_id, itemId, type, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.deleteInsInfo&data={"table":"' + type + '","id":"' + itemId + '","policy_id":' + war_id + '}').then(response => {
+    cb(response.data)
   }).catch(error => {
     cb(error)
     console.log(error)
@@ -110,78 +243,6 @@ const queryID = function (id, tb, cb) {
     })
 }
 
-const queryRegion = function (mode, code, cb) {
-  axios.get('Warranty/getAreaList?mode=' + mode + '&code=' + code).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const searchOccupation = function (key, cb) {
-  axios.get('UploadWarranty/getOccupation?search=' + key).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const getDoubleOrderid = function (cb) {
-  axios.get('UploadWarranty/index?code=ST000051&war_id=0').then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const queryOccupation = function (if_id, cb) {
-  axios.get('Warranty/getSubFieldList?if_id=' + if_id).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const queryMatters = function (cb) {
-  axios.get('Warranty/getClientmatterList?sc_id=' + SCID).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const querySafegoods = function (cb) {
-  axios.get('Warranty/getSafegoodsList?sc_id=' + SCID).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const pushWarranty = function (data, cb) {
-  axios.post('Warranty/pushWarranty', data).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
-const queryZipcode = function (code, cb) {
-  axios.get('Warranty/getZipCode?code=' + code).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
 const getAge = function(str) {
   if (!str) return
   var now = new Date()
@@ -197,27 +258,18 @@ const getAge = function(str) {
   return age
 }
 
-const queryPersonInfo = function (id, cb) {
-  axios.get('Home/Mycenter/index?user_id=' + id).then(response => {
-    cb(response)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
-
 const obj2json = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
-const share = function(data, cb) {
-  axios.post('wechat/share', data).then(response => {
-    cb(response.data)
-  }).catch(error => {
-    cb(error)
-    console.log(error)
-  })
-}
+// const share = function(data, cb) {
+//   axios.post('wechat/share', data).then(response => {
+//     cb(response.data)
+//   }).catch(error => {
+//     cb(error)
+//     console.log(error)
+//   })
+// }
 
 // 保存临时数据
 const keepData = function (data, cb) {
@@ -253,22 +305,25 @@ const deleteData = function (admin_id, cb) {
 }
 
 export default {
+  // login,
   initField,
   queryID,
-  queryRegion,
+  GetArea,
   searchOccupation,
   queryOccupation,
+  getJobPid,
   queryMatters,
   querySafegoods,
   pushWarranty,
   getDoubleOrderid,
-  queryZipcode,
   getAge,
-  queryPersonInfo,
   obj2json,
-  share,
+  // share,
   getData,
   deleteData,
-  keepData
+  keepData,
+  calMoney,
+  saveWarranty,
+  deleteItem
 }
 

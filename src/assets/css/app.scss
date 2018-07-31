@@ -1,5 +1,10 @@
 @import './antui-all.css';
-$mainColor:#FFBA00;
+$mainColor:#3b9cf5;
+$green : #4cd964;
+$bg-gray: #c8c8c8;
+//$bd-gray: #d2d2d2;
+$ft-black: #333;
+$ft-size: .16rem;
 @import './app-iconfont';
 
 /* am-ui*/
@@ -8,12 +13,10 @@ $mainColor:#FFBA00;
   z-index: 12000
 }
 
-.am-list:not([am-version]) {
-  padding-top: 0;
-}
 
 .am-article:not([am-version]) {
-  font-size: .15rem;
+  font-size: $ft-size;
+  padding-bottom: 0;
 }
 
 .am-list:not([am-version]).form .am-list-button a,
@@ -24,26 +27,22 @@ $mainColor:#FFBA00;
 .am-switch:not([am-version]) .am-switch-inner {
   &:before {
     color: #fff;
-    content: '是';
+    content: '';
     text-align: left;
     padding-left: .03rem;
     line-height: .3rem;
+    background-color: $green;
+    border: none;
   }
   &:after {
-    color: #000;
-    content: '否';
+    color: $ft-black;
+    content: '';
     text-align: right;
     padding-right: .03rem;
     line-height: .3rem;
-  }
-}
+    background-color: $bg-gray;
+    border: none;
 
-.am-sex.am-switch:not([am-version]) .am-switch-inner {
-  &:before {
-    content: '男';
-  }
-  &:after {
-    content: '女';
   }
 }
 
@@ -52,6 +51,12 @@ $mainColor:#FFBA00;
   white-space: normal;
   position: relative;
   z-index: 1000;
+}
+
+ input::-webkit-input-placeholder { /* placeholder颜色  */
+  color: $bg-gray !important;
+  /* placeholder字体大小  */
+  font-size: .16rem !important;
 }
 
 @media screen and (max-width: 360px) and (min-width: 360px),
@@ -71,6 +76,12 @@ screen and (max-width: 412px) and (min-width: 412px) {
   }
 }
 
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 
 /* global*/
 
@@ -94,7 +105,7 @@ body {
 }
 
 .uppercase {
-  text-transform: uppercase,
+  text-transform: uppercase;
 }
 
 .flex-right {
@@ -123,18 +134,191 @@ body {
 }
 
 .am-list-contents {
-  font-size: .15rem
+  font-size: $ft-size
+}
+section {
+  padding-top: .1rem;
+  background-color: #ebf5fe;
+}
+.am- {
+  &list {
+    padding: 0 .1rem .1rem .1rem;
+    background-color: #ebf5fe;
+    &-last {
+      padding: 0 .2rem .1rem .2rem;
+    }
+    &-body {
+      padding-top: .1rem;
+      padding-bottom: .1rem;
+      background-color: #fff;
+    }
+    &-label {
+      color: $ft-black !important;
+      font-size: $ft-size !important;
+    }
+    &-item {
+      font-size: $ft-size !important;
+      border: none;
+      background: none !important;
+      padding: 0 .1rem !important;
+      min-height: .5rem !important;
+    }
+    &-item.check {
+      padding-left: .5rem !important;
+    }
+    //输入框
+    &-control {
+      position: relative;
+      font-size:  $ft-size !important;
+      border: 1px solid $bg-gray;border-radius: .05rem;overflow: hidden;padding: .04rem .25rem .04rem .1rem;
+      input {
+        white-space: nowrap;text-overflow: ellipsis;font-size: $ft-size !important;
+      }
+    }
+    &-change {
+      min-width: .8rem;text-align: center;
+      font-size: .16rem;
+      line-height: .25rem;
+      margin-left: .1rem;
+      border: 1px solid $bg-gray;border-radius: .05rem;overflow: hidden;padding: .04rem 0;
+    }
+    &-change.orange {
+      border: 1px solid #ff9212;color: #ff9212;
+    }
+    .changeBlue {
+      color: #fff;
+      border: 1px solid $mainColor;
+      background-color: $mainColor;
+    }
+    //按钮
+    &-control-button {
+      min-height: .3rem !important;
+      padding-top: .1rem !important;
+      .am-list-control {
+        border: none;overflow: hidden;padding:0;
+        button {
+          width: auto !important;
+          min-width: .5rem;
+          height: .3rem;line-height: .3rem;
+          border-radius: .05rem;
+          padding: 0 .1rem !important;
+          //margin-bottom: .1rem;
+          margin-right: .1rem;
+          margin-bottom: .1rem;
+        }
+        button.tiny {
+          color: #888;
+          background-color: #fff;
+          border: 1px solid $bg-gray !important;
+        }
+        button.tiny-blue {
+          color: #fff;
+          border: 1px solid $mainColor !important;
+          background-color: $mainColor !important;
+        }
+      }
+    }
+    //清除按钮
+    &-clear {
+      position: absolute;
+      right: .05rem;
+      top: 0.05rem;
+    }
+    //switch
+    &-switch {
+      display: inline-block;
+      color: $mainColor;
+      width: 80%;
+      font-size: $ft-size;
+    }
+    .am-switch{
+      float: right;
+      margin-top: .05rem;
+    }
+
+    //险种
+    &-dropdown-main {
+      padding: 0 !important;
+      font-size: $ft-size !important;
+      .am-ft-md {
+        font-size: $ft-size !important;
+      }
+    }
+    &-dropdown-list {
+      padding-left: 0 !important;
+      //margin-top: .1rem;
+      .hm{
+        padding: .1rem;
+      }
+      .hm>div{
+        width: 48%;
+        display: inline-block;
+        margin-bottom: .05rem;
+      }
+      .hm>div>span{
+        padding-left: .1rem;
+        color: #ff9212;
+      }
+    }
+
+    //伸缩框
+    &-item.dropdown {
+      padding: 0 !important;
+    }
+    &-dropdown-main {
+      padding: 0 .15rem !important;
+      border-bottom: solid 1px #e4e4e4;
+      min-height: .5rem !important;
+      .am-list-label {
+        font-size: .18rem !important;
+        color: $mainColor !important;
+        width: 100% !important;
+      }
+    }
+  }
+
 }
 
+//底部按钮
+.am- {
+  &button-group{
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+    .am-button {
+      border-radius: .05rem;
+      a {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .am-button.blue {
+      a{
+        color: #fff;
+      }
+    }
+    .am-button.white {
+      border-color: $mainColor;
+      color: $mainColor;
+    }
+    .am-button.gray {
+      border-color: $bg-gray;
+      background-color: $bg-gray;
+      a{
+        color: #fff;
+      }
+    }
+  }
+
+}
+//健康告知
 .app- {
   &img {
     display: block;
     width: 100%;
   }
   &navi {
-    -webkit-box-shadow: 1px 1px 3px 1px #666;
-    -moz-box-shadow: 1px 1px 3px 1px #666;
-    box-shadow: 1px 1px 3px 1px #666;
+    color: #fff;
+    padding: .15rem;
   }
   &loading {
     position: fixed;
@@ -145,8 +329,7 @@ body {
     z-index: 10000;
     background-color: #FFF;
   }
-  &prompt,
-  &dialog {
+  &prompt{
     position: fixed;
     top: 0;
     bottom: 0;
@@ -154,11 +337,24 @@ body {
     right: 0;
   }
   &article {
-    margin: 0 .1rem;
-    font-size: .13rem;
+    font-size: $ft-size;
     line-height: 1.5;
-    padding: .1rem 0;
-    color: #000;
+    padding: .1rem;
+    color: $ft-black;
+    p{
+      margin-bottom: .05rem;
+      text-indent: .2rem;
+    }
+  }
+  &agreement {
+    .am-checkbox.agreement .icon-check, .am-checkbox.argument .icon-check {
+      margin-left: 0;
+    }
+    .am-checkbox.agreement label, .am-checkbox.argument label {
+      padding-left: 0;
+      font-size: $ft-size
+    }
+
   }
   &color {
     &-success {
@@ -175,8 +371,8 @@ body {
     }
   }
   &list {
-    color: #000;
-    font-size: .17rem;
+    color: $ft-black;
+    font-size: .16rem;
     padding: .07rem .15rem .05rem;
     min-height: .32rem;
     vertical-align: middle;
@@ -191,13 +387,13 @@ body {
     background-size: .15rem .01rem, .15rem .01rem, 100% 0, 100% .01rem;
     &-header {
       font-size: .18rem;
-      color: #888;
-      padding: .12rem .15rem .06rem;
+      color: $mainColor;
+      padding: .1rem .15rem;
       width: 100%;
-      background-color: #fafafa;
+      background-color: #fff;
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
-      box-sizing: border-box;
+      border-bottom: 1px solid #e4e4e4;
       .app-iconfont {
         margin-left: .04rem;
         margin-right: .04rem;
@@ -229,25 +425,30 @@ body {
       line-height: normal
     }
     &-title {
-      color: #000;
-      line-height: 1.5em;
+      color: $ft-black;
+      font-size: $ft-size !important;
+      line-height: .25rem;
       width: auto;
-      white-space: wrap;
-      white-space: pre-wrap;
-      -webkit-flex: 1;
+      text-align: left;
+      -webkit-flex: 5;
+    }
+    &-button {
+      .am-button {
+        margin-right: 0 !important;
+        float: right;
+      }
     }
     &-brief {
       color: #888;
-      font-size: .14rem;
-      line-height: .18rem;
+      font-size: .15rem;
+      line-height: .2rem;
+      padding-top: .1rem;
+      padding-bottom: .1rem;
     }
-  }
-  &container {
-    padding-bottom: .50rem;
   }
   &navi.am-tab:not([am-version]) .am-tab-item {
     background-color: #f1f1f1;
-    color: #323232;
+    color: #fff;
     &.selected {
       background-color: $mainColor;
       border-bottom-color: $mainColor;
@@ -282,56 +483,52 @@ body {
 
 .app-dialog {
   z-index: 100;
-  &.am-dialog:not([am-version]) {
-    &:before {
-      display: none;
-    }
-    position: fixed;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  &-bg {
+    position: absolute;
     top: 0;
-    .am-dialog-wrap {
-      padding-top: 0;
-      max-width: 100%;
-      z-index: 10000;
-      height: 100%;
-      -moz-border-radius: 0;
-      border-radius: 0;
-      position: relative;
-    }
-    .am-dialog-header {
-      height: .42rem;
-      padding-top: .15rem;
-      position: absolute;
-      width: 100%;
-      top: 0;
-      background-color: #FFF;
-      z-index: 10002;
-      -webkit-box-shadow: 0 1px 4px 1px rgba(100, 100, 100, .5);
-      -moz-box-shadow: 0 1px 4px 1px rgba(100, 100, 100, .5);
-      box-shadow: 0 1px 4px 1px rgba(100, 100, 100, .5);
-    }
-    .am-dialog-body {
-      padding: .5rem 0rem .6rem;
-      width: 100%;
-      top: 0;
-      position: absolute;
-      overflow: auto;
-      height: 100%;
-      z-index: 10001;
-    }
-    .am-dialog-footer {
-      position: absolute;
-      z-index: 10002;
-      background-color: #FFF;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      height: .5rem;
-      margin-top: 0;
-    }
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-color: rgba(0,0,0,.5);
   }
-  .am-inform:not([am-version]) {
-    position: relative;
-    z-index: 11000;
+  .am-dialog-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    height: 90%;
+    background-color: #fff;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
+  //确认
+  .am-dialog-header {
+    height: .42rem;
+    line-height: .42rem;
+    width: 100%;
+    text-align: center;
+  }
+  .am-dialog-body {
+    overflow: auto;
+  }
+  .am-button.tiny-blue{
+    color: #fff;
+    border: none !important;
+    background-color: #3b9cf5 !important;
+  }
+
+}
+
+.am-toast .am-toast-text{
+  min-width: 2rem;
+  max-width: 3rem;
+  padding: .2rem;
+  min-height: 0;
 }

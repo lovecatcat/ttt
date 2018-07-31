@@ -3,9 +3,11 @@
     <div :class="{'am-list-label': !autoWidth,'app-list-title': autoWidth}">{{label}}</div>
     <div class="am-list-control">
       <slot name="input"></slot>
+      <slot name="button"></slot>
+      <slot name="icon"></slot>
+
     </div>
-    <slot name="icon"></slot>
-    <slot name="button"></slot>
+    <!--<slot name="button"></slot>-->
   </div>
 </template>
 <script>

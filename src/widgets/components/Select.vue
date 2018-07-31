@@ -1,11 +1,9 @@
 <template>
-  <div class="am-list-item dropdown">
-    <div class="am-list-dropdown-main">
-      <div class="am-list-label">{{label}}</div>
-      <div class="am-list-control">
-        <slot></slot>
-      </div>
-      <div v-if="!readonly" class="am-list-arrow"><span class="am-icon arrow vertical"></span></div>
+  <div class="am-list-item am-input-autoclear">
+    <div class="am-list-label">{{label}}</div>
+    <div class="am-list-control">
+      <slot></slot>
+      <slot name="icon"></slot>
     </div>
   </div>
 </template>

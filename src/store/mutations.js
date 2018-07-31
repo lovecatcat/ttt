@@ -1,4 +1,7 @@
 export default {
+  setUserId(state, payload) {
+    state.user_id = payload
+  },
   saveInit(state, payload) {
     state.init = Object.assign({}, state.init, payload)
   },
@@ -10,6 +13,9 @@ export default {
   },
   saveAssured(state, payload) {
     state.assured = Object.assign({}, state.assured, payload)
+  },
+  saveBank(state, payload) {
+    state.bank = Object.assign({}, state.bank, payload)
   },
   // 添加受益人
   addBeneficiary(state) {
@@ -36,11 +42,11 @@ export default {
   saveMatters(state, payload) {
     state.matters = payload
   },
-  saveSafegoods(state, payload) {
-    state.safegoods = payload
-  },
   setAntiMoney(state, bool) {
     state.anti_money = bool
+  },
+  setWarId(state, payload) {
+    state.war_id = payload
   },
   setParam(state, payload) {
     if (typeof payload === 'boolean' || typeof payload === 'string') {

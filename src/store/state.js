@@ -1,22 +1,22 @@
 import $_GET from '../widgets/Get.js'
-import local from '../widgets/Local'
+// import local from '../widgets/Local'
 
-var admin_id = $_GET['admin_id']
-if (!admin_id && !local) {
-  location.href = '/Wechat/login'
-}
+let user_id = $_GET['user_id']
+// if (!user_id && !local) {
+//   location.href = '/Wechat/login'
+// }
 
 export default {
   warranty: {}, //保单信息
   applicant: {}, //投保人信息
   assured: {}, //被保人信息
+  bank: {}, //交费信息
   insured: 0, //核保结果
   uploadImg: '', //上传影像结果
   anti_money: false, //反洗钱标准
   init: {}, //初始化数据,
-  main_insurance: '0', //主险数据
-  addonIns: {}, //附加险数据
-  admin_id: admin_id || 1846,
+  insurances: {}, //选中的险种
+  user_id: user_id || 2684,
   todo: false, //未完成订单
   ready: false, //首页加载
   war_id: null, //保单ID
@@ -26,144 +26,144 @@ export default {
   },
   addr: { // 地址
     11: {
-      name: '北京',
-      if_id: 129
+      text: '北京',
+      value: 1
     },
     12: {
-      name: '天津',
-      if_id: 147
+      text: '天津',
+      value: 2
     },
     13: {
-      name: '河北',
-      if_id: 165
+      text: '河北',
+      value: 5
     },
     14: {
-      name: '山西',
-      if_id: 348
+      text: '山西',
+      value: 6
     },
     15: {
-      name: '内蒙古',
-      if_id: 479
+      text: '内蒙古',
+      value: 7
     },
     21: {
-      name: '辽宁',
-      if_id: 594
+      text: '辽宁',
+      value: 8
     },
     22: {
-      name: '吉林',
-      if_id: 713
+      text: '吉林',
+      value: 9
     },
     23: {
-      name: '黑龙江',
-      if_id: 783
+      text: '黑龙江',
+      value: 10
     },
     31: {
-      name: '上海',
-      if_id: 929
+      text: '上海',
+      value: 3
     },
     32: {
-      name: '江苏',
-      if_id: 948
+      text: '江苏',
+      value: 11
     },
     33: {
-      name: '浙江',
-      if_id: 1061
+      text: '浙江',
+      value: 12
     },
     34: {
-      name: '安徽',
-      if_id: 1174
+      text: '安徽',
+      value: 13
     },
     35: {
-      name: '福建',
-      if_id: 1296
+      text: '福建',
+      value: 14
     },
     36: {
-      name: '江西',
-      if_id: 1391
+      text: '江西',
+      value: 15
     },
     37: {
-      name: '山东',
-      if_id: 1503
+      text: '山东',
+      value: 16
     },
     41: {
-      name: '河南',
-      if_id: 1660
+      text: '河南',
+      value: 17
     },
     42: {
-      name: '湖北',
-      if_id: 1837
+      text: '湖北',
+      value: 18
     },
     43: {
-      name: '湖南',
-      if_id: 1955
+      text: '湖南',
+      value: 19
     },
     44: {
-      name: '广东',
-      if_id: 2092
+      text: '广东',
+      value: 20
     },
     45: {
-      name: '广西',
-      if_id: 2290
+      text: '广西',
+      value: 21
     },
     46: {
-      name: '海南',
-      if_id: 2419
+      text: '海南',
+      value: 22
     },
     50: {
-      name: '重庆',
-      if_id: 2451
+      text: '重庆',
+      value: 4
     },
     51: {
-      name: '四川',
-      if_id: 2495
+      text: '四川',
+      value: 23
     },
     52: {
-      name: '贵州',
-      if_id: 2700
+      text: '贵州',
+      value: 24
     },
     53: {
-      name: '云南',
-      if_id: 2798
+      text: '云南',
+      value: 25
     },
     54: {
-      name: '西藏',
-      if_id: 2944
+      text: '西藏',
+      value: 26
     },
     61: {
-      name: '陕西',
-      if_id: 3026
+      text: '陕西',
+      value: 27
     },
     62: {
-      name: '甘肃',
-      if_id: 3150
+      text: '甘肃',
+      value: 28
     },
     63: {
-      name: '青海',
-      if_id: 3254
+      text: '青海',
+      value: 29
     },
     64: {
-      name: '宁夏',
-      if_id: 3306
+      text: '宁夏',
+      value: 30
     },
     65: {
-      name: '新疆',
-      if_id: 3334
+      text: '新疆',
+      value: 31
     },
     71: {
-      name: '台湾',
-      if_id: 3453
+      text: '台湾',
+      value: 32
     },
     81: {
-      name: ' 香港',
-      if_id: 3844
+      text: ' 香港',
+      value: 33
     },
     82: {
-      name: '澳门',
-      if_id: 3866
+      text: '澳门',
+      value: 34
     },
     90: {
-      name: '钓鱼岛',
-      if_id: 3877
+      text: '钓鱼岛',
+      value: 35
     }
   },
   districts: {},

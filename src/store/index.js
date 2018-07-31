@@ -12,10 +12,10 @@ const getters = {
   //   state.init.applicant ? Object.assign({}, state.init.applicant.occupation_code) : {}
   // }
   applAge(state) {
-    return Api.getAge(state.applicant.birthday)
+    return Api.getAge(state.applicant.holder_birthday)
   },
   assuAge(state) {
-    return Api.getAge(state.assured.birthday)
+    return Api.getAge(state.assured.insured_birthday)
   }
 }
 const debug = process.env.NODE_ENV !== 'production'

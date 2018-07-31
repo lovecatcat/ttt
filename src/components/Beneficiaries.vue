@@ -1,34 +1,34 @@
 <template>
   <section id="Beneficiaries">
-    <div class="app-list-header am-flexbox">
-      <div class="am-flexbox-item"><span class="app-iconfont">&#xe631;</span>身故受益人信息</div>
-    </div>
-    <div class="am-list">
-      <div class="am-list-header">身故受益人类型</div>
-      <div class="am-list-body">
-        <label class="am-list-item radio">
+    <div class="am-list am-list-6lb form">
+      <div class="app-list-header">身故受益人类型</div>
+      <div class="am-list-body" aria-labelledby="demo-cb-header-1">
+        <label class="am-list-item check">
           <div class="am-list-content">法定受益人</div>
           <div class="am-checkbox">
-            <input type="radio" value="0" v-model="warranty.benefited_type">
-            <span class="icon-check"></span>
+            <input type="radio" name="radio" value="1" v-model="is_legal_benefic">
+            <span class="icon-check" aria-hidden="true"></span>
           </div>
         </label>
-        <label class="am-list-item radio">
+        <label class="am-list-item check">
           <div class="am-list-content">指定受益人</div>
           <div class="am-checkbox">
-            <input type="radio" value="1" v-model="warranty.benefited_type">
-            <span class="icon-check"></span>
+            <input type="radio" name="radio" value="0" v-model="is_legal_benefic">
+            <span class="icon-check" aria-hidden="true"></span>
           </div>
         </label>
+
       </div>
     </div>
-    <app-beneficiary v-show="warranty.benefited_type === '1'" ref=child :key="person" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
-    <div class="am-button-group" role="group" v-show="warranty.benefited_type === '1'">
-      <a @click="add" class="am-button" role="button"><span class="app-iconfont">&#xe667;</span> 继续添加 </a>
+
+    <app-beneficiary v-show="is_legal_benefic === '0'" ref=child :key="person" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
+    <div class="am-button-group" role="group" v-show="is_legal_benefic === '0'" style="margin-bottom: .1rem">
+      <a @click="add" class="am-button white" role="button"><span class="app-iconfont">&#xe667;</span> 添加受益人 </a>
     </div>
-    <div class="am-tab am-fixed am-fixed-bottom app-navi">
-      <router-link to="/prospectus" class="am-tab-item">上一步</router-link>
-      <router-link to="/healthinfo" class="am-tab-item selected">下一步</router-link>
+
+    <div class="am-button-group" role="group" aria-label="操作按钮组">
+      <button type="button" class="am-button white"><router-link to="/prospectus">上一步</router-link></button>
+      <button type="button" class="am-button blue"><router-link to="/healthinfo">下一步</router-link></button>
     </div>
   </section>
 </template>
@@ -44,9 +44,7 @@ export default {
   data() {
     return {
       beneficiaries: [],
-      warranty: {
-        benefited_type: '0' //身故受益人类型：默认法定
-      }
+      is_legal_benefic: '1'
     }
   },
   computed: {
@@ -65,7 +63,7 @@ export default {
       vm.$dialog.open('确认添加受益人吗？', '', function() {
         vm.$store.commit('addBeneficiary')
         vm.$refs.child.forEach($vm => {
-          $vm.$data.beneficiary.benefited_ratio = (100 / vm.$store.state.tmp.people.length).toFixed(0)
+          $vm.$data.beneficiary.ratio = (100 / vm.$store.state.tmp.people.length).toFixed(0)
         })
         return
       })
@@ -76,7 +74,7 @@ export default {
         benefited[i] = []
       }
       this.$refs.child.forEach(vm => {
-        benefited[vm.$data.beneficiary.benefited_level].push(Number(vm.$data.beneficiary.benefited_ratio))
+        benefited[vm.$data.beneficiary.sort_order].push(Number(vm.$data.beneficiary.rate))
       })
       for (var j = 1; j <= 10; j++) {
         var sum = 0
@@ -84,7 +82,7 @@ export default {
           sum += benefited[j][k]
         }
         if (sum !== 100 && benefited[j].length > 0) {
-          this.$toast.open('受益顺序为' + j + '的受益人的受益份额和为100%', '')
+          this.$toast.open('受益顺序为' + j + '的受益人的受益份额和为100%', 'warn')
           return false
         }
       }
@@ -97,12 +95,12 @@ export default {
       return false
     }
     let vm = this
-    let type = vm.warranty.benefited_type
-    if (type === '1') {
+    let type = vm.is_legal_benefic
+    if (type === '0') {
       let children = vm.$refs.child
       for (let index in children) {
-        if (children[index].beneficiary.document_number === vm.$store.state.assured.document_number && children[index].beneficiary.name === vm.$store.state.assured.name) {
-          vm.$toast.open('受益人和被保险人不能是同一人', '')
+        if (children[index].beneficiary.ID_no === vm.$store.state.assured.insured_ID_no && children[index].beneficiary.fullname === vm.$store.state.assured.insured_name) {
+          vm.$toast.open('受益人和被保险人不能是同一人', 'warn')
           return false
         }
         if (!children[index].checkForm()) {
@@ -112,12 +110,10 @@ export default {
         if (Number(index) === children.length - 1) {
           vm.$store.commit('saveBeneficiary', Api.obj2json(vm.beneficiaries))
           if (!this.checkRatio()) return
-          vm.$store.commit('setWarranty', vm.warranty)
           next()
         }
       }
     } else {
-      vm.$store.commit('setWarranty', vm.warranty)
       next()
     }
   }

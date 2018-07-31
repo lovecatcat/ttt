@@ -1,228 +1,151 @@
 <template>
-  <div id="Healthinfo">
-    <div class="app-list-header am-flexbox">
-      <div class="am-flexbox-item"><span class="app-iconfont">&#xe631;</span>健康告知</div>
-    </div>
-    <div v-show="showPup0ver" class="app-mask"></div>
-    <div class="am-list am-list-6lb form" v-for="item,index in matters">
-      <div class="am-list-item">
-        <div class="app-list-title">{{item.entry}}. {{item.content}} <span class="am-ft-red">{{item.answer}}</span>
-        </div>
-      </div>
-      <template v-if="item.child">
-        <div class="am-list-body" v-for="childitem in item.child">
-          <div class="am-list-item">
-            <div class="app-list-title">{{childitem.entry}}. {{childitem.content}}</div>
-          </div>
-          <div class="app-list" :class="{'flex-right':!isExempted}">
-            <div class="app-list-title" v-if="isExempted">被保险人</div>
-            <div class="am-switch">
-              <input type="checkbox"
-                     v-model="clientvalue.ass_amswer[childitem.ci_id]"
-                     @change="assChanged(clientvalue.ass_amswer,childitem.ci_id, childitem.entry)"
-                     :value="childitem.ci_id"
-                     class="am-switch-checkbox"
-                     :id="'assmatter'+childitem.ci_id">
-              <label class="am-switch-label" :for="'assmatter'+childitem.ci_id">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
-            </div>
-          </div>
-          <div class="am-list-item" v-if="clientvalue.fields[childitem.ci_id]">
-            <div class="am-ft-md qaline"><span class="am-ft-red" v-html="clientvalue.fields[childitem.ci_id]"></span>
-            </div>
-          </div>
-          <app-form :ref="'form'+childitem.ci_id"
-                    :k="'assu'+childitem.ci_id"
-                    v-if="forms[item.entry]"
-                    :forms="forms[item.entry]"
-                    :index="childitem.ci_id"
-          >
-            <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
-          </app-form>
-          <div class="app-list" v-if="isExempted">
-            <div class="app-list-title">投保人</div>
-            <div class="am-switch">
-              <input type="checkbox"
-                     v-model="clientvalue.app_amswer[childitem.ci_id]"
-                     @change="appChanged(clientvalue.app_amswer,childitem.ci_id, childitem.entry)"
-                     :value="childitem.ci_id"
-                     class="am-switch-checkbox"
-                     :id="'appmatter'+childitem.ci_id">
-              <label class="am-switch-label" :for="'appmatter'+childitem.ci_id">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
-            </div>
-          </div>
-          <div class="am-list-item" v-if="clientvalue.app_fields[childitem.ci_id]">
-            <div class="am-ft-md"><span class="am-ft-red" v-html="clientvalue.app_fields[childitem.ci_id]"></span></div>
-          </div>
-          <app-form who="appl"
-                    :ref="'appform'+childitem.ci_id"
-                    :k="'appl'+childitem.ci_id"
-                    v-if="appForms[item.entry]"
-                    :forms="appForms[item.entry]"
-                    :index="childitem.ci_id"
-          >
-            <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
-          </app-form>
-        </div>
+  <section id="Healthinfo">
+    <app-dropdown up='up'>
+      <template slot="header">
+        <div class="am-list-label">被保人 — 健康告知</div>
       </template>
-      <template v-else>
-        <div class="am-list-body">
-          <div class="app-list" :class="{'flex-right':!isExempted}">
-            <div class="app-list-title" v-if="isExempted">被保险人</div>
-            <div class="am-switch">
-              <input type="checkbox"
-                     v-model="clientvalue.ass_amswer[item.ci_id]"
-                     @change="assChanged(clientvalue.ass_amswer,item.ci_id, item.entry)"
-                     :value="item.ci_id"
-                     class="am-switch-checkbox"
-                     :id="'assmatter'+item.ci_id">
-              <label class="am-switch-label" :for="'assmatter'+item.ci_id">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
-            </div>
+      <div class="am-list-body" v-for="item,index in matters" v-if="isShow(item.entry,2)" style="border-bottom: solid 1px #e4e4e4">
+        <div class="am-list-item am-list-control-button" style="padding-top: 0 !important;align-items:flex-start;">
+          <div class="app-list-title">
+            {{item.entry}}. {{item.content}}
+            {{item.answer}}
+            <template v-if="item.child">
+              <div v-for="childitem in item.child" :key="childitem.id">
+                {{childitem.entry}}. {{childitem.content}}
+              </div>
+            </template>
           </div>
-          <div class="am-list-item" v-if="clientvalue.fields[item.ci_id]">
-            <div class="am-ft-md qaline"><span class="am-ft-red" v-html="clientvalue.fields[item.ci_id]"></span></div>
+          <div class="am-list-control app-list-button">
+            <button slot="button" class="am-button tiny" :class="{'tiny-blue':clientvalue.ass_amswer[item.id]}"
+                    :disabled="clientvalue.ass_amswer[item.id]" @click="assChange(item.id,true),toblur()">是</button>
+            <button slot="button" class="am-button tiny" :class="{'tiny-blue':!clientvalue.ass_amswer[item.id]}"
+                    :disabled="!clientvalue.ass_amswer[item.id]" @click="assChange(item.id,false),toblur()">否</button>
           </div>
-          <app-form :ref="'form'+item.ci_id"
-                    :k="'assu'+item.ci_id"
-                    v-if="forms[item.entry]"
-                    :forms="forms[item.entry]"
-                    :index="item.ci_id"
-          >
-            <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
-          </app-form>
-          <div class="app-list" v-if="isExempted">
-            <div class="app-list-title">投保人</div>
-            <div class="am-switch">
-              <input type="checkbox" v-model="clientvalue.app_amswer[item.ci_id]"
-                     @change="appChanged(clientvalue.app_amswer,item.ci_id, item.entry)" :value="item.ci_id"
-                     class="am-switch-checkbox" :id="'appmatter'+item.ci_id">
-              <label class="am-switch-label" :for="'appmatter'+item.ci_id">
-                <div class="am-switch-inner"></div>
-                <div class="am-switch-switch"></div>
-              </label>
-            </div>
-          </div>
-          <div class="am-list-item" v-if="clientvalue.app_fields[item.ci_id]">
-            <div class="am-ft-md"><span class="am-ft-red" v-html="clientvalue.app_fields[item.ci_id]"></span></div>
-          </div>
-          <app-form who="appl"
-                    :ref="'appform'+item.ci_id"
-                    :k="'appl'+item.ci_id"
-                    v-if="appForms[item.entry]"
-                    :forms="appForms[item.entry]"
-                    :index="item.ci_id"
-          >
-            <button slot="cancel" type="button" class="am-button tiny" @click="showPup0ver = false">取消</button>
-          </app-form>
         </div>
+        <template v-if="assforms[item.id] && clientvalue.ass_amswer[item.id]">
+          <app-form :k="'assu'+item.id" :forms="assforms[item.id]" :index="item.id"></app-form>
+        </template>
+      </div>
+    </app-dropdown>
+    <app-dropdown up='down' v-if="isExempted" >
+      <template slot="header">
+        <div class="am-list-label">投保人 — 健康告知</div>
       </template>
-    </div>
-    <div class="app-agreement">
-      <div class="am-checkbox mini argument">
-        <input id="agree2" type="checkbox" v-model="assuAllNo">
-        <span class="icon-check"></span>
-        <label class="am-ft-md" for="agree2">【被保人】告知事项全是否</label>
+      <div class="am-list-body" v-for="item,index in matters" v-if="isShow(item.entry,1)" style="border-bottom: solid 1px #e4e4e4">
+        <div class="am-list-item am-list-control-button" style="padding-top: 0 !important;align-items:flex-start;">
+          <div class="app-list-title">
+            {{item.entry}}. {{item.content}}
+            {{item.answer}}
+            <template v-if="item.child">
+              <div v-for="childitem in item.child" :key="childitem.id">
+                {{childitem.entry}}. {{childitem.content}}
+              </div>
+            </template>
+          </div>
+          <div class="am-list-control app-list-button">
+            <button slot="button" class="am-button tiny" :class="{'tiny-blue':clientvalue.app_amswer[item.id]}"
+                    :disabled="clientvalue.app_amswer[item.id]" @click="appChange(item.id,true),toblur()">是</button>
+            <button slot="button" class="am-button tiny" :class="{'tiny-blue':!clientvalue.app_amswer[item.id]}"
+                    :disabled="!clientvalue.app_amswer[item.id]" @click="appChange(item.id,false),toblur()">否</button>
+          </div>
+        </div>
+        <template v-if="appforms[item.id] && clientvalue.app_amswer[item.id]">
+          <app-form :k="'assu'+item.id" :forms="appforms[item.id]" :index="item.id"></app-form>
+        </template>
       </div>
-    </div>
-    <div class="app-agreement" v-if="isExempted">
-      <div class="am-checkbox mini argument">
-        <input id="agreeappl" type="checkbox" v-model="applAllNo">
-        <span class="icon-check"></span>
-        <label class="am-ft-md" for="agreeappl">【投保人】告知事项全是否</label>
+    </app-dropdown>
+    <div class="am-list am-list-6lb form am-list-last">
+      <div class="app-list-brief">
+        1. 本人承诺上述内容与客户告知事实一致，并无虚假和重大遗漏。 <br>2. 本人愿意承担因不实告知带来的所有责任。
       </div>
-    </div>
-    <div class="app-agreement am-list">
-      <div class="am-checkbox mini argument">
-        <input id="promise" type="checkbox" v-model="promise">
-        <span class="icon-check"></span>
-        <label class="am-ft-md" for="promise">用户承诺</label>
-      </div>
-      <div class="am-list-item">
-        <div class="am-ft-sm">1. 本人承诺上述内容与客户告知事实一致，并无虚假和重大遗漏。
-          <br>2. 本人愿意承担因不实告知带来的所有责任。
+      <div class="app-agreement">
+        <div class="am-checkbox mini argument">
+          <input id="promise" type="checkbox" v-model="promise">
+          <span class="icon-check"></span>
+          <label class="am-ft-md " for="promise">用户承诺</label>
         </div>
       </div>
     </div>
-    <div class="am-tab am-fixed am-fixed-bottom app-navi">
-      <router-link to="/beneficiaries" class="am-tab-item">上一步</router-link>
-      <router-link to="/healthinfov1" class="am-tab-item selected" v-if="diffHealth">下一步</router-link>
-      <router-link to="/billinfo" class="am-tab-item selected" v-else>下一步</router-link>
+
+    <div class="am-button-group" role="group" aria-label="操作按钮组">
+      <button type="button" class="am-button white"><router-link to="/beneficiaries">上一步</router-link></button>
+      <!--<button type="button" class="am-button blue" v-if="diffHealth"> <router-link to="/healthinfov1">下一步</router-link></button>-->
+      <button type="button" class="am-button blue"> <router-link to="/billinfo">下一步</router-link></button>
     </div>
-  </div>
+  </section>
 </template>
 <script>
   import Api from '../api'
 
-  const noNeedAnswer = ['11', '12', '14']
   const needAnswer = {
-    '1': [{
+    '10': [{
       title: '每天吸烟(支)',
-      input: '',
-      type: 'number'
+      type: 'number',
+      msg: '请输入吸烟数量, 保留整数',
+      reg: /^\d+$/,
+      value: ''
     }, {
       title: '烟龄(年)',
-      input: '',
-      type: 'number'
+      type: 'number',
+      msg: '请输入烟龄, 保留整数',
+      reg: /^\d+$/,
+      value: ''
     }],
-    '2': [{
-      title: '每天喝酒(两)',
-      input: '',
-      type: 'number'
+    '11': [{
+      title: '每天饮酒(两)',
+      type: 'number',
+      msg: '请输入每天饮酒量, 保留整数',
+      reg: /^\d+$/,
+      value: ''
     }, {
-      title: '酒龄(年)',
-      input: '',
-      type: 'number'
+      title: '酒龄',
+      type: 'number',
+      msg: '请输入酒龄, 保留整数',
+      reg: /^\d+$/,
+      value: ''
     }],
-    '3': [{
+    '12': [{
       title: '检查原因',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '检查时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '检查地点',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '检查结果',
-      input: '',
+      value: '',
       type: 'text'
     }],
-    '4': [{
+    '15': [{
       title: '住院时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '原因',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '医院名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '5': [{
+    '16': [{
       title: '是否住院',
-      input: '',
+      value: '',
       type: 'radio'
     }, {
       title: '发病时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '疾病名称',
@@ -230,147 +153,147 @@
       type: 'text'
     }, {
       title: '诊疗医院',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '6': [{
+    '29': [{
       title: '智障等级',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '残疾部位',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '原因',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '程度',
-      input: '',
+      value: '',
       type: 'text'
     }],
-    '7': [{
+    '30': [{
       title: '药物名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '使用时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '8': [{
+    '31': [{
       title: '怀孕(周)',
-      input: '',
+      value: '',
       type: 'number',
       ci_id: '32'
     }, {
       title: '是否住院',
-      input: '',
+      value: '',
       type: 'radio'
     }, {
       title: '发病时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '疾病名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '诊疗医院',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '9': [{
+    '35': [{
       title: '是否住院',
-      input: '',
+      value: '',
       type: 'radio'
     }, {
       title: '发病时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '疾病名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '诊疗医院',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '10': [{
+    '38': [{
       title: '与被保人关系',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '患病时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '疾病名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '13': [{
+    '41': [{
       title: '事故发生时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '受伤情况',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '目前状况',
-      input: '',
+      value: '',
       type: 'select',
       options: ['治愈', '好转', '未愈']
     }],
-    '15': [{
+    '43': [{
       title: '特殊人群类型',
-      input: '',
+      value: '',
       type: 'select',
       options: ['高龄人员', '残疾人员', '低保人员']
     }],
-    '16': [{
+    '44': [{
       title: '保险公司名称',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '投保时间',
-      input: '',
+      value: '',
       type: 'date'
     }, {
       title: '投保险种',
-      input: '',
+      value: '',
       type: 'text'
     }, {
       title: '已投保身故保险金额总和',
-      input: '',
+      value: '',
       type: 'number'
     }]
   }
@@ -380,20 +303,20 @@
     components: {
       'app-form': {
         template: `
-        <div class="app-pupover" v-show="show">
-          <div class="am-list form">
-            <template v-for="item in forms">
-              <template v-show="index=='32'&&item.ci_id=='32'" v-if="index=='32'&&item.ci_id=='32'">
+
+        <div >
+            <div  v-for="item in forms">
+              <template v-show="index=='32'&&item.ci_id=='32'" v-if="index=='32'&&item.id=='32'">
                 <app-input :label="item.title">
-                  <input slot="input" v-model="item.input" type="number" placeholder="必填">
-                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                  <input slot="input" v-model="item.value" type="number" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" v-show="item.value" @click="item.value = ''"><i class="iconfont icon-chahao"></i></div>
                 </app-input>
               </template>
-              <template v-show="index!='32'" v-if="index!='32'&&item.ci_id!='32'">
-                <div class="am-list-item" v-if="item.type=='radio'">
+              <template v-show="index!='32'" v-if="index!='32'&&item.id!='32'">
+                <div class="am-list-item" v-if="item.value=='radio'">
                   <div class="am-list-content">{{item.title}}</div>
                   <div class="am-switch">
-                    <input type="checkbox" v-model="item.input" class="am-switch-checkbox" :id="'item'+index">
+                    <input type="checkbox" v-model="item.value" class="am-switch-checkbox" :id="'item'+index">
                     <label class="am-switch-label" :for="'item'+index">
                       <div class="am-switch-inner"></div>
                       <div class="am-switch-switch"></div>
@@ -401,30 +324,27 @@
                   </div>
                 </div>
                 <app-input :label="item.title" v-else-if="item.type=='date'">
-                  <input slot="input" :class="{'has':item.input != ''}" v-model="item.input" type="month" placeholder="请选择时间">
-                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                  <input slot="input" :class="{'has':item.value != ''}" v-model="item.value" type="month" placeholder="请选择时间">
+                  <div slot="icon" class="am-list-clear" v-show="item.value" @click="item.input = ''"><i class="iconfont icon-chahao"></i></div>
                 </app-input>
                 <app-input :label="item.title" v-else-if="item.type=='number'">
-                  <input slot="input" v-model="item.input" type="number" placeholder="必填">
-                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                  <input slot="input" v-model="item.value" type="number" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" v-show="item.value" @click="item.value = ''"><i class="iconfont icon-chahao"></i></div>
                 </app-input>
                 <app-input :label="item.title" v-else-if="item.type=='text'">
-                  <input slot="input" v-model="item.input" type="text" placeholder="必填">
-                  <div slot="icon" class="am-list-clear" @click="item.input = ''"><i class="am-icon-clear am-icon"></i></div>
+                  <input slot="input" v-model="item.value" type="text" placeholder="必填">
+                  <div slot="icon" class="am-list-clear" v-show="item.value" @click="item.value = ''"><i class="iconfont icon-chahao"></i></div>
                 </app-input>
                 <app-select :label="item.title" v-else-if="item.type=='select'">
-                  <select v-model="item.input" >
+                  <select v-model="item.value" >
                     <option disabled value="">请选择</option>
                     <option v-for="(ite,ind) in item.options" :value="ite" :key="ind">{{ite}}</option>
                   </select>
+                  <div slot="icon" class="am-list-clear" @click="item.value = ''"><i class="iconfont icon-xiajiantou"></i></div>
                 </app-select>
               </template>
-            </template>
-            <div class="am-button-group">
-              <button type="button" class="am-button tiny" @click="cancel">取消</button>
-              <button type="button" class="am-button tiny" @click="confirm">确定</button>
-            </div>
-          </div>
+            </div >
+
         </div>
         `,
         props: ['forms', 'index', 'who'],
@@ -432,85 +352,15 @@
           return {
             show: false
           }
-        },
-        methods: {
-          cancel() {
-            this.show = false
-            this.$parent.showPup0ver = false
-            if (this.who === 'appl') {
-              this.$parent.clientvalue.app_amswer[this.index] = false
-              this.$parent.clientvalue.app_fields[this.index] = ''
-            } else {
-              this.$parent.clientvalue.ass_amswer[this.index] = false
-              this.$parent.clientvalue.fields[this.index] = ''
-            }
-          },
-          confirm() {
-            if (!this.checkForm()) {
-              return false
-            }
-            this.show = false
-            this.$parent.showPup0ver = false
-          },
-          checkForm() {
-            console.log(typeof this.index)
-            let bool = true
-            let field = ''
-            for (let i in this.forms) {
-              let j = this.forms[i]
-              if (this.index === '32' && !this.forms[0].input) {
-                this.$toast.open('请填写' + j.title, '')
-                bool = false
-                break
-              } else if ((this.index === '33' || this.index === '34') && i > 0 && !j.input) {
-                this.$toast.open('请填写' + j.title, '')
-                bool = false
-                break
-              } else if (['32', '33', '34'].indexOf(this.index) === -1 && !j.input && j.type !== 'radio') {
-                this.$toast.open('请填写' + j.title, '')
-                bool = false
-                break
-              }
-              console.count('checkForm')
-              let text
-              if (j.type === 'radio') {
-                text = j.input === true ? '是' : '否'
-              } else {
-                text = j.input
-//                j.input = ''
-              }
-              if (this.index === '33' || this.index === '34') {
-                if (i > 0) {
-                  field += j.title + '：' + text + '\t'
-                }
-              } else if (this.index !== '32') {
-                field += j.title + '：' + text + '\t'
-              }
-            }
-            if (this.index === '32') {
-              field += this.forms[0].title + '：' + this.forms[0].input + '\t'
-            }
-            // 合并输入内容
-            if (this.who === 'appl') {
-              this.$set(this.$parent.clientvalue.app_fields, this.index, field)
-            } else {
-              this.$set(this.$parent.clientvalue.fields, this.index, field)
-            }
-            return bool
-          }
         }
       }
     },
     data() {
       return {
-        diffHealth: false,
-        isExempted: false,
-        forms: needAnswer,
-        appForms: Api.obj2json(needAnswer),
-        assuAllNo: null,
-        applAllNo: null,
+        isExempted: false, //是否有豁免
+        appforms: Api.obj2json(needAnswer),
+        assforms: Api.obj2json(needAnswer),
         promise: false,
-        showPup0ver: false,
         matters: [], //健康告知问题
         clientvalue: {
           ass_amswer: {}, //被保险人勾选
@@ -522,65 +372,35 @@
     },
     activated() {
       this.isExempted = false
-      this.diffHealth = false
       for (let i in this.$store.state.insurances) {
         console.log(this.$store.state.insurances[i].safe_id)
-        if (this.$store.state.insurances[i].safe_id === '370') {
-          if (this.$store.state.main_insurance.safe_id === '377') {
-            this.diffHealth = true
-          } else {
-            this.isExempted = true
-          }
+        if (this.$store.state.insurances[i].code === '33F00030') {
+          this.isExempted = true
         }
       }
     },
     computed: {
-      age() {
+      applAge() {
+        let birthday = this.$store.state.applicant.birthday
+        return birthday ? this.getAge(birthday) : 0
+      },
+      assuAge() {
         let birthday = this.$store.state.assured.birthday
-        return birthday ? (new Date().getFullYear() - birthday.substr(0, 4)) : 20
-      }
-    },
-    watch: {
-      assuAllNo(val) {
-        if (val === true) {
-          this.clientvalue.ass_amswer = {}
-          this.clientvalue.fields = {}
-          if (!this.isExempted) {
-            this.clientvalue.app_amswer = {}
-            this.clientvalue.app_fields = {}
-          }
-        }
+        return birthday ? this.getAge(birthday) : 0
       },
-      applAllNo(val) {
-        if (val === true) {
-          this.clientvalue.app_amswer = {}
-          this.clientvalue.app_fields = {}
-        }
+      isAssuWm() {
+        let sex = this.$store.state.assured.insured_gender
+        return sex
       },
-      clientvalue: {
-        handler(val) {
-          this.save2local('clientvalue', val)
-        },
-        deep: true
-      },
-      showPup0ver(val) {
-        if (val) {
-          document.body.style.position = 'fixed'
-        } else {
-          document.body.style.position = 'static'
-        }
+      isApplWm() {
+        let sex = this.$store.state.applicant.holder_gender
+        return sex
       }
     },
     created() {
       const vm = this
       Api.queryMatters(res => {
-        if (res.name && res.name.indexOf('Error') > -1) {
-          vm.$toast.open('服务器开小差了', 'error')
-          return
-        }
-        vm.matters = res.filter(matter => {
-          return matter.version === '2'
-        })
+        vm.matters = res.data
         vm.$store.dispatch('saveMatters', Api.obj2json(vm.matters))
       })
       if (this.$store.state.todo) {
@@ -598,114 +418,191 @@
       if (!this.checkForm()) {
         return false
       }
-      this.$store.commit('saveClientValue', Api.obj2json(this.clientvalue))
+      let appitems = []
+      let vm = this
+      this.matters.forEach(function (item, index) {
+        let insured_answer = vm.clientvalue.ass_amswer[item.id] ? '1' : '0'
+        let holder_answer = vm.clientvalue.app_amswer[item.id] ? '1' : '0'
+        let insured_fields = vm.clientvalue.fields[item.id] ? vm.clientvalue.fields[item.id] : ''
+        let holder_fields = vm.clientvalue.app_fields[item.id] ? vm.clientvalue.app_fields[item.id] : ''
+        appitems.push({
+          mv_id: item.id,
+          insured_answer: insured_answer,
+          holder_answer: holder_answer,
+          insured_fields: insured_fields,
+          holder_fields: holder_fields
+        })
+      })
+      this.$store.commit('saveClientValue', Api.obj2json(appitems))
       next()
     },
     methods: {
-      noNeedChoose(owner, id) {
-        let toast_text = null
-        let age = null
-        let sex = null
-        if (owner === '投保人') {
-          age = this.getAge(this.$store.state.applicant.birthday)
-          sex = this.$store.state.warranty.appl_sex
-        } else if (owner === '被保人') {
-          age = this.getAge(this.$store.state.assured.birthday)
-          sex = this.$store.state.warranty.assu_sex
+      //失去焦点
+      toblur() {
+        document.activeElement.blur()
+      },
+      isShow(i, type) {
+        //type 2被保人
+        // if (i === 0 || i === 12) {
+        //   return false
+        // }
+        if (i === '8' && type === 1 && this.isApplWm !== 'LAB0010') {
+          return false
         }
-        if (age >= 2 && (['36', '37'].indexOf(id) !== -1)) {
-          toast_text = owner + '小于2周岁才需填写此项'
-        } else if ((['32', '33', '34'].indexOf(id) !== -1) && (age <= 12 || Number(sex) === 11338)) {
-          toast_text = '大于12周岁女性才需填写此项'
-        } else if (age >= 18 && id === '44') {
-          toast_text = '小于18周岁才需填写此项'
+        if (i === '9' && type === 1 && this.applAge > 2) {
+          return false
         }
-        if (toast_text) {
-          this.$toast.open(toast_text)
+        if (i === '16' && type === 1 && this.applAge < 18) {
+          return false
+        }
+        if (i === '8' && type === 2 && (this.isAssuWm !== 'LAB0010' || this.assuAge < 12)) {
+          return false
+        }
+        if (i === '9' && type === 2 && this.assuAge > 2) {
+          return false
+        }
+        if (i === '16' && type === 2 && this.assuAge < 18) {
           return false
         }
         return true
       },
-      appChanged(val, id, entry) {
-        this.applAllNo = false
-        // 如果为否
-        if (val[id] === false) {
-          var forms = this.appForms[id]
-          for (var i in forms) {
-            forms[i].input = ''
-          }
-          this.$set(this.clientvalue.app_amswer, id, false)
-          this.$set(this.clientvalue.app_fields, id, '')
-        } else if (!this.noNeedChoose('投保人', id)) {
-          val[id] = false
-          this.appChanged(val, id, entry)
-          return false
-        } else if (noNeedAnswer.indexOf(entry) === -1) {
-          // 为是且有必填项
-          this.showPup0ver = true
-          console.log(this.$refs['appform' + id])
-          this.$refs['appform' + id][0].show = true
-        } else {
-          this.$set(this.clientvalue.app_amswer, id, true)
-          this.save2local('clientvalue', this.clientvalue)
+      change(item) {
+        let ret = {
+          status: true,
+          msg: ''
         }
+        if (item.must === false) {
+          return ret
+        }
+        // let reg = item.reg
+        let msg = ''
+        if (item.type === 'number' && !/^\d+\.?\d*$/.test(item.value)) {
+          msg = item.msg || '请输入正确的数字'
+          ret = { status: false, msg }
+        } else if (item.type === 'text' && !item.value) {
+          msg = item.msg || '请输入' + item.title
+          ret = { status: false, msg }
+        } else if (item.type === 'date' && !/^[1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9]$/.test(item.value)) {
+          msg = '请输入日期，形如 1999-12-31'
+          ret = { status: false, msg }
+        } else if (item.type === 'textarea' && !item.value) {
+          msg = '请完成说明'
+          ret = { status: false, msg }
+        } else if (item.type === 'select' && !item.value) {
+          msg = '请完成选择'
+          ret = { status: false, msg }
+        }
+        // if (toast_text) {
+        //   this.$toast.open(toast_text, 'warn')
+        //   return false
+        // }
+        return ret
+      },
+      appChange(id,state) {
+        this.clientvalue.app_amswer[id] = state
         this.$forceUpdate()
       },
-      assChanged(val, id, entry) {
-        this.assuAllNo = false
-
-        // 如果为否
-        if (val[id] === false) {
-          var forms = this.forms[id]
-          for (var i in forms) {
-            forms[i].input = ''
-          }
-          this.$set(this.clientvalue.ass_amswer, id, false)
-          this.$set(this.clientvalue.fields, id, '')
-        } else if (!this.noNeedChoose('被保人', id)) {
-          val[id] = false
-          this.assChanged(val, id, entry)
-          return false
-        } else if (noNeedAnswer.indexOf(entry) === -1) {
-          // 为是且有必填项
-          this.showPup0ver = true
-          console.log(this.$refs['form' + id])
-          this.$refs['form' + id][0].show = true
-        } else {
-          this.$set(this.clientvalue.ass_amswer, id, true)
-          this.save2local('clientvalue', this.clientvalue)
-        }
+      assChange(id,state) {
+        this.clientvalue.ass_amswer[id] = state
         this.$forceUpdate()
+      },
+      getIndex(id, chief) {
+        for (let i in this.matters) {
+          let item = this.matters[i]
+          if (item.id === id && !chief) {
+            return item.entry
+          }
+          if (item.id === chief) {
+            for (let j = 0; j < item.child.length; j++) {
+              if (item.child[j].id === id) {
+                return i + item.child[j].entry
+              }
+            }
+          }
+        }
+      },
+      kuohaoFilter(val) {
+        val = val.toString()
+        if (!val) return ''
+        let len = val.length
+        let leftk = val.indexOf('(')
+        let rightk = val.indexOf(')')
+        if (leftk !== 0) {
+          val = '(' + val
+        }
+        if (rightk !== (len - 1)) {
+          val = val + ')'
+        }
+        return val
       },
       checkForm() {
-        let assuBools = this.clientvalue.ass_amswer
-        let assuAllFalse = true
-        for (let i in assuBools) {
-          if (assuBools[i] === true) {
-            assuAllFalse = false
+        let toast_text = null
+        let input = null
+        let title = ''
+        let msg = ''
+
+        for (let i in this.clientvalue.ass_amswer) {
+          if (this.clientvalue.ass_amswer[i] === true) {
+            let item = this.assforms[i]
+            if (item && item.length) {
+              let val = []
+              for (let k = item.length - 1; k >= 0; k--) {
+                input = item[k]
+                title = input.title ? input.title : ''
+                let who = '被保人'
+                msg = '问题' + this.getIndex(Number(i), Number(input.chief)) + who + title + ','
+
+                if (input.must !== false || input.value) {
+                  let ret = this.change(input)
+                  console.log(ret)
+                  if (!ret.status) {
+                    toast_text = msg + ret.msg
+                    break
+                  }
+                }
+                val.push(input.type !== 'textarea' ? input.value : this.kuohaoFilter(input.value))
+              }
+              this.clientvalue.fields[i] = val.reverse().join('|')
+            }
+          } else {
+            this.clientvalue.fields[i] = ''
           }
-        }
-        if (!this.assuAllNo && assuAllFalse) {
-          this.$toast.open('被保人告知项全为否，请选中下方按钮', '')
-          return false
         }
 
         if (this.isExempted) {
-          let applBools = this.clientvalue.app_amswer
-          let applAllFalse = true
-          for (let i in applBools) {
-            if (applBools[i] === true) {
-              applAllFalse = false
+          for (let j in this.clientvalue.app_amswer) {
+            if (this.clientvalue.app_amswer[j] === true) {
+              let jitem = this.appforms[j]
+              if (jitem && jitem.length) {
+                let jval = []
+                for (let l = jitem.length - 1; l >= 0; l--) {
+                  input = jitem[l]
+                  title = input.title ? input.title : ''
+                  msg = '投保人问题 ' + this.getIndex(Number(j), Number(input.chief)) + ' ' + title + '，'
+
+                  if (input.must !== false || input.value) {
+                    let jret = this.change(input)
+                    if (!jret.status) {
+                      toast_text = msg + jret.msg
+                      break
+                    }
+                  }
+
+                  jval.push(input.type !== 'textarea' ? input.value : this.kuohaoFilter(input.value))
+                }
+                this.clientvalue.app_fields[j] = jval.reverse().join('|')
+              }
+            } else {
+              this.clientvalue.app_fields[j] = ''
             }
           }
-          if (!this.applAllNo && applAllFalse) {
-            this.$toast.open('投保人告知项全为否，请选中下方按钮', '')
-            return false
-          }
         }
-
+        if (toast_text) {
+          this.$toast.open(toast_text, 'warn')
+          return false
+        }
         if (!this.promise) {
-          this.$toast.open('请阅读用户承诺并确认', '')
+          this.$toast.open('请阅读用户承诺并确认', 'warn')
           return false
         }
         return true

@@ -14,11 +14,11 @@ export default {
   saveMatters: ({ commit }, payload) => {
     commit('saveMatters', payload)
   },
-  saveSafegoods: ({ commit }, payload) => {
-    commit('saveSafegoods', payload)
-  },
   setAntiMoney: ({ commit }, payload) => {
     commit('setAntiMoney', payload)
+  },
+  setWarId: ({ commit }, payload) => {
+    commit('setWarId', payload)
   },
   setParam: ({ commit }, payload) => {
     commit('setParam', payload)

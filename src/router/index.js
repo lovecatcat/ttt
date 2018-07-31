@@ -10,7 +10,7 @@ import Insured from '@/components/Insured' //投保人信息
 import Beinsured from '@/components/Beinsured' //被投保人信息
 import Beneficiaries from '@/components/Beneficiaries' //身故受益人信息
 import Healthinfo from '@/components/Healthinfo' //健康告知
-import HealthinfoV1 from '@/components/HealthinfoV1' //健康告知版本一
+// import HealthinfoV1 from '@/components/HealthinfoV1' //健康告知版本一
 import Billinfo from '@/components/Billinfo' //填写收费信息
 
 import Prospectus from '@/components/Prospectus' //保险计划
@@ -40,14 +40,14 @@ const router = new Router({
     name: 'Beinsured',
     component: Beinsured,
     meta: {
-      docTitle: '被保险人信息'
+      docTitle: '被保人信息'
     }
   }, {
     path: '/prospectus',
     name: 'Prospectus',
     component: Prospectus,
     meta: {
-      docTitle: '选择险种'
+      docTitle: '险种信息'
     }
   }, {
     path: '/beneficiaries',
@@ -64,26 +64,18 @@ const router = new Router({
       docTitle: '健康告知'
     }
   }, {
-    path: '/healthinfov1',
-    name: 'HealthinfoV1',
-    component: HealthinfoV1,
-    meta: {
-      docTitle: '健康告知'
-    }
-  }, {
     path: '/billinfo',
     name: 'Billinfo',
     component: Billinfo,
     meta: {
-      docTitle: '填写收费信息'
+      docTitle: '交费信息'
     }
   }, {
     path: '/preview',
     name: 'Preview',
     component: Preview,
     meta: {
-      docTitle: '投保信息确认',
-      keepnew: true
+      docTitle: '信息确认'
     }
   }, {
     path: '/success',
