@@ -164,8 +164,8 @@ const getJobPid = function (key, cb) {
   })
 }
 //获取险种
-const querySafegoods = function (cb) {
-  axios.get(url + urlData + 'server=PolicyIns.getProductList&data={"supplier_id":"' + SCID + '"}').then(response => {
+const querySafegoods = function (data, cb) {
+  axios.get(url + urlData + 'server=PolicyIns.getProductList&data={"supplier_id":' + SCID + ',"user_id":' + data + '}').then(response => {
     cb(response.data.data)
   }).catch(error => {
     cb(error)
@@ -224,6 +224,34 @@ const pushWarranty = function (data, cb) {
 //删除数据
 const deleteItem = function (war_id, itemId, type, cb) {
   axios.post(url + urlData + 'server=PolicyIns.deleteInsInfo&data={"table":"' + type + '","id":"' + itemId + '","policy_id":' + war_id + '}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+
+//人核支付
+const paySuccess = function (data, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":"' + data + '"},"company_code":"XinTai","method":"paySuccess"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//自核支付
+const payInterface = function (data, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":"' + data + '"},"company_code":"XinTai","method":"payInterface"}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
+//上传影像
+const insuredImg = function (data, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":"' + data + '"},"company_code":"XinTai","method":"insuredImg"}').then(response => {
     cb(response.data)
   }).catch(error => {
     cb(error)
@@ -324,6 +352,9 @@ export default {
   keepData,
   calMoney,
   saveWarranty,
-  deleteItem
+  deleteItem,
+  paySuccess,
+  payInterface,
+  insuredImg
 }
 

@@ -2,11 +2,11 @@
   <section class="Beneficiary">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header fn-clear" v-if="count > 1">
-        第 {{index+1}} 个受益人
-        <a v-show="count > 1 && crt > 0" v-if="index>0" class="fn-right" @click="del">删除该受益人</a>
+        第 {{BfIndex+1}} 个受益人
+        <a v-show="count > 1 && crt > 0" v-if="BfIndex>0" class="fn-right del" @click="del">删除</a>
       </div>
       <div class="am-list-body">
-        <app-input label="同投保人" class="am-list-control-button" v-if="index == 0 && applicant.is_assured !== 'LBK0001'" >
+        <app-input label="同投保人" class="am-list-control-button" v-if="BfIndex === 0 && applicant.is_assured && applicant.is_assured !== 'LBK0001'" >
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':same}"
                   :disabled="same"
@@ -39,7 +39,7 @@
           <div class="am-list-item ">
             <div class="am-list-label">证件有效期</div>
             <div class="am-list-control" style="width: 70%">
-              <input slot="input" :class="{'has': beneficiary.ID_expire_end != ''}"  :readonly="longTerm" v-model="beneficiary.ID_expire_end" :disabled="['LAA0028','LAA0031'].indexOf(beneficiary.ID_type) > -1" type="date" placeholder="请选择" @change="checkTerm('受益人', beneficiary.ID_expire_end )">
+              <input slot="input" :class="{'has': beneficiary.ID_expire_end != ''}" :readonly="longTerm" v-model="beneficiary.ID_expire_end" type="date" placeholder="请选择" @change="checkTerm('受益人', beneficiary.ID_expire_end )">
 
               <div class="am-list-clear" style="" :disabled="longTerm"><i class="iconfont icon-rili"></i></div>
             </div>
@@ -51,7 +51,7 @@
           <app-input label="性别" class="am-list-control-button">
             <button slot="button" class="am-button tiny"
                     :class="{'tiny-blue':beneficiary.gender===item.value}"
-                    v-for="(item,index) in init.gender" :disabled="beneficiary.ID_type == 'LAA0028' || beneficiary.ID_type == 'LAA0029'"
+                    v-for="(item,index) in init.gender" :disabled="beneficiary.ID_type == 'LAA0028' || beneficiary.ID_type == 'LAA0031'"
                     @click="beneficiary.gender = item.value">{{item.text}}
             </button>
           </app-input>
@@ -91,18 +91,18 @@
         <label class="am-list-item check" v-for="(item,index) in init.tax_type">
           <div class="am-list-content">{{item.text}}</div>
           <div class="am-checkbox">
-            <input type="radio" name="radio" :value="item.value" v-model="beneficiary.tax_type">
+            <input type="radio" :name="'radio' + BfIndex" :value="item.value" v-model="beneficiary.tax_type">
             <span class="icon-check" aria-hidden="true"></span>
           </div>
         </label>
 
       </div>
     </div>
-    <div class="am-list am-list-6lb form"  v-if="anti_money">
+    <div class="am-list am-list-6lb form" >
       <div class="app-list-header">反洗钱标准 — 必填</div>
       <div class="am-list-body">
         <!-- 证件为护照时 可以修改国籍 -->
-        <div class="am-list-item " v-if="beneficiary.ID_type === 'LAA0029' || beneficiary.ID_type === 'LAA0034'">
+        <div class="am-list-item " v-if="beneficiary.ID_type === 'LAA0029'">
           <div class="am-list-label">国籍</div>
           <div class="am-list-control">
             <input type="text" placeholder="请选择" readonly v-model="beneficiary.nation_name"
@@ -140,23 +140,23 @@
         </div>
         <app-input label="详细地址" v-if="!sameAddr">
           <input slot="input" v-model.lazy.trim="beneficiary.address" type="text" placeholder="请输入">
-          <div slot="icon" v-show="beneficiary.address != ''" class="am-list-clear"><i
+          <div slot="icon" v-show="beneficiary.address !== ''" class="am-list-clear"><i
             class="iconfont icon-chahao" @click="beneficiary.address = ''"></i></div>
         </app-input>
         <app-input label="邮编" v-if="!sameAddr">
           <input slot="input" @change="checkZipcode" maxlength="6" v-model.lazy="beneficiary.zip"
                  type="text" placeholder="请输入" readonly>
-          <div slot="icon" v-show="beneficiary.zip != ''" class="am-list-clear"><i
+          <div slot="icon" v-show="beneficiary.zip !== ''" class="am-list-clear"><i
             class="iconfont icon-chahao" @click="beneficiary.zip = ''"></i></div>
         </app-input>
 
         <app-input label="手机号码">
-          <input slot="input" @change="checkPhone" v-model.number.lazy="beneficiary.tel" type="number" placeholder="请输入(二必选一)">
-          <div slot="icon" v-show="beneficiary.tel != ''" class="am-list-clear"><i class="iconfont icon-chahao" @click="beneficiary.tel = ''"></i></div>
+          <input slot="input" @change="checkPhone" v-model.number.lazy="beneficiary.phone" type="number" placeholder="请输入(二必选一)">
+          <div slot="icon" v-show="beneficiary.phone !== ''" class="am-list-clear"><i class="iconfont icon-chahao" @click="beneficiary.phone = ''"></i></div>
         </app-input>
         <app-input label="固定电话">
-          <input slot="input" @change="checkTel" v-model.lazy.trim="beneficiary.tel" type="text" placeholder="请输入(二必选一)">
-          <div slot="icon" v-show="beneficiary.tel != ''" class="am-list-clear"><i class="iconfont icon-chahao" @click="beneficiary.tel = ''"></i></div>
+          <input slot="input" @change="checkTel" v-model.lazy.trim="beneficiary.calTel" type="text" placeholder="请输入(二必选一)">
+          <div slot="icon" v-show="beneficiary.calTel !== ''" class="am-list-clear"><i class="iconfont icon-chahao" @click="beneficiary.calTel = ''"></i></div>
         </app-input>
         <!-- 职业 -->
         <app-input label="职业">
@@ -183,7 +183,7 @@ import {provs_data, citys_data, dists_data} from 'vue-pickers/lib/areaData'
 
 export default {
   name: 'Beneficiary',
-  props: ['people', 'index'],
+  props: ['people', 'BfIndex'],
   components: {
     'app-occupation': Occupation,
     vuePickers
@@ -202,7 +202,7 @@ export default {
         birthday: '', //出生日期
         type: 'LAP0005',//受益类型
 
-        rate: (100 / (this.index + 1)).toFixed(0), //受益比例
+        rate: (100 / (this.BfIndex + 1)).toFixed(0), //受益比例
         sort_order: 1, //受益顺序
         // 证件
         ID_type: 'LAA0028', //证件类型
@@ -224,6 +224,8 @@ export default {
         occupation_code: '', //职业代码
 
         tel: '', //联系电话
+        calTel: '', //固定电话
+        phone: '', //手机号码
         beneficiary_is_insured: 0 //关系
       },
       isCopy: '',
@@ -307,9 +309,9 @@ export default {
           vm.beneficiary.tel = applicant.holder_mobile ? applicant.holder_mobile : applicant.holder_phone
         }
       } else {
-        vm.beneficiary.genre = ''
-        vm.beneficiary.ID_type = ''
-        vm.beneficiary.ID_type_name = ''
+        vm.beneficiary.genre = 'LAB0009'
+        vm.beneficiary.ID_type = 'LAA0028'
+        vm.beneficiary.ID_type_name = '身份证'
         vm.beneficiary.tax_type = ''
         vm.beneficiary.ID_no = ''
         vm.beneficiary.ID_expire_end = ''
@@ -317,8 +319,8 @@ export default {
         vm.beneficiary.fullname = ''
         vm.beneficiary.birthday = ''
         if (this.anti_money) {
-          vm.beneficiary.nation = ''
-          vm.beneficiary.nation_name = ''
+          vm.beneficiary.nation = 'LAI0002'
+          vm.beneficiary.nation_name = '中国'
           vm.beneficiary.province = ''
           vm.beneficiary.province_name = ''
           vm.beneficiary.city = ''
@@ -347,10 +349,12 @@ export default {
       if (this.resSelect === 'ID') {
         this.beneficiary.ID_type = val.select1.value
         this.beneficiary.ID_type_name = val.select1.text
+        this.pickData.data1 = []
         // this.typeChange()
       } else if (this.resSelect === 'nation') {
         this.beneficiary.nation = val.select1.value
         this.beneficiary.nation_name = val.select1.text
+        this.pickData.data1 = []
       } else if (this.resSelect === 'area') {
         this.beneficiary.province = val.select1.value ? val.select1.value : ''
         this.beneficiary.province_name = val.select1.text ? val.select1.text : ''
@@ -375,6 +379,7 @@ export default {
         this.columns = 3
         this.link = true
         this.resSelect = 'area'
+        this.pickData.data3 = []
         this.pickData.data1 = provs_data
         this.pickData.data2 = citys_data
         this.pickData.data3 = dists_data
@@ -527,7 +532,7 @@ export default {
     checkForm() {
       const vm = this
       var toast_text = null
-      let sb = vm.count > 1 ? '第 ' + (vm.index + 1) + ' 个' : ''
+      let sb = vm.count > 1 ? '第 ' + (vm.BfIndex + 1) + ' 个' : ''
       if (!vm.beneficiary.fullname) {
         toast_text = '请填写' + sb + '受益人【姓名】'
       } else if (!vm.beneficiary.ID_no) {
@@ -555,23 +560,19 @@ export default {
           toast_text = '请选择' + sb + '受益人【通讯地址省份】'
         } else if (!vm.beneficiary.city) {
           toast_text = '请选择' + sb + '受益人【通讯地址市区】'
-        } else if (!vm.beneficiary.district) {
-          toast_text = '请选择' + sb + '受益人【通讯地址县/区】'
         } else if (!vm.beneficiary.address) {
           toast_text = '请填写' + sb + '受益人【详细地址】'
         } else if (!vm.beneficiary.zip && !vm.checkZipcode()) {
           toast_text = '请填写' + sb + '受益人【通信邮编】'
+        } else if (vm.beneficiary.phone && !vm.checkPhone()) {
+          return false
+        } else if (vm.beneficiary.calTel && !vm.checkTel()) {
+          return false
         } else if (!vm.beneficiary.tel) {
           toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'
         } else if (!vm.beneficiary.occupation_code) {
           toast_text = '请填写' + sb + '受益人【职业】'
         }
-        // else if (vm.beneficiary.tel && !vm.checkPhone()) {
-        //   return false
-        // }
-        // else if (vm.beneficiary.tel && !vm.checkTel()) {
-        //   return false
-        // }
       }
 
       // 重置税收类型
@@ -587,15 +588,16 @@ export default {
     },
     // 电话校验
     checkTel() {
-      if (!/^0\d{10,11}$/.test(this.beneficiary.visit_tel)) {
+      if (!/^0\d{10,11}$/.test(this.beneficiary.calTel)) {
         this.$toast.open('电话以0开头,格式为区号+号码,如:01012345678', 'warn')
         return false
       }
+      this.beneficiary.tel = this.beneficiary.calTel
       return true
     },
     // 手机校验
     checkPhone() {
-      const tel = this.beneficiary.tel
+      const tel = this.beneficiary.phone
       const owner = '受益人'
       var toast_text = null
       if (!tel) {
@@ -614,6 +616,7 @@ export default {
         this.$toast.open(toast_text, 'warn')
         return false
       }
+      this.beneficiary.tel = tel
       return true
     },
     // 邮编校验

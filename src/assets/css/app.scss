@@ -402,6 +402,14 @@ section {
         position: relative;
         top: -.01rem;
       }
+      .del {
+        background-color: $mainColor;
+        color: #fff;
+        font-size: $ft-size;
+        padding: 0 .1rem;
+      }
+
+
     }
     &-control {
       width: 100%;
@@ -503,7 +511,6 @@ section {
     left: 0;
     right: 0;
     margin: 0 auto;
-    height: 90%;
     background-color: #fff;
     overflow-x: hidden;
     overflow-y: scroll;

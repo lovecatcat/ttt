@@ -58,7 +58,7 @@
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':assured.insured_gender===item.value}"
                   v-for="(item,index) in init.gender" :disabled="assured.insured_ID_type === 'LAA0028' || assured.insured_ID_type === 'LAA0031'"
-                  @click="assured.insured_gender = item.value">{{item.text}}
+                  @click="assured.insured_gender = item.value, checkSex(), toblur()">{{item.text}}
           </button>
         </app-input>
         <!-- 证件为身份证和户口本 性别和 出生日期 不允许修改 -->
@@ -112,7 +112,7 @@
         </app-input>
         <!--手机号码-->
         <app-input label="邮箱">
-          <input slot="input" @change="checkEmail" v-model.lazy="assured.insured_email" type="text" placeholder="请输入">
+          <input slot="input" @change="checkEmail" v-model.lazy="assured.insured_email" type="text" placeholder="请输入(选填)">
           <div slot="icon" v-show="assured.insured_email !== ''" class="am-list-clear"><i class="iconfont icon-chahao"
                                                                                           @click="assured.insured_email = ''"></i>
           </div>
@@ -298,6 +298,9 @@
       },
       appl_id() {
         return this.$store.state.assured.appl_id || ''
+      },
+      is_assured() {
+        return this.$store.state.applicant.is_assured
       }
     },
     mounted() {
@@ -318,6 +321,13 @@
       //     return false
       //   }
       // })
+      this.$watch('assured.insured_marriage', function (val) {
+        if (val && val === 'LAD0005' && this.is_assured === 'LBK0004') {
+          this.$toast.open('投保人是被保人的配偶，被保人不能未婚！', 'warn')
+          this.assured.insured_marriage = 'LAD0006'
+          return false
+        }
+      })
     },
     methods: {
       close() {
@@ -429,7 +439,9 @@
                 }
                 console.log(addr[code])
                 vm.assured.insured_birthday = idInfo.birth
+                vm.checkAge()
                 vm.assured.insured_gender = sex[idInfo.sex]
+                vm.checkSex()
                 vm.assured.insured_home_province_name || (vm.assured.insured_home_province_name = addr[code].text)
                 vm.assured.insured_home_province || (vm.assured.insured_home_province = addr[code].value)
               }
@@ -570,6 +582,8 @@
           toastText = '被保人年龄不能超过60周岁'
         } else if ((new Date() - new Date(this.assured.insured_birthday)) / 24 / 3600 / 1000 < 28) {
           toastText = '被保人需出生满28天'
+        } else if (this.age < 16) {
+          this.assured.insured_salary_avg = 0
         }
         if (toastText) {
           console.info(toastText)
@@ -581,8 +595,7 @@
       //性别校验
       checkSex() {
         console.log('更改被保人性别')
-        if (this.$store.state.applicant.is_assured === 'LBK0004' &&
-          Number(this.$store.state.applicant.holder_gender) === Number(this.assured.insured_gender)) {
+        if (this.is_assured === 'LBK0004' && this.$store.state.applicant.holder_gender === this.assured.insured_gender) {
           let toast_text = '当投被保人关系为配偶时，性别不能相同'
           this.$toast.open(toast_text, 'warn')
           return false
@@ -738,9 +751,11 @@
           toast_text = '请选择被保人【国籍】'
         } else if (!vm.assured.insured_home_province && vm.assured.insured_ID_type !== 'LAA0031' && vm.assured.insured_ID_type !== 'LAA0028') {
           toast_text = '请选择被保人【户籍】'
+        } else if (!vm.assured.insured_marriage) {
+          toast_text = '请选择被保人【婚姻状态】'
         } else if (!vm.checkPhone()) {
           return false
-        } else if (!vm.assured.insured_salary_avg) {
+        } else if (!vm.assured.insured_salary_avg && vm.assured.insured_salary_avg !== 0) {
           toast_text = '请填写被保人【年收入】'
         } else if (!vm.assured.insured_salary_from) {
           toast_text = '请选择被保人【收入来源】'

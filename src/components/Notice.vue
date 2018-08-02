@@ -48,6 +48,7 @@
   </section>
 </template>
 <script>
+
 import $_GET from '../widgets/Get'
 export default {
   name: 'notice',

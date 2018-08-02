@@ -166,7 +166,7 @@
       <template slot="header">
         <div class="am-list-label">险种信息</div>
         <div class="am-list-content am-ft-right">
-          <router-link to="/billinfo"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
+          <router-link to="/prospectus"><span class="app-iconfont">&#xe649;</span>修改&nbsp;&nbsp;</router-link>
         </div>
       </template>
       <div class="am-list-body" v-for="item, index in insurances" :key="index">
@@ -232,11 +232,11 @@
         <app-input label="邮编">
           <input slot="input" readonly v-model.number="beneficiary.zip" type="number">
         </app-input>
-        <app-input label="手机号码" v-show="beneficiary.tel">
-          <input slot="input" readonly v-model.number="beneficiary.tel" type="number">
+        <app-input label="手机号码" v-show="beneficiary.phone">
+          <input slot="input" readonly v-model.number="beneficiary.phone" type="number">
         </app-input>
-        <app-input label="固定电话" v-show="beneficiary.visit_tel">
-          <input slot="input" readonly v-model="beneficiary.visit_tel" type="text">
+        <app-input label="固定电话" v-show="beneficiary.calTel">
+          <input slot="input" readonly v-model="beneficiary.calTel" type="text">
         </app-input>
         <app-input label="职业">
           <input slot="input" readonly v-model="beneficiary.occupation" type="text">
@@ -376,6 +376,9 @@
       },
       war_id () {
         return this.$store.state.war_id
+      },
+      user_id () {
+        return this.$store.state.user_id
       }
     },
     filters: {
@@ -440,7 +443,7 @@
         pushdata.ins_area = '323' //深圳
         pushdata.sales_channel = '2'
         pushdata.is_first = '1'
-        pushdata.user_id = '2846'
+        pushdata.user_id = vm.user_id
         //投保人信息
         let applfieldFilter = ['holder_ID_type_name', 'holder_nation_name', 'holder_salary_from_name', 'holder_home_province_name', 'holder_contact_province_name', 'holder_contact_city_name', 'temp_holder_job_code', 'holder_job_name', 'holder_isTaxResidents']
         for (let i in this.applicant) {
@@ -537,33 +540,76 @@
       },
       save_ins (pushdata) {
         let vm = this
+        console.log('保存保单')
         Api.saveWarranty(JSON.stringify(pushdata), res => {
           console.log(res)
           vm.uploading = false
           let policy_id = res.data.policy_id
           this.$store.dispatch('setWarId', policy_id)
-          if (!policy_id) return false
-          Api.pushWarranty(policy_id, res => {
-            console.log(res)
-            vm.$store.dispatch('setParam', {
-              insured: res
+          if (res.code && policy_id) {
+            Api.pushWarranty(policy_id, res => {
+              console.log('核保')
+              console.log(res)
+              vm.$store.dispatch('setParam', {
+                insured: res
+              })
+              if (res.code === '-1') {
+                vm.paySuccess(policy_id)
+              } else if (res.code === '1') {
+                vm.payInterface(policy_id)
+              } else {
+                vm.$toast.open(res.msg ? res.msg : '核保失败', 'warn')
+              }
             })
-            if (res.code === -1) {
-              vm.$toast.open(res.msg)
-              setTimeout(function () {
-                vm.done = true
-                vm.$router.push('/success')
-              }, 2000)
-            } else if (res.code === 1) {
-              vm.$toast.open(res.msg)
-              setTimeout(function () {
-                vm.done = true
-                vm.$router.push('/success')
-              }, 2000)
-            } else {
-              vm.$toast.open(res.msg ? res.msg : '核保失败')
-            }
-          })
+          } else {
+            vm.$toast.open('保存保单失败，请重试', 'warn')
+          }
+        })
+      },
+      paySuccess (policy_id) {
+        let vm = this
+        console.log('人核支付')
+        Api.insuredImg(policy_id, res => {
+          console.log(res)
+          if (res.code === '1') {
+            Api.paySuccess(policy_id, res => {
+              console.log(res)
+              if (res.code === '1') {
+                vm.$toast.open('人核成功')
+                setTimeout(function () {
+                  vm.done = true
+                  vm.$router.push('/success')
+                }, 2000)
+              } else {
+                vm.$toast.open('人核支付失败')
+              }
+            })
+          } else {
+            vm.$toast.open('上传影像失败，请重试！')
+          }
+        })
+      },
+      payInterface (policy_id) {
+        let vm = this
+        console.log('自核支付')
+        Api.insuredImg(policy_id, res => {
+          console.log(res)
+          if (res.code === '1') {
+            Api.payInterface(policy_id, res => {
+              console.log(res)
+              if (res.code === '1') {
+                vm.$toast.open('自核成功')
+                setTimeout(function () {
+                  vm.done = true
+                  vm.$router.push('/success')
+                }, 2000)
+              } else {
+                vm.$toast.open('自核支付失败')
+              }
+            })
+          } else {
+            vm.$toast.open('上传影像失败，请重试！')
+          }
         })
       }
     }

@@ -324,7 +324,7 @@
                   </div>
                 </div>
                 <app-input :label="item.title" v-else-if="item.type=='date'">
-                  <input slot="input" :class="{'has':item.value != ''}" v-model="item.value" type="month" placeholder="请选择时间">
+                  <input slot="input" :class="{'has':item.value != ''}" v-model="item.value" type="date" placeholder="请选择时间">
                   <div slot="icon" class="am-list-clear" v-show="item.value" @click="item.input = ''"><i class="iconfont icon-chahao"></i></div>
                 </app-input>
                 <app-input :label="item.title" v-else-if="item.type=='number'">
@@ -518,7 +518,7 @@
                 return i + item.child[j].entry
               }
             }
-          }
+          } ``
         }
       },
       kuohaoFilter(val) {

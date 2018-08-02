@@ -82,8 +82,8 @@
           <div slot="input" readonly>中国</div>
         </app-input>
         <!--户籍-->
-        <div class="am-list-item "
-             v-if="applicant.holder_ID_type !== 'LAA0031' && applicant.holder_ID_type !== 'LAA0028'">
+        <div class="am-list-item ">
+             <!--v-if="applicant.holder_ID_type !== 'LAA0031' && applicant.holder_ID_type !== 'LAA0028'">-->
           <div class="am-list-label">户籍</div>
           <div class="am-list-control">
             <input type="text" placeholder="请选择" readonly v-model="applicant.holder_home_province_name"
@@ -92,9 +92,9 @@
             <div class="am-list-clear" style=""><i class="iconfont icon-xiajiantou"></i></div>
           </div>
         </div>
-        <app-input label="户籍" v-else>
-          <input slot="input" type="text" v-model.lazy="applicant.holder_home_province_name" placeholder="请选择" readonly>
-        </app-input>
+        <!--<app-input label="户籍" v-else>-->
+          <!--<input slot="input" type="text" v-model.lazy="applicant.holder_home_province_name" placeholder="请选择" readonly>-->
+        <!--</app-input>-->
         <!--户籍-->
         <!--婚姻状况-->
         <app-input label="婚姻状态" class="am-list-control-button">
@@ -366,9 +366,11 @@
       this.$watch('applicant.is_assured', function (val) {
         if (val && val === 'LBK0002' && this.applicant.holder_marriage === 'LAD0005') {
           this.$toast.open('投保人未婚不能为被保人父母！', 'warn')
+          this.applicant.is_assured = 'LBK0001'
           return false
         } else if (val && val === 'LBK0004' && this.applicant.holder_marriage === 'LAD0005') {
           this.$toast.open('投保人未婚不能为被保人配偶！', 'warn')
+          this.applicant.is_assured = 'LBK0001'
           return false
         }
       })
@@ -499,6 +501,7 @@
                   0: 'LAB0010'
                 }
                 console.log(addr[code])
+                console.log(code)
                 vm.applicant.holder_birthday = idInfo.birth
                 vm.checkAge()
                 vm.applicant.holder_gender = sex[idInfo.sex]
@@ -744,6 +747,7 @@
         if (!/^0\d{10,11}$/.test(this.applicant.holder_phone)) {
           this.$toast.open('电话以0开头,格式为区号+号码,如:01012345678', '')
         }
+        return true
       },
       //邮箱校验
       checkEmail() {

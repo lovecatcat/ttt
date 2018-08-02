@@ -6,14 +6,14 @@
         <label class="am-list-item check">
           <div class="am-list-content">法定受益人</div>
           <div class="am-checkbox">
-            <input type="radio" name="radio" value="1" v-model="is_legal_benefic">
+            <input type="radio" name="benefic" value="1" v-model="is_legal_benefic">
             <span class="icon-check" aria-hidden="true"></span>
           </div>
         </label>
         <label class="am-list-item check">
           <div class="am-list-content">指定受益人</div>
           <div class="am-checkbox">
-            <input type="radio" name="radio" value="0" v-model="is_legal_benefic">
+            <input type="radio" name="benefic" value="0" v-model="is_legal_benefic">
             <span class="icon-check" aria-hidden="true"></span>
           </div>
         </label>
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <app-beneficiary v-show="is_legal_benefic === '0'" ref=child :key="person" v-for='person,index in people' :people='person' :index='index'></app-beneficiary>
+    <app-beneficiary v-show="is_legal_benefic === '0'" ref=child :key="person" v-for='person,index in people' :people='person' :BfIndex='index'></app-beneficiary>
     <div class="am-button-group" role="group" v-show="is_legal_benefic === '0'" style="margin-bottom: .1rem">
       <a @click="add" class="am-button white" role="button"><span class="app-iconfont">&#xe667;</span> 添加受益人 </a>
     </div>

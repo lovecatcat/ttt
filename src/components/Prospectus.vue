@@ -142,11 +142,11 @@
         </app-input>
       </template>
         <!--附加豁免-->
-        <template v-else-if="index==='33F00030' && addonIns[index].period_money">
+        <template v-else-if="index==='33F00030' && addonIns[index].period_money && addonsSelected[index]">
           <div class="hm">
             <div >保险金额(元)<span>{{addonIns[index].money}}</span></div>
-            <div >保障期间(年)<span>1年</span></div>
-            <div >交费期间(年)<span>终身</span></div>
+            <div >交费期间(年)<span>{{insurance.pay_year - 1}}年</span></div>
+            <div >保障期间(年)<span>终身</span></div>
             <div >年缴保费(元)<span>{{addonIns[index].period_money}}</span></div>
           </div>
 
@@ -246,6 +246,9 @@
       },
       email() {
         return this.$store.state.applicant.holder_email
+      },
+      is_assured() {
+        return this.$store.state.applicant.is_assured
       }
     },
     filters: {
@@ -269,7 +272,8 @@
       }
     },
     created() {
-      Api.querySafegoods(res => {
+      let user_id = this.$store.state.user_id
+      Api.querySafegoods(user_id, res => {
         if (res.name && res.name.indexOf('Error') > -1) {
           this.$toast.open('服务器开小差了', 'error')
           return
@@ -278,8 +282,7 @@
       })
     },
     activated() {
-      if (this.$store.state.warranty.is_assured === 15000) {
-        this.addonsSelected[370] = false
+      if (this.$store.state.applicant.is_assured === 'LBK0001') {
         this.back = '/insured'
       } else {
         this.back = '/beinsured'
@@ -290,11 +293,11 @@
         if (from.path !== '/insured' && from.path !== '/beinsured') {
           return
         }
-        if (from.path === '/insured') {
-          vm.back = '/insured'
-        } else {
-          vm.back = '/beinsured'
-        }
+        // if (this.is_assured === 'LBK0001') {
+        //   vm.back = '/insured'
+        // } else {
+        //   vm.back = '/beinsured'
+        // }
         if (vm.insurance) {
           vm.insurance.period_money = ''
           vm.insurance.money = ''

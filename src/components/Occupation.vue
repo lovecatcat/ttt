@@ -1,7 +1,7 @@
 <template>
   <div class="show app-dialog" v-show="OccupationShow">
     <div class="app-dialog-bg"></div>
-    <div class="am-dialog-wrap">
+    <div class="am-dialog-wrap" style="height: 90%">
       <div class="am-dialog-header" slot="header">
        选择职业
       </div>
@@ -51,7 +51,7 @@
 
       </section>
       <div class="am-button-group" slot="footer">
-        <!--<button type="button" class="am-button white" @click="OccupationShow = false">取消</button>-->
+        <button type="button" class="am-button white" @click="OccupationShow = false">取消</button>
         <button type="button" class="am-button blue" @click="OccupationShow = false">确定</button>
       </div>
     </div>
