@@ -509,6 +509,7 @@
         extend_items.GetPolMode = this.insurances[0].GetPolMode //保单递送方式
         extend_items.PayMode = this.bank.PayMode //首期缴费方式
         extend_items.ExPayMode = this.bank.ExPayMode //续期缴费方式
+        if (vm.isDouble) extend_items.double_main_risk = 'NB_05' //双主险
         pushdata.extend_items = extend_items
         if (vm.isDouble) pushdata.policy_no = vm.isDouble
         console.log(pushdata)
@@ -540,6 +541,7 @@
       },
       save_ins (pushdata) {
         let vm = this
+        this.delNum = 0
         console.log('保存保单')
         Api.saveWarranty(JSON.stringify(pushdata), res => {
           console.log(res)
@@ -581,9 +583,14 @@
                   vm.$router.push('/success')
                 }, 2000)
               } else {
+                setTimeout(function () {
+                  vm.done = true
+                  vm.$router.push('/payfail')
+                }, 2000)
                 vm.$toast.open('人核支付失败')
               }
             })
+            this.clearStorage()
           } else {
             vm.$toast.open('上传影像失败，请重试！')
           }
@@ -605,8 +612,13 @@
                 }, 2000)
               } else {
                 vm.$toast.open('自核支付失败')
+                setTimeout(function () {
+                  vm.done = true
+                  vm.$router.push('/payfail')
+                }, 2000)
               }
             })
+            this.clearStorage()
           } else {
             vm.$toast.open('上传影像失败，请重试！')
           }

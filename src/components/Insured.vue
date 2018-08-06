@@ -374,6 +374,7 @@
           return false
         }
       })
+      this.setData('applicant', this.$storage.fetch('applicant'))
     },
     methods: {
       close() {
@@ -893,10 +894,13 @@
           assu.temp_insured_job_code = applicant.temp_holder_job_code//职业代码
           assu.insured_job_name = applicant.holder_job_name//职业名称
           assu.insured_isTaxResidents = applicant.holder_isTaxResidents
+          this.save2local('applicant', this.applicant)
+          this.save2local('assured', assu)
           this.$store.dispatch('setApplicant', this.applicant)
           this.$store.dispatch('saveAssured', assu)
           this.$router.push('/prospectus')
         } else {
+          this.save2local('applicant', this.applicant)
           this.$store.commit('setApplicant', this.applicant)
           this.$router.push('/beinsured')
         }

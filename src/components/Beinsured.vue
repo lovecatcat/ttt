@@ -328,6 +328,7 @@
           return false
         }
       })
+      this.setData('assured', this.$storage.fetch('assured'))
     },
     methods: {
       close() {
@@ -789,6 +790,7 @@
         }
         this.$toast.close()
         clearInterval(this.Interval)
+        this.save2local('assured', this.assured)
         this.$store.commit('saveAssured', this.assured)
         this.$router.push('/prospectus')
       }

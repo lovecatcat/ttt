@@ -2,15 +2,12 @@
   <div id="Success">
     <div class="am-message result">
       <i class="am-icon result success"></i>
-      <div class="am-message-main">投保成功</div>
+      <div class="am-message-main">核保成功，支付失败</div>
       <div class="am-message-sub am-ft-left">
         <br>
-        <template>
-          <p>支付成功</p>
-          <P>请去个人中心-保单管理查看改单信息</P>
-        </template>
+        <p>请去个人中心-寿险订单查看该单信息</p>
         <br>
-        <p v-if="insured.data && insured.data.policy_no">投保单号：{{insured.data.policy_no}}</p>
+        <p v-if="insured.data.policy_no">投保单号：{{insured.data.policy_no}}</p>
         <br>
       </div>
     </div>

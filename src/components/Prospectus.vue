@@ -273,6 +273,7 @@
     },
     created() {
       let user_id = this.$store.state.user_id
+      // this.setData('insurance', this.$storage.fetch('insurance'))
       Api.querySafegoods(user_id, res => {
         if (res.name && res.name.indexOf('Error') > -1) {
           this.$toast.open('服务器开小差了', 'error')
@@ -293,11 +294,6 @@
         if (from.path !== '/insured' && from.path !== '/beinsured') {
           return
         }
-        // if (this.is_assured === 'LBK0001') {
-        //   vm.back = '/insured'
-        // } else {
-        //   vm.back = '/beinsured'
-        // }
         if (vm.insurance) {
           vm.insurance.period_money = ''
           vm.insurance.money = ''
@@ -336,6 +332,7 @@
       if (this.insurance.GetPolMode === 'LAS0003' && !this.checkEmail()) {
         return false
       }
+      this.save2local('insurance', this.insurance)
       this.$store.commit('saveInsurance', JSON.parse(JSON.stringify(insurances)))
       next()
     },

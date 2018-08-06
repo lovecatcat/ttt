@@ -65,7 +65,7 @@ export default {
       this.agreement = true
     }
     var applicant = this.$storage.fetch('applicant')
-    if (applicant.dd) {
+    if (applicant.holder_name) {
       this.$dialog.open('未完成保单', '是否继续完成最近一笔保单?', () => {
         this.$store.commit('setParam', {
           todo: true
@@ -81,7 +81,15 @@ export default {
         'tips': 2,
         'confirmation': 2
       }
-
+      // var ws = plus.webview.currentWebview()
+      // alert(JSON.stringify(ws))
+      // var parent_self = plus.webview.getWebviewById('member_plans_detail') //父级id
+      // alert(parent_self)
+      // mui.fire(parent_self, 'alones')
+      // mui.openWindow({
+      //   url: 'member-life-order.html',
+      //   id: 'member_life_order'
+      // })
       let list = []
       let basePath = this.local ? '/static' : '/xtins/XT_ins'
       for (let i = 0; i < imgs[id]; i++) {

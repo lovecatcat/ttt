@@ -52,6 +52,9 @@ export default {
       return this.$store.state.tmp.people
     }
   },
+  created () {
+    // this.setData('beneficiaries', this.$storage.fetch('beneficiaries'))
+  },
   methods: {
     add() {
       var vm = this
@@ -108,6 +111,7 @@ export default {
         }
         children[index].$emit('save')
         if (Number(index) === children.length - 1) {
+          this.save2local('beneficiaries', this.beneficiaries)
           vm.$store.commit('saveBeneficiary', Api.obj2json(vm.beneficiaries))
           if (!this.checkRatio()) return
           next()

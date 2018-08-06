@@ -57,11 +57,10 @@ Vue.mixin({
     //   window.location.href = '/Wechat/toLogin?gourl=XT_ins'
     // }
     // 完成未完成订单
-    if (this.$store.state.todo) {
-      this.setData('applicant', this.$storage.fetch('applicant'))
-      this.setData('assured', this.$storage.fetch('assured'))
-      this.setData('warranty', this.$storage.fetch('warranty'))
-    }
+    // if (this.$store.state.todo) {
+    //   this.setData('applicant', this.$storage.fetch('applicant'))
+    //   this.setData('assured', this.$storage.fetch('assured'))
+    // }
   },
   activated() {
     scrollTo(0, 0) // 滚动顶部
@@ -124,22 +123,17 @@ Vue.mixin({
       return age
     },
     save2local(key, val) {
-      // this.local && console.log('存储到缓存' + key, JSON.stringify(val))
-      // this.$storage.save(key, Object.assign(this.$storage.fetch(key), val))
+      this.local && console.log('存储到缓存' + key, JSON.stringify(val))
+      this.$storage.save(key, Object.assign(this.$storage.fetch(key), val))
     },
     setData(key, val) {
-      // if (!this[key]) return
-      // this.local && console.log('从缓存读取' + key, JSON.stringify(val))
-      // this[key] = typeof this[key] === 'object' ? Object.assign({}, this[key], val) : Object.assign({}, val)
+      if (!this[key]) return
+      this.local && console.log('从缓存读取' + key, JSON.stringify(val))
+      this[key] = typeof this[key] === 'object' ? Object.assign({}, this[key], val) : Object.assign({}, val)
     },
     clearStorage() {
       this.$storage.remove('applicant')
       this.$storage.remove('assured')
-      this.$storage.remove('warranty')
-      this.$storage.remove('main_insurance')
-      this.$storage.remove('insurance')
-      this.$storage.remove('clientvalue')
-      this.$storage.remove('init')
     }
   }
 })

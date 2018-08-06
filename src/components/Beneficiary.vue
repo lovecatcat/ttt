@@ -85,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div class="am-list am-list-6lb form"  v-if="getAge(beneficiary.birthday) >= 16">
+    <div class="am-list am-list-6lb form">
       <div class="app-list-header">受益人声明（备注说明）</div>
       <div class="am-list-body" aria-labelledby="demo-cb-header-1">
         <label class="am-list-item check" v-for="(item,index) in init.tax_type">
@@ -160,8 +160,8 @@
         </app-input>
         <!-- 职业 -->
         <app-input label="职业">
-          <div slot="input" @click="$refs.occupation.OccupationShow = true" placeholder="请点击选择职业" :class="{pd:!beneficiary.occupation}">
-            {{beneficiary.occupation}}
+          <div slot="input" @click="$refs.occupation.OccupationShow = true" placeholder="请点击选择职业" :class="{pd:!beneficiary.job}">
+            {{beneficiary.job}}
           </div>
         </app-input>
         <!-- 职业 -->
@@ -220,8 +220,8 @@ export default {
         district_name: '', //区
         zip: '', //通信邮编
         // 职业
-        occupation: '', //职业
-        occupation_code: '', //职业代码
+        job: '', //职业
+        job_code: '', //职业代码
 
         tel: '', //联系电话
         calTel: '', //固定电话
@@ -304,8 +304,8 @@ export default {
           vm.beneficiary.district_name = applicant.holder_contact_district_name
           vm.beneficiary.address = applicant.holder_contact_address
           vm.beneficiary.zip = applicant.holder_contact_zip
-          vm.beneficiary.occupation = applicant.holder_job_name
-          vm.beneficiary.occupation_code = applicant.holder_job_code
+          vm.beneficiary.job = applicant.holder_job_name
+          vm.beneficiary.job_code = applicant.holder_job_code
           vm.beneficiary.tel = applicant.holder_mobile ? applicant.holder_mobile : applicant.holder_phone
         }
       } else {
@@ -329,8 +329,8 @@ export default {
           vm.beneficiary.district_name = ''
           vm.beneficiary.address = ''
           vm.beneficiary.zip = ''
-          vm.beneficiary.occupation = ''
-          vm.beneficiary.occupation_code = ''
+          vm.beneficiary.job = ''
+          vm.beneficiary.job_code = ''
           vm.beneficiary.tel = ''
         }
       }
@@ -549,9 +549,9 @@ export default {
         toast_text = '请选择' + sb + '受益人【受益顺序】'
       } else if (!vm.beneficiary.rate) {
         toast_text = '请填写' + sb + '受益人【受益比例】'
-      } else if (!vm.beneficiary.tax_type && vm.getAge(vm.beneficiary.birthday) >= 16) {
+      } else if (!vm.beneficiary.tax_type) {
         toast_text = '请选择' + sb + '受益人个人税收居民身份类型'
-      } else if (!vm.checkTax(sb + ' 受益人', vm.beneficiary.tax_type) && vm.getAge(vm.beneficiary.birthday) >= 16) {
+      } else if (!vm.checkTax(sb + ' 受益人', vm.beneficiary.tax_type)) {
         return false
       } else if (vm.anti_money) {
         if (!vm.beneficiary.nation) {
@@ -570,15 +570,15 @@ export default {
           return false
         } else if (!vm.beneficiary.tel) {
           toast_text = '请填写' + sb + '受益人【手机号码】或【固定电话】其一'
-        } else if (!vm.beneficiary.occupation_code) {
+        } else if (!vm.beneficiary.job_code) {
           toast_text = '请填写' + sb + '受益人【职业】'
         }
       }
 
       // 重置税收类型
-      if (vm.getAge(vm.beneficiary.birthday) < 16) {
-        this.beneficiary.tax_type = ''
-      }
+      // if (vm.getAge(vm.beneficiary.birthday) < 16) {
+      //   this.beneficiary.tax_type = ''
+      // }
       if (toast_text) {
         console.info(toast_text)
         vm.$toast.open(toast_text, 'warn')
@@ -638,18 +638,18 @@ export default {
     // 设置职业
     // 设置职业
     setOccupation(selected) {
-      this.beneficiary.occupation_code = {
+      this.beneficiary.job_code = {
         '1': selected.value[0],
         '2': selected.value[1],
         '3': selected.value[2],
         '4': selected.value[3]
       }
-      this.beneficiary.occupation = selected.text
+      this.beneficiary.job = selected.text
     },
     // 清除职业
     clearOccupation() {
-      this.beneficiary.occupation_code = ''
-      this.beneficiary.occupation = ''
+      this.beneficiary.job_code = ''
+      this.beneficiary.job = ''
       this.$refs.occupation.show = true
     }
   }

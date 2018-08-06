@@ -15,7 +15,8 @@ import Billinfo from '@/components/Billinfo' //填写收费信息
 
 import Prospectus from '@/components/Prospectus' //保险计划
 import Preview from '@/components/Preview' // 预览
-import Success from '@/components/Success' //成功
+import Success from '@/components/Success' //支付成功
+import PayFail from '@/components/PayFail' //支付失败
 
 import NotFound from '@/components/NotFound' //未找到
 // import Api from '../api'
@@ -83,6 +84,13 @@ const router = new Router({
     component: Success,
     meta: {
       docTitle: '提交成功'
+    }
+  },{
+    path: '/payfail',
+    name: 'PayFail',
+    component: PayFail,
+    meta: {
+      docTitle: '支付失败'
     }
   }, {
     path: '*',
