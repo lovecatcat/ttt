@@ -1,5 +1,5 @@
 <template>
-  <section id="billinfo">
+  <section id="billinfo" class="pd-b47">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header">
         首/续期收费账户信息
@@ -20,7 +20,8 @@
           </button>
         </app-input>
         <app-input label="户名">
-          <input slot="input" disabled v-model.trim="applicant.holder_name" type="text" placeholder="请输入">
+          <input slot="input" disabled v-model.trim="bank.bank_holder" type="text" placeholder="请输入" v-if="bank.bank_holder">
+          <input slot="input" disabled v-model.trim="applicant.holder_name" type="text" placeholder="请输入" v-else>
         </app-input>
         <app-input label="账户类型" class="am-list-control-button">
           <button slot="button" class="am-button tiny"
@@ -46,7 +47,7 @@
           <div class="am-list-label">开户地址</div>
           <div class="am-list-control">
             <input type="text" placeholder="请选择" readonly
-                   v-model="bank.bank_area_name"
+                   v-model="bank.bank_province_name + bank.bank_area_name"
                    @click="toShow('area')" v-if="bank.bank_area_name">
             <input type="text" placeholder="请选择" readonly @click="toShow('area')" v-else>
             <div class="am-list-clear" style=""><i class="iconfont icon-xiajiantou"></i></div>
@@ -66,9 +67,12 @@
         </div>
       </div>
     </div>
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组" v-show="group" v-if="!policy_id">
       <button type="button" class="am-button white"><router-link to="/healthinfo">上一步</router-link></button>
       <button type="button" class="am-button blue"> <router-link to="/preview">下一步</router-link></button>
+    </div>
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组" v-show="group" v-if="policy_id">
+      <button type="button" class="am-button blue" @click="paySure">确认支付</button>
     </div>
     <!-- 开户行所在地 -->
     <!--vue-pickers-->
@@ -77,7 +81,8 @@
   </section>
 </template>
 <script>
-
+import Api from '../api'
+import $_GET from '../widgets/Get'
 // 区域选择器
 import vuePickers from 'vue-pickers'
 import {provs_data, citys_data} from 'vue-pickers/lib/areaData'
@@ -90,6 +95,10 @@ export default {
   data() {
     return {
       agreement: false, //协议
+      policy_id: '', //保单id
+      state: '', //0是自核，5是人核
+      user_id: '',
+      uploading: false, //正在提交
       bank: {
         PayMode: 'LAT0008', //首期缴费方式
         ExPayMode: 'LBJ0002',//续期缴费方式
@@ -112,7 +121,10 @@ export default {
         data1: provs_data,
         data2: citys_data
       },
-      resSelect: null
+      resSelect: null,
+      group: true, //底部按钮
+      docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
+      showHeight: document.documentElement.clientHeight   //实时屏幕高度
     }
   },
   computed: {
@@ -130,6 +142,48 @@ export default {
     }
     this.$store.commit('saveBank', this.bank)
     this.checkForm() && next()
+  },
+  created() {
+    this.policy_id = $_GET['policy_id'] || ''
+    this.state = $_GET['state'] || ''
+    if (!this.policy_id) return false
+    Api.editWarranty(this.policy_id, res => {
+      console.log(res)
+      if (res.code) {
+        let data = res.data.insData
+        this.user_id = data.user_id
+        this.bank.PayMode = 'LAT0008' //首期缴费方式
+        this.bank.ExPayMode = 'LBJ0002'//续期缴费方式
+        this.bank.bank_holder = data.bank_holder //户名
+        this.bank.bank_name = data.bank_name //开户行
+        this.bank.temp_bank_name = data.bank_name_text //开户行名称
+        this.bank.bank_type = data.bank_type//账户类型
+        this.bank.bank_no = data.bank_no//卡号
+        this.bank.bank_province = data.bank_province // 省
+        this.bank.bank_province_name = data.bank_province_text // 省
+        this.bank.bank_area = data.bank_area //市
+        this.bank.bank_area_name = data.bank_area_text //市
+      } else {
+        this.$toast.open(res.msg, 'warn')
+      }
+    })
+  },
+  mounted() {
+    // window.onresize监听页面高度的变化
+    window.onresize = () => {
+      return (() => {
+        this.showHeight = document.body.clientHeight
+      })()
+    }
+  },
+  watch: {
+    showHeight() {
+      if (this.docmHeight > this.showHeight) {
+        this.group = false
+      } else {
+        this.group = true
+      }
+    }
   },
   methods: {
     close() {
@@ -178,7 +232,7 @@ export default {
         toast_text = '请选择首期缴费方式'
       } else if (!this.bank.ExPayMode) {
         toast_text = '请选择续期缴费方式'
-      } else if (!this.applicant.holder_name) {
+      } else if (!this.applicant.holder_name && !this.bank.bank_holder) {
         toast_text = '户名不能为空'
       } else if (!this.bank.bank_type) {
         toast_text = '请选择账户类型'
@@ -215,6 +269,82 @@ export default {
         return false
       }
       return true
+    },
+    paySure() {
+      // 重新支付
+      let vm = this
+      this.checkForm()
+      if (vm.uploading) {
+        return false
+      }
+      vm.uploading = true
+      // vm.$toast.open('正在提交', 'loading')
+      let pushdata = {}
+      pushdata.id = this.policy_id
+      pushdata.supplier_id = 12
+      pushdata.ins_area = '323' //深圳
+      pushdata.sales_channel = '2'
+      pushdata.is_first = '1'
+      pushdata.user_id = vm.user_id
+      //银行信息
+      pushdata.bank_holder = vm.bank.bank_holder
+      pushdata.bank_name = vm.bank.bank_name
+      pushdata.bank_type = vm.bank.bank_type
+      pushdata.bank_no = vm.bank.bank_no
+      pushdata.bank_province = vm.bank.bank_province
+      pushdata.bank_area = vm.bank.bank_area
+      console.log('保存保单')
+      vm.$toast.open('正在支付中', 'loading')
+      Api.saveWarranty(JSON.stringify(pushdata), res => {
+        console.log(res)
+        vm.$store.dispatch('setParam', {
+          insured: {
+            state: this.state
+          }
+        })
+        if (this.state === 5) { //人核
+          console.log('人核支付')
+          Api.paySuccess(vm.policy_id, res => {
+            console.log(res)
+            if (res.code) {
+              vm.uploading = false
+              vm.$toast.open('人核支付成功')
+              setTimeout(function () {
+                vm.done = true
+                vm.$router.push('/success')
+              }, 2000)
+            } else {
+              setTimeout(function () {
+                vm.done = true
+                vm.$router.push('/payfail')
+              }, 2000)
+              vm.uploading = false
+              vm.$toast.open('人核支付失败')
+            }
+          })
+        } else {
+          console.log('自核支付')
+          Api.payInterface(vm.policy_id, res => {
+            console.log('支付中...')
+            console.log(res)
+            if (res.code) {
+              vm.uploading = false
+              vm.$toast.open('自核支付成功')
+              setTimeout(function () {
+                vm.done = true
+                vm.$router.push('/success')
+              }, 2000)
+            } else {
+              vm.uploading = false
+              vm.$toast.open('自核支付失败')
+              setTimeout(function () {
+                vm.done = true
+                vm.$router.push('/payfail')
+              }, 2000)
+            }
+          })
+        }
+      })
     }
   }
 }

@@ -230,7 +230,15 @@ const deleteItem = function (war_id, itemId, type, cb) {
     console.log(error)
   })
 }
-
+//编辑保单
+const editWarranty = function (war_id, cb) {
+  axios.post(url + urlData + 'server=PolicyIns.edit&data={"policy_id":' + war_id + '}').then(response => {
+    cb(response.data)
+  }).catch(error => {
+    cb(error)
+    console.log(error)
+  })
+}
 //人核支付
 const paySuccess = function (data, cb) {
   axios.post(url + urlData + 'server=PolicyIns.onlineInsured&data={"msg":{"policy_id":"' + data + '"},"company_code":"XinTai","method":"paySuccess"}').then(response => {
@@ -352,6 +360,7 @@ export default {
   keepData,
   calMoney,
   saveWarranty,
+  editWarranty,
   deleteItem,
   paySuccess,
   payInterface,

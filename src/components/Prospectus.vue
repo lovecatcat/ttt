@@ -1,5 +1,5 @@
 <template>
-  <section id="Prospectus">
+  <section id="Prospectus" class="pd-b47">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header">险种信息</div>
       <div class="am-list-body">
@@ -144,7 +144,8 @@
         <!--附加豁免-->
         <template v-else-if="index==='33F00030' && addonIns[index].period_money && addonsSelected[index]">
           <div class="hm">
-            <div >保险金额(元)<span>{{addonIns[index].money}}</span></div>
+            <div v-if="addonsSelected['31A00050']">保险金额(元)<span>{{Number(insurance.period_money) + Number(addonIns['31A00050'].period_money)}}</span></div>
+            <div v-else>保险金额(元)<span>{{insurance.period_money}}</span></div>
             <div >交费期间(年)<span>{{insurance.pay_year - 1}}年</span></div>
             <div >保障期间(年)<span>终身</span></div>
             <div >年缴保费(元)<span>{{addonIns[index].period_money}}</span></div>
@@ -175,7 +176,7 @@
       </div>
     </div>
 
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组">
       <button type="button" class="am-button white"><router-link :to="back">上一步</router-link></button>
       <button type="button" class="am-button blue"><router-link to="/beneficiaries">下一步</router-link></button>
     </div>
@@ -555,7 +556,7 @@
             product.productId = vm.addonIns[addonIndex].safe_id
             product.pay = vm.addonIns[addonIndex].pay_year
             product.insure = vm.addonIns[addonIndex].safe_year
-            product.amount = vm.addonIns[addonIndex].money
+            product.amount = vm.addonsSelected[bwjklq] ? Number(vm.insurance.period_money) + Number(vm.addonIns[bwjklq].period_money) : vm.insurance.period_money
             product.premium = ''
             console.log(JSON.stringify(product))
             basedata.productInfo.push(product)
@@ -574,6 +575,10 @@
               console.log('试算附加险' + addonIndex + '成功')
               let data = res.data[1]
               vm.addonIns[addonIndex].period_money = data.Prem
+              vm.addonIns[addonIndex].money = data.Amnt
+              if (addonIndex === bwjklq) {
+                vm.cal(fjhm)
+              }
               this.$forceUpdate()
             } else {
               console.log('试算主险成功')
@@ -640,6 +645,10 @@
               }
             }
           }
+        } else {
+          if (index === bwjklq) {
+            this.cal(fjhm)
+          }
         }
         if (toast_text) {
           this.addonsSelected[index] = false
@@ -647,6 +656,8 @@
         } else {
           if (this.addonsSelected[index] && index === fjhm) {
             this.cal(index)
+          }else if (this.addonsSelected[fjhm] && index === bwjklq) {
+            this.cal(fjhm)
           }
         }
         this.$forceUpdate()

@@ -134,11 +134,15 @@ body {
 }
 
 .am-list-contents {
-  font-size: $ft-size
+  font-size: $ft-size;
+
 }
 section {
   padding-top: .1rem;
   background-color: #ebf5fe;
+}
+.pd-b47{
+   padding-bottom: .47rem;
 }
 .am- {
   &list {
@@ -282,22 +286,27 @@ section {
 //底部按钮
 .am- {
   &button-group{
-    padding-top: .2rem;
-    padding-bottom: .2rem;
+    //position: fixed;bottom: 0;left: 0;right: 0;
+    //-moz-box-shadow:0px -1px 3px $bg-gray; -webkit-box-shadow:0px -1px 3px $bg-gray; box-shadow:0px -1px 3px $bg-gray;
+    //padding-top: .2rem;
+    //padding-bottom: .2rem;
+    padding: 0;
     .am-button {
-      border-radius: .05rem;
+      border-radius: 0rem;
       a {
         display: inline-block;
         width: 100%;
       }
     }
     .am-button.blue {
+      margin-left: 0;
       a{
         color: #fff;
       }
     }
     .am-button.white {
-      border-color: $mainColor;
+      border-color: #fff;
+      //border-top-color: $mainColor;
       color: $mainColor;
     }
     .am-button.gray {
@@ -309,6 +318,16 @@ section {
     }
   }
 
+}
+.Beneficiary-group{
+  padding: .2rem .15rem;
+  .am-button {
+    border-radius: .05rem;
+  }
+  .am-button.white {
+    border-color: $mainColor;
+    color: $mainColor;
+  }
 }
 //健康告知
 .app- {
@@ -489,6 +508,7 @@ section {
   }
 }
 
+//职业
 .app-dialog {
   z-index: 100;
   position: fixed;
@@ -521,9 +541,11 @@ section {
     line-height: .42rem;
     width: 100%;
     text-align: center;
+    background-color: #fff;
   }
   .am-dialog-body {
     overflow: auto;
+    padding-top: .1rem;
   }
   .am-button.tiny-blue{
     color: #fff;

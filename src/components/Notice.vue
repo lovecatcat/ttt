@@ -1,5 +1,5 @@
 <template>
-  <section id="notice">
+  <section id="notice" class="pd-b47">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header">
         投保须知
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组">
       <button type="button" class="am-button blue" @click="$toast.open('请先确认投保须知','warn')" v-if="!agreement">下一步</button>
       <button type="button" class="am-button blue" v-else> <router-link to="/insured">下一步</router-link></button>
     </div>

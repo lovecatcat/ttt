@@ -160,7 +160,7 @@
         </app-input>
         <!-- 职业 -->
         <app-input label="职业">
-          <div slot="input" @click="$refs.occupation.OccupationShow = true" placeholder="请点击选择职业" :class="{pd:!beneficiary.job}">
+          <div slot="input" @click="$refs.occupation.OccupationShow = true, scrollClose()" placeholder="请点击选择职业" :class="{pd:!beneficiary.job}">
             {{beneficiary.job}}
           </div>
         </app-input>
@@ -389,6 +389,10 @@ export default {
     //失去焦点
     toblur() {
       document.activeElement.blur()
+    },
+    //禁用滚动条
+    scrollClose() {
+      document.documentElement.style.overflowY = 'hidden'
     },
     sameZipcode() {
       this.beneficiary.zipcode = this.applicant.zipcode

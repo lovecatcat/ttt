@@ -12,6 +12,7 @@ import Beneficiaries from '@/components/Beneficiaries' //身故受益人信息
 import Healthinfo from '@/components/Healthinfo' //健康告知
 // import HealthinfoV1 from '@/components/HealthinfoV1' //健康告知版本一
 import Billinfo from '@/components/Billinfo' //填写收费信息
+import xtPay from '@/components/xtPay' //重新支付
 
 import Prospectus from '@/components/Prospectus' //保险计划
 import Preview from '@/components/Preview' // 预览
@@ -70,6 +71,13 @@ const router = new Router({
     component: Billinfo,
     meta: {
       docTitle: '交费信息'
+    }
+  }, {
+    path: '/xtPay',
+    name: 'xtPay',
+    component: xtPay,
+    meta: {
+      docTitle: '信泰支付'
     }
   }, {
     path: '/preview',

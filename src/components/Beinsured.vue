@@ -1,5 +1,5 @@
 <template>
-  <section id="Beinsured">
+  <section id="Beinsured" class="pd-b47">
     <div class="am-list am-list-6lb form" v-if="init&&init.tax_type">
       <div class="app-list-header">被保人声明（备注说明）</div>
       <div class="am-list-body" aria-labelledby="demo-cb-header-1">
@@ -118,7 +118,7 @@
           </div>
         </app-input>
         <app-input label="职业">
-          <div slot="input" @click="$refs.occupation.OccupationShow = true" placeholder="请点击选择职业" :class="{pd:!assured.insured_job_name}">
+          <div slot="input" @click="$refs.occupation.OccupationShow = true, scrollClose()" placeholder="请点击选择职业" :class="{pd:!assured.insured_job_name}">
             {{assured.insured_job_name}}
           </div>
           <!--<div slot="icon" class="am-list-clear" v-show="assured.insured_job_name" ><i class="iconfont icon-chahao" @click="clearOccupation"></i></div>-->
@@ -206,7 +206,7 @@
         </label>
       </div>
     </div>
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组" v-show="group">
       <button type="button" class="am-button white"><router-link to="/insured">上一步</router-link></button>
       <button type="button" class="am-button blue" @click="next()">下一步</button>
     </div>
@@ -289,7 +289,10 @@
           data2: citys_data,
           data3: dists_data
         },
-        resSelect: null
+        resSelect: null,
+        group: true, //底部按钮
+        docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
+        showHeight: document.documentElement.clientHeight   //实时屏幕高度
       }
     },
     computed: {
@@ -308,10 +311,23 @@
       vm.$nextTick(function () {
         vm.Interval = setInterval(vm.keepData, 5000)
       })
+      // window.onresize监听页面高度的变化
+      window.onresize = () => {
+        return (() => {
+          this.showHeight = document.body.clientHeight
+        })()
+      }
     },
     watch: {
       longTerm(val) {
         this.assured.insured_ID_expire_end = val ? '9999-12-31' : ''
+      },
+      showHeight() {
+        if (this.docmHeight > this.showHeight) {
+          this.group = false
+        } else {
+          this.group = true
+        }
       }
     },
     created() {
@@ -398,6 +414,10 @@
       //失去焦点
       toblur() {
         document.activeElement.blur()
+      },
+      //禁用滚动条
+      scrollClose() {
+        document.documentElement.style.overflowY = 'hidden'
       },
       typeChange() {
         this.assured.insured_ID_no = ''

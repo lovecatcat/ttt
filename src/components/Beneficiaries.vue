@@ -1,5 +1,5 @@
 <template>
-  <section id="Beneficiaries">
+  <section id="Beneficiaries" class="pd-b47">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header">身故受益人类型</div>
       <div class="am-list-body" aria-labelledby="demo-cb-header-1">
@@ -22,11 +22,11 @@
     </div>
 
     <app-beneficiary v-show="is_legal_benefic === '0'" ref=child :key="person" v-for='person,index in people' :people='person' :BfIndex='index'></app-beneficiary>
-    <div class="am-button-group" role="group" v-show="is_legal_benefic === '0'" style="margin-bottom: .1rem">
+    <div class="am-button-group Beneficiary-group" role="group" v-show="is_legal_benefic === '0'" style="margin-bottom: 0.1rem">
       <a @click="add" class="am-button white" role="button"><span class="app-iconfont">&#xe667;</span> 添加受益人 </a>
     </div>
 
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组" v-show="group">
       <button type="button" class="am-button white"><router-link to="/prospectus">上一步</router-link></button>
       <button type="button" class="am-button blue"><router-link to="/healthinfo">下一步</router-link></button>
     </div>
@@ -44,7 +44,10 @@ export default {
   data() {
     return {
       beneficiaries: [],
-      is_legal_benefic: '1'
+      is_legal_benefic: '1',
+      group: true, //底部按钮
+      docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
+      showHeight: document.documentElement.clientHeight   //实时屏幕高度
     }
   },
   computed: {
@@ -54,6 +57,23 @@ export default {
   },
   created () {
     // this.setData('beneficiaries', this.$storage.fetch('beneficiaries'))
+  },
+  mounted() {
+    // window.onresize监听页面高度的变化
+    window.onresize = () => {
+      return (() => {
+        this.showHeight = document.body.clientHeight
+      })()
+    }
+  },
+  watch: {
+    showHeight() {
+      if (this.docmHeight > this.showHeight) {
+        this.group = false
+      } else {
+        this.group = true
+      }
+    }
   },
   methods: {
     add() {

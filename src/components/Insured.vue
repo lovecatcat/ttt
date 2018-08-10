@@ -1,5 +1,5 @@
 <template>
-  <section id="Insured">
+  <section id="Insured" class="pd-b47">
     <div class="am-list am-list-6lb form">
       <div class="app-list-header">投保人声明（备注说明）</div>
       <div class="am-list-body" aria-labelledby="demo-cb-header-1">
@@ -22,7 +22,7 @@
           <div class="am-list-control">
             <input type="text" placeholder="请选择" readonly v-model="applicant.holder_ID_type_name" @click="toShow('ID')"
                    v-if="applicant.holder_ID_type_name">
-            <input type="text" placeholder="请选择" readonly @click="toShow('ID')" v-else>
+            <input type="text" placeholder="请选择" readonly @click="toShow('ID')"  v-else>
             <div class="am-list-clear" style=""><i class="iconfont icon-xiajiantou"></i></div>
           </div>
         </div>
@@ -58,7 +58,7 @@
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':applicant.holder_gender===item.value}"
                   v-for="(item,index) in init.gender" :disabled="applicant.holder_ID_type === 'LAA0028' || applicant.holder_ID_type === 'LAA0031'"
-                  @click="applicant.holder_gender = item.value">{{item.text}}
+                  @click="toblur(),applicant.holder_gender = item.value">{{item.text}}
           </button>
         </app-input>
         <!-- 证件为身份证和户口本 性别和 出生日期 不允许修改 -->
@@ -101,7 +101,7 @@
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':applicant.holder_marriage===item.value}"
                   v-for="(item,index) in init.marriage"
-                  @click="applicant.holder_marriage = item.value, toblur()">{{item.text}}
+                  @click="toblur(), applicant.holder_marriage = item.value">{{item.text}}
           </button>
         </app-input>
         <!--婚姻状况-->
@@ -129,7 +129,7 @@
           </div>
         </app-input>
         <app-input label="职业">
-          <div slot="input" @click="$refs.occupation.OccupationShow = true" placeholder="请点击选择职业" :class="{pd:!applicant.holder_job_name}">
+          <div slot="input" @click="$refs.occupation.OccupationShow = true, toblur(), scrollClose()" placeholder="请点击选择职业" :class="{pd:!applicant.holder_job_name}">
             {{applicant.holder_job_name}}
           </div>
           <!--<div slot="icon" class="am-list-clear" v-show="applicant.holder_job_name" ><i class="iconfont icon-chahao" @click="clearOccupation"></i></div>-->
@@ -152,7 +152,7 @@
           <div class="am-list-label">收入来源</div>
           <div class="am-list-control">
             <input type="text" placeholder="请选择" readonly v-model="applicant.holder_salary_from_name"
-                   @click="toShow('salary')" v-if="applicant.holder_salary_from_name">
+                   @click=" toShow('salary')" v-if="applicant.holder_salary_from_name">
             <input type="text" placeholder="请选择" readonly @click="toShow('salary')" v-else>
             <div class="am-list-clear" style=""><i class="iconfont icon-xiajiantou"></i></div>
           </div>
@@ -213,14 +213,14 @@
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':applicant.is_assured===item.value}"
                   v-for="(item,index) in init.is_assured"
-                  @click="applicant.is_assured = item.value, toblur()">{{item.text}}
+                  @click="toblur(), applicant.is_assured = item.value">{{item.text}}
           </button>
         </app-input>
         <app-input label="合同争议处理方式" class="am-list-control-button">
           <button slot="button" class="am-button tiny"
                   :class="{'tiny-blue':applicant.DisputedFlag===item.value}"
                   v-for="(item,index) in init.DisputedFlag"
-                  @click="applicant.DisputedFlag = item.value, toblur()">{{item.text}}
+                  @click="toblur(), applicant.DisputedFlag = item.value">{{item.text}}
           </button>
         </app-input>
         <app-input label="仲裁委员会名称" v-if="applicant.DisputedFlag == 'LBH0002'">
@@ -243,7 +243,7 @@
             </label>
           </div>
     </div>
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组" v-show="group">
       <button type="button" class="am-button white"><router-link to="/">上一步</router-link></button>
       <button type="button" class="am-button blue" @click="next">下一步</button>
     </div>
@@ -329,7 +329,10 @@
           data2: citys_data,
           data3: dists_data
         },
-        resSelect: null
+        resSelect: null,
+        group: true, //底部按钮
+        docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
+        showHeight: document.documentElement.clientHeight   //实时屏幕高度
       }
     },
     computed: {
@@ -345,6 +348,12 @@
       vm.$nextTick(function () {
         vm.Interval = setInterval(vm.keepData, 5000)
       })
+      // window.onresize监听页面高度的变化
+      window.onresize = () => {
+        return (() => {
+          this.showHeight = document.body.clientHeight
+        })()
+      }
     },
     watch: {
       longTerm(val) {
@@ -353,6 +362,13 @@
       appl_id(val) {
         if (val) {
           this.applicant.appl_id = val
+        }
+      },
+      showHeight() {
+        if (this.docmHeight > this.showHeight) {
+          this.group = false
+        } else {
+          this.group = true
         }
       }
     },
@@ -444,6 +460,19 @@
       //失去焦点
       toblur() {
         document.activeElement.blur()
+      },
+      //禁用滚动条
+      scrollClose() {
+        document.documentElement.style.overflowY = 'hidden'
+      },
+      //获取焦点
+      hideKeyboard: function() {
+        this.show = false
+        this.group = false
+      },
+      //失去焦点true
+      showKeyboard: function() {
+        this.group = true
       },
       // keepData() {
       //   let keepData = {

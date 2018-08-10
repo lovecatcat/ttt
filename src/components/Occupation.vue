@@ -1,11 +1,11 @@
 <template>
-  <div class="show app-dialog" v-show="OccupationShow">
+  <div class="show app-dialog pd-b47" v-show="OccupationShow">
     <div class="app-dialog-bg"></div>
-    <div class="am-dialog-wrap" style="height: 90%">
-      <div class="am-dialog-header" slot="header">
+    <div class="am-dialog-wrap" style="max-height: 90%">
+      <div class="am-dialog-header" style="position: fixed" slot="header">
        选择职业
       </div>
-      <section class="am-dialog-body" slot="body">
+      <section class="am-dialog-body pd-b47" slot="body" style="padding-top: .52rem">
         <div class="am-list am-list-6lb form" v-show="commonOccupation.length > 0">
           <div class="app-list-header">常见职业</div>
           <div class="am-list-body" style="padding-left: .1rem">
@@ -50,9 +50,9 @@
         </div>
 
       </section>
-      <div class="am-button-group" slot="footer">
-        <button type="button" class="am-button white" @click="OccupationShow = false">取消</button>
-        <button type="button" class="am-button blue" @click="OccupationShow = false">确定</button>
+      <div class="am-button-group am-fixed am-fixed-bottom" slot="footer">
+        <button type="button" class="am-button white" @click="OccupationShow = false, scroll()">取消</button>
+        <button type="button" class="am-button blue" @click="OccupationShow = false, scroll()">确定</button>
       </div>
     </div>
     <!--vue-pickers-->
@@ -154,6 +154,9 @@ export default {
     }
   },
   methods: {
+    scroll() {
+      document.documentElement.style.overflowY = 'scroll'
+    },
     close() {
       this.show = false
       this.pickData.data1 = this.init.occupation

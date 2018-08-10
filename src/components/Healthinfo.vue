@@ -1,5 +1,5 @@
 <template>
-  <section id="Healthinfo">
+  <section id="Healthinfo" class="pd-b47">
     <app-dropdown up='up'>
       <template slot="header">
         <div class="am-list-label">被保人 — 健康告知</div>
@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组">
       <button type="button" class="am-button white"><router-link to="/beneficiaries">上一步</router-link></button>
       <!--<button type="button" class="am-button blue" v-if="diffHealth"> <router-link to="/healthinfov1">下一步</router-link></button>-->
       <button type="button" class="am-button blue"> <router-link to="/billinfo">下一步</router-link></button>

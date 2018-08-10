@@ -1,5 +1,5 @@
 <template>
-  <section id="preview">
+  <section id="preview" class="pd-b47">
     <div class="app-list-header am-flexbox" style="margin-bottom: .1rem">
       <div class="am-flexbox-item"><span class="app-iconfont">&#xe631;</span>信息确认</div>
     </div>
@@ -305,7 +305,7 @@
       </div>
     </div>
 
-    <div class="am-button-group" role="group" aria-label="操作按钮组">
+    <div class="am-button-group am-fixed am-fixed-bottom" role="group" aria-label="操作按钮组">
       <button type="button" class="am-button white"><router-link to="/billinfo">上一步</router-link></button>
       <button type="button" class="am-button blue" @click="push()">提交核保</button>
     </div>
@@ -555,15 +555,17 @@
               vm.$store.dispatch('setParam', {
                 insured: res
               })
-              if (res.code === '-1') {
+              if (res.code == '-1') {
                 vm.paySuccess(policy_id)
-              } else if (res.code === '1') {
+              } else if (res.code == '1') {
                 vm.payInterface(policy_id)
               } else {
+                vm.uploading = false
                 vm.$toast.open(res.msg ? res.msg : '核保失败', 'warn')
               }
             })
           } else {
+            vm.uploading = false
             vm.$toast.open('保存保单失败，请重试', 'warn')
           }
         })
@@ -573,10 +575,11 @@
         console.log('人核支付')
         Api.insuredImg(policy_id, res => {
           console.log(res)
-          if (res.code === '1') {
+          if (res.code == '1') {
             Api.paySuccess(policy_id, res => {
               console.log(res)
-              if (res.code === '1') {
+              if (res.code == '1') {
+                vm.uploading = false
                 vm.$toast.open('人核成功')
                 setTimeout(function () {
                   vm.done = true
@@ -587,11 +590,13 @@
                   vm.done = true
                   vm.$router.push('/payfail')
                 }, 2000)
+                vm.uploading = false
                 vm.$toast.open('人核支付失败')
               }
             })
             this.clearStorage()
           } else {
+            vm.uploading = false
             vm.$toast.open('上传影像失败，请重试！')
           }
         })
@@ -601,16 +606,18 @@
         console.log('自核支付')
         Api.insuredImg(policy_id, res => {
           console.log(res)
-          if (res.code === '1') {
+          if (res.code == '1') {
             Api.payInterface(policy_id, res => {
               console.log(res)
-              if (res.code === '1') {
+              if (res.code == '1') {
+                vm.uploading = false
                 vm.$toast.open('自核成功')
                 setTimeout(function () {
                   vm.done = true
                   vm.$router.push('/success')
                 }, 2000)
               } else {
+                vm.uploading = false
                 vm.$toast.open('自核支付失败')
                 setTimeout(function () {
                   vm.done = true
