@@ -656,7 +656,7 @@
         } else {
           if (this.addonsSelected[index] && index === fjhm) {
             this.cal(index)
-          }else if (this.addonsSelected[fjhm] && index === bwjklq) {
+          } else if (this.addonsSelected[fjhm] && index === bwjklq) {
             this.cal(fjhm)
           }
         }
