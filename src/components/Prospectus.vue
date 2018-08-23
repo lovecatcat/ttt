@@ -514,12 +514,12 @@
           double_main_risk: '',
           productInfo: [],
           insurant: {
-            birthday: vm.$store.state.assured.insured_birthday || '1987-01-01', //vm.assured.insured_birthday
-            genderCode: vm.$store.state.assured.insured_gender || 'LAB0009' //vm.assured.insured_gender
+            birthday: vm.$store.state.assured.insured_birthday, //vm.assured.insured_birthday
+            genderCode: vm.$store.state.assured.insured_gender //vm.assured.insured_gender
           },
           applicant: {
-            birthday: vm.$store.state.applicant.holder_birthday || '1987-01-01', //vm.applicant.hpo5  older_birthday,
-            genderCode: vm.$store.state.applicant.holder_gender || 'LAB0009' //vm.applicant.holder_gender
+            birthday: vm.$store.state.applicant.holder_birthday, //vm.applicant.hpo5  older_birthday,
+            genderCode: vm.$store.state.applicant.holder_gender  //vm.applicant.holder_gender
           }
         }
         let main = {}

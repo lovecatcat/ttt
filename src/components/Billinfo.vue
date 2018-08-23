@@ -203,7 +203,6 @@ export default {
         this.bank.bank_province_name = val.select1.text ? val.select1.text : ''
         this.bank.bank_area = val.select2.value ? val.select2.value : ''
         this.bank.bank_area_name = val.select2.text ? val.select2.text : ''
-        this.bank.bank_area_name = this.bank.bank_province_name + this.bank.bank_area_name
       }
     },
     toShow(type) {
@@ -217,6 +216,7 @@ export default {
         this.columns = 2
         this.link = true
         this.resSelect = 'area'
+        this.pickData.data2 = []
         this.pickData.data1 = provs_data
         this.pickData.data2 = citys_data
       }

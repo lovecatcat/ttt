@@ -98,7 +98,7 @@
 
       </div>
     </div>
-    <div class="am-list am-list-6lb form" >
+    <div class="am-list am-list-6lb form" v-show="anti_money">
       <div class="app-list-header">反洗钱标准 — 必填</div>
       <div class="am-list-body">
         <!-- 证件为护照时 可以修改国籍 -->

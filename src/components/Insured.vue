@@ -364,7 +364,7 @@
           this.applicant.appl_id = val
         }
       },
-      showHeight() {
+      showHeight() { //底部按钮fixed兼容
         if (this.docmHeight > this.showHeight) {
           this.group = false
         } else {
@@ -450,6 +450,7 @@
           this.columns = 3
           this.link = true
           this.resSelect = 'area'
+          //解决省市区的bug，后2列的数据不重置
           this.pickData.data3 = []
           this.pickData.data1 = provs_data
           this.pickData.data2 = citys_data
@@ -464,15 +465,6 @@
       //禁用滚动条
       scrollClose() {
         document.documentElement.style.overflowY = 'hidden'
-      },
-      //获取焦点
-      hideKeyboard: function() {
-        this.show = false
-        this.group = false
-      },
-      //失去焦点true
-      showKeyboard: function() {
-        this.group = true
       },
       // keepData() {
       //   let keepData = {
@@ -578,26 +570,26 @@
         return true
       },
       // 检查ID是否存在
-      checkIDExist() {
-        const vm = this
-        const id = vm.applicant.holder_ID_no
-        Api.queryID(id, 'applicant', res => {
-          if (res.name && res.name.indexOf('Error') > -1) {
-            vm.$toast.open('服务器开小差了', 'error')
-            return
-          }
-
-          // 不存在 appl_id
-          if (!res.appl_id && vm.applicant.appl_id) {
-            vm.$delete(vm.applicant, 'appl_id')
-            vm.cardinfo = {}
-            return false
-          }
-          vm.cardinfo = res
-          vm.$set(vm.applicant, 'appl_id', res.appl_id)
-          vm.setInfo()
-        })
-      },
+      // checkIDExist() {
+      //   const vm = this
+      //   const id = vm.applicant.holder_ID_no
+      //   Api.queryID(id, 'applicant', res => {
+      //     if (res.name && res.name.indexOf('Error') > -1) {
+      //       vm.$toast.open('服务器开小差了', 'error')
+      //       return
+      //     }
+      //
+      //     // 不存在 appl_id
+      //     if (!res.appl_id && vm.applicant.appl_id) {
+      //       vm.$delete(vm.applicant, 'appl_id')
+      //       vm.cardinfo = {}
+      //       return false
+      //     }
+      //     vm.cardinfo = res
+      //     vm.$set(vm.applicant, 'appl_id', res.appl_id)
+      //     vm.setInfo()
+      //   })
+      // },
       setInfo() {
         // let toast_text = Rule.checkName('投保人', this.applicant.holder_name)
         // if (toast_text) {
